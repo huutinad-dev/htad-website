@@ -72,6 +72,9 @@ export default buildConfig({
     // Files are still served through /api/media/file/<filename>, so stored URLs don't change.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      // keep the adapter's fields (e.g. _objectKey) in the schema even when disabled,
+      // so local and Vercel share one database schema / migration history
+      alwaysInsertFields: true,
       collections: { media: true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
