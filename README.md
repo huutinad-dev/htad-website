@@ -1,67 +1,73 @@
-# Payload Blank Template
+# HTAd Portfolio — Payload CMS + Next.js
 
-This template comes configured with the bare minimum to get started on anything you need.
+Website portfolio của **Huu Tin Trading & Advertising (HTAd)**, xây dựng từ file *Company profile 2026*.
+Song ngữ **EN / VI**, toàn bộ nội dung quản lý qua Payload CMS tại `/admin`.
 
-## Quick start
+- **Stack:** Payload 3 · Next.js 16 (App Router) · PostgreSQL · Tailwind CSS 4 · Motion · Lenis · font Be Vietnam Pro (hỗ trợ đầy đủ tiếng Việt)
+- **Ảnh:** lưu local trong thư mục `media/` (không commit). Ảnh gốc để seed nằm ở `seed-assets/`.
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+## Cài đặt
 
-## Quick Start - local setup
+```bash
+npm install
+cp .env.example .env   # rồi điền DATABASE_URL, PAYLOAD_SECRET
+npm run migrate        # tạo bảng trong schema `htad`
+npm run seed           # nạp nội dung + ảnh từ company profile
+npm run dev            # http://localhost:3000  (admin: /admin)
+```
 
-To spin up this template locally, follow these steps:
+Lần đầu vào `/admin` sẽ được yêu cầu tạo tài khoản quản trị.
 
-### Clone
+## ⚠️ Database dùng chung
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+DB đang dùng chung với một ứng dụng khác (schema `public`). Vì vậy:
 
-### Development
+- Payload chỉ tạo bảng trong schema **`htad`** (`DATABASE_SCHEMA`), cấu hình ở `src/payload.config.ts`.
+- `push` (tự đồng bộ schema khi dev) đã **tắt**. Mọi thay đổi schema phải đi qua migration:
+  ```bash
+  npm run migrate:create <ten>   # sinh file trong src/migrations
+  # đọc lại SQL, đảm bảo chỉ chạm "htad".*
+  npm run migrate
+  ```
+- **Không bao giờ** chạy `payload migrate:fresh`, `migrate:reset` hay bật `push: true`.
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+## Cấu trúc nội dung (CMS)
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+| Mục | Loại | Nội dung |
+|---|---|---|
+| Home page | Global | Hero + slideshow, marquee, giới thiệu, số liệu, tiêu đề các section, dự án nổi bật, logo đối tác, CTA |
+| About page | Global | Giới thiệu công ty, mạng lưới, nhà sáng lập |
+| Site settings | Global | Logo, thông tin liên hệ, footer, SEO |
+| Services | Collection | 7 dịch vụ: mô tả, điểm nổi bật, gallery, logo đối tác, dự án liên quan |
+| Projects | Collection | 11 dự án: danh mục, năm, gallery, link YouTube, link ngoài |
+| Project categories | Collection | Danh mục dùng để lọc dự án |
+| Media | Upload | Ảnh (có focal point) |
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+Đổi ngôn ngữ nội dung bằng bộ chọn **Locale** ở góc trên trang admin. Trường nào chưa dịch sẽ tự lấy bản tiếng Anh.
 
-#### Docker (Optional)
+## Trang
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+`/en` · `/vi` — Trang chủ
+`/[locale]/about` · `/[locale]/services` · `/[locale]/services/[slug]`
+`/[locale]/projects` (lọc theo `?category=`) · `/[locale]/projects/[slug]` · `/[locale]/contact`
 
-To do so, follow these steps:
+Trang được cache (ISR, 10 phút). Khi lưu nội dung trong CMS, cache được xoá ngay (`src/hooks/revalidate.ts`).
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+## Mã nguồn
 
-## How it works
+```
+src/
+  app/(frontend)/[locale]/   Các trang public
+  app/(payload)/             Admin + API của Payload
+  collections/  globals/     Schema CMS
+  components/                UI; components/motion/ chứa animation (Reveal, SplitHeading, Parallax, Counter, SmoothScroll)
+  lib/                       Truy vấn Payload, từ điển UI (dictionary.ts), helper media
+  seed/                      Nội dung EN/VI trích từ PDF + script seed
+  migrations/                Migration SQL (schema htad)
+seed-assets/                 Ảnh & logo trích từ PDF
+```
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+## Ghi chú
 
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/3.x/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+- Ảnh trích từ PDF đã bị Canva nén (tối đa ~800px). Nên thay bằng ảnh gốc độ phân giải cao qua `/admin → Media`.
+- Mô tả các dự án *VPF Rebranding, Key Visuals, Total Football, Fan Culture Event* không có trong PDF và là bản viết tạm — cần kiểm tra lại.

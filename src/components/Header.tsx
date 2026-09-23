@@ -1,0 +1,156 @@
+'use client'
+
+import { useLenis } from 'lenis/react'
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+import type { Locale } from '@/i18n/config'
+import type { Dictionary } from '@/lib/dictionary'
+
+type Props = {
+  locale: Locale
+  dict: Dictionary
+  logo: { src: string; alt: string } | null
+  contact: { email?: string | null; phone?: string | null }
+}
+
+const EASE = [0.16, 1, 0.3, 1] as const
+
+export function Header({ locale, dict, logo, contact }: Props) {
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const [solid, setSolid] = useState(false)
+  const { scrollY } = useScroll()
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0
+    setSolid(y > 40)
+    setHidden(y > 240 && y > prev)
+  })
+
+  const lenis = useLenis()
+  useEffect(() => setOpen(false), [pathname])
+  useEffect(() => {
+    if (open) lenis?.stop()
+    else lenis?.start()
+  }, [open, lenis])
+
+  const links = [
+    { href: `/${locale}`, label: dict.nav.home },
+    { href: `/${locale}/about`, label: dict.nav.about },
+    { href: `/${locale}/services`, label: dict.nav.services },
+    { href: `/${locale}/projects`, label: dict.nav.projects },
+    { href: `/${locale}/contact`, label: dict.nav.contact },
+  ]
+  const isActive = (href: string) => (href === `/${locale}` ? pathname === href : pathname.startsWith(href))
+  const switchTo = (target: Locale) => pathname.replace(/^\/(en|vi)(?=\/|$)/, `/${target}`)
+
+  return (
+    <>
+      <motion.header
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
+          solid && !open ? 'border-b border-white/5 bg-ink/80 backdrop-blur-md' : 'bg-transparent'
+        }`}
+        animate={{ y: hidden && !open ? '-100%' : '0%' }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        <div className="container-x flex h-20 items-center justify-between">
+          <Link href={`/${locale}`} className="relative z-10 block h-11 w-[142px] md:h-14 md:w-[165px]" aria-label="Home">
+            {logo && <Image src={logo.src} alt={logo.alt} fill priority sizes="165px" className="object-contain object-left" />}
+          </Link>
+
+          <nav className="hidden items-center gap-9 lg:flex">
+            {links.slice(1).map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`group relative text-sm font-medium uppercase tracking-wider transition-colors ${
+                  isActive(l.href) ? 'text-gold' : 'text-white/80 hover:text-white'
+                }`}
+              >
+                {l.label}
+                <span
+                  className={`absolute -bottom-1.5 left-0 h-px bg-gold transition-all duration-500 ${
+                    isActive(l.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
+              </Link>
+            ))}
+          </nav>
+
+          <div className="relative z-10 flex items-center gap-5">
+            <div className="flex items-center gap-1 text-xs font-semibold tracking-wider">
+              {(['en', 'vi'] as const).map((l, i) => (
+                <span key={l} className="flex items-center gap-1">
+                  {i > 0 && <span className="text-white/30">/</span>}
+                  <Link
+                    href={switchTo(l)}
+                    className={l === locale ? 'text-gold' : 'text-white/60 transition-colors hover:text-white'}
+                    aria-current={l === locale ? 'true' : undefined}
+                  >
+                    {l.toUpperCase()}
+                  </Link>
+                </span>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-white/20 lg:hidden"
+              aria-label={open ? dict.close : dict.menu}
+              aria-expanded={open}
+            >
+              <span className={`h-px w-5 bg-white transition-transform duration-300 ${open ? 'translate-y-[3.5px] rotate-45' : ''}`} />
+              <span className={`h-px w-5 bg-white transition-transform duration-300 ${open ? '-translate-y-[3.5px] -rotate-45' : ''}`} />
+            </button>
+          </div>
+        </div>
+      </motion.header>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-40 flex flex-col justify-between bg-ink px-5 pb-10 pt-28 lg:hidden"
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.7, ease: EASE }}
+          >
+            <nav className="flex flex-col gap-2">
+              {links.map((l, i) => (
+                <span key={l.href} className="overflow-hidden">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '100%' }}
+                    animate={{ y: '0%' }}
+                    transition={{ duration: 0.7, ease: EASE, delay: 0.2 + i * 0.06 }}
+                  >
+                    <Link
+                      href={l.href}
+                      className={`display block text-5xl ${isActive(l.href) ? 'text-gold' : 'text-white'}`}
+                    >
+                      {l.label}
+                    </Link>
+                  </motion.span>
+                </span>
+              ))}
+            </nav>
+            <motion.div
+              className="space-y-1 text-sm text-muted"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              {contact.email && <p>{contact.email}</p>}
+              {contact.phone && <p>{contact.phone}</p>}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}

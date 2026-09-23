@@ -1,9 +1,18 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
+
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    group: 'Content',
+  },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [revalidateCollection],
+    afterDelete: [revalidateCollectionDelete],
   },
   fields: [
     {
@@ -12,5 +21,13 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    staticDir: 'media',
+    mimeTypes: ['image/*'],
+    focalPoint: true,
+    imageSizes: [
+      { name: 'thumbnail', width: 480 },
+      { name: 'card', width: 960 },
+    ],
+  },
 }
