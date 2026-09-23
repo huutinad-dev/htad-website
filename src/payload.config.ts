@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { en } from '@payloadcms/translations/languages/en'
 import { vi } from '@payloadcms/translations/languages/vi'
 import path from 'path'
@@ -65,5 +66,14 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    // Uploads go to Vercel Blob when a token is configured (always on Vercel, whose
+    // filesystem is read-only). Without a token, files stay in the local /media folder.
+    // Files are still served through /api/media/file/<filename>, so stored URLs don't change.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      collections: { media: true },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
 })

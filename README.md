@@ -4,7 +4,12 @@ Website portfolio của **Huu Tin Trading & Advertising (HTAd)**, xây dựng t�
 Song ngữ **EN / VI**, toàn bộ nội dung quản lý qua Payload CMS tại `/admin`.
 
 - **Stack:** Payload 3 · Next.js 16 (App Router) · PostgreSQL · Tailwind CSS 4 · Motion · Lenis · font Be Vietnam Pro (hỗ trợ đầy đủ tiếng Việt)
-- **Ảnh:** lưu local trong thư mục `media/` (không commit). Ảnh gốc để seed nằm ở `seed-assets/`.
+- **Ảnh:** khi có `BLOB_READ_WRITE_TOKEN` (bắt buộc trên Vercel), ảnh lưu trên **Vercel Blob**; không có token thì lưu local trong `media/` (không commit). Ảnh gốc để seed nằm ở `seed-assets/`.
+
+## Deploy (Vercel)
+
+Env: `DATABASE_URL`, `DATABASE_SCHEMA=htad`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `BLOB_READ_WRITE_TOKEN` (tạo Blob store trong tab Storage của project).
+Lần đầu chuyển ảnh local lên Blob: `npx tsx scripts/upload-media-to-blob.ts` (cần token trong `.env`).
 
 ## Cài đặt
 
