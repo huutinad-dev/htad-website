@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import type { Locale } from '@/i18n/config'
+import { localePath, type Locale } from '@/i18n/config'
 import { asMedia } from '@/lib/media'
 import type { Project } from '@/payload-types'
 
@@ -18,7 +18,7 @@ export function ProjectCard({
 }) {
   const category = typeof project.category === 'object' ? project.category?.title : null
   return (
-    <Link href={`/${locale}/projects/${project.slug}`} className="group block">
+    <Link href={localePath(locale, `/projects/${project.slug}`)} className="group block">
       <div
         className={`relative overflow-hidden rounded-sm bg-surface ${
           size === 'lg' ? 'aspect-[16/10]' : 'aspect-[4/3]'

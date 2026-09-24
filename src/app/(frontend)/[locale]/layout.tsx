@@ -43,7 +43,6 @@ export async function generateMetadata({ params }: Omit<Props, 'children'>): Pro
     title: { default: title, template: `%s — ${settings.shortName || title}` },
     description: settings.seoDescription ?? undefined,
     openGraph: { title, description: settings.seoDescription ?? undefined, images: og ? [og] : undefined },
-    alternates: { languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])) },
   }
 }
 

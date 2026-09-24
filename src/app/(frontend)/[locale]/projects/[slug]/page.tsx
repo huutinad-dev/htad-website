@@ -9,7 +9,7 @@ import { Reveal } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { RichText } from '@/components/RichText'
 import { VideoButton } from '@/components/VideoButton'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
 import { getProject, getProjects } from '@/lib/payload'
@@ -62,7 +62,7 @@ export default async function ProjectPage({ params }: Props) {
         <div className="container-x relative pb-16 pt-40 md:pb-24">
           {category && (
             <Reveal>
-              <Link href={`/${locale}/projects?category=${category.slug}`} className="eyebrow mb-6 inline-block hover:text-white">
+              <Link href={localePath(locale, `/projects?category=${category.slug}`)} className="eyebrow mb-6 inline-block hover:text-white">
                 {category.title}
               </Link>
             </Reveal>
@@ -137,7 +137,7 @@ export default async function ProjectPage({ params }: Props) {
 
       {/* Next project */}
       {next && next.id !== project.id && (
-        <Link href={`/${locale}/projects/${next.slug}`} className="group relative block overflow-hidden border-t border-line">
+        <Link href={localePath(locale, `/projects/${next.slug}`)} className="group relative block overflow-hidden border-t border-line">
           <div className="absolute inset-0 opacity-40 transition-opacity duration-700 group-hover:opacity-70">
             <Img media={nextCover} sizes="100vw" className="transition-transform duration-[1.5s] ease-out-expo group-hover:scale-105" />
             <div className="absolute inset-0 bg-ink/60" />

@@ -91,7 +91,8 @@
 /* Vietnamese stacks diacritics above capitals; give them room.
    Unlayered so it wins over the layered utilities. */
 :lang(vi) .display {
-  line-height: 1.08;
+  line-height: 1.16;
+  letter-spacing: -0.005em;
 }
 
 /* Keeps every line of a SplitHeading on one line: the font size shrinks to fit the

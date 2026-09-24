@@ -8,7 +8,7 @@ import { Img } from '@/components/Img'
 import { Parallax } from '@/components/motion/Parallax'
 import { Reveal } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
 import { getHome, getServices } from '@/lib/payload'
@@ -41,7 +41,7 @@ export default async function ServicesPage({ params }: Props) {
           return (
             <article key={s.id} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
               <Reveal from={flip ? 'right' : 'left'} className={`lg:col-span-7 ${flip ? 'lg:order-2' : ''}`}>
-                <Link href={`/${locale}/services/${s.slug}`} className="group block">
+                <Link href={localePath(locale, `/services/${s.slug}`)} className="group block">
                   <Parallax className="aspect-[16/10] rounded-sm" amount={8}>
                     <Img
                       media={asMedia(s.cover)}
@@ -62,7 +62,7 @@ export default async function ServicesPage({ params }: Props) {
                   <p className="mt-6 text-lg leading-relaxed text-muted">{s.excerpt}</p>
                 </Reveal>
                 <Reveal delay={0.24} className="mt-10">
-                  <ArrowLink href={`/${locale}/services/${s.slug}`}>{dict.learnMore}</ArrowLink>
+                  <ArrowLink href={localePath(locale, `/services/${s.slug}`)}>{dict.learnMore}</ArrowLink>
                 </Reveal>
               </div>
             </article>
@@ -70,7 +70,7 @@ export default async function ServicesPage({ params }: Props) {
         })}
       </section>
 
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={`/${locale}/contact`} dict={dict} />
+      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
     </>
   )
 }

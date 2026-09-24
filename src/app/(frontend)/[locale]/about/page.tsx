@@ -8,7 +8,7 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { PageHero } from '@/components/PageHero'
 import { RichText } from '@/components/RichText'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
 import { getAbout, getHome } from '@/lib/payload'
@@ -98,7 +98,7 @@ export default async function AboutPage({ params }: Props) {
         </section>
       )}
 
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={`/${locale}/contact`} dict={dict} />
+      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
     </>
   )
 }

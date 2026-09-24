@@ -12,7 +12,7 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { ProjectSlider } from '@/components/ProjectSlider'
 import { SectionHeading } from '@/components/SectionHeading'
 import { ServiceList } from '@/components/ServiceList'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, mediaSrc } from '@/lib/media'
 import { getHome, getProjects, getServices } from '@/lib/payload'
@@ -63,11 +63,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <p className="max-w-xl text-lg leading-relaxed text-white/85 md:text-xl">{home.hero.subtitle}</p>
               </Reveal>
             )}
-            <Reveal delay={0.75}>
-              <ArrowLink href={`/${locale}/contact`} variant="solid">
-                {dict.contactUs}
-              </ArrowLink>
-            </Reveal>
           </div>
         </div>
         <div className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
@@ -105,7 +100,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <SectionHeading
             eyebrow={home.servicesSection?.eyebrow}
             heading={home.servicesSection?.heading}
-            action={<ArrowLink href={`/${locale}/services`}>{dict.allServices}</ArrowLink>}
+            action={<ArrowLink href={localePath(locale, `/services`)}>{dict.allServices}</ArrowLink>}
             className="mb-10 md:mb-14"
           />
           <ServiceList
@@ -113,7 +108,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               const cover = asMedia(s.cover)
               const src = mediaSrc(cover)
               return {
-                href: `/${locale}/services/${s.slug}`,
+                href: localePath(locale, `/services/${s.slug}`),
                 title: s.title,
                 excerpt: s.excerpt,
                 image: src ? { src, alt: cover!.alt } : null,
@@ -128,7 +123,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <SectionHeading
           eyebrow={home.projectsSection?.eyebrow}
           heading={home.projectsSection?.heading}
-          action={<ArrowLink href={`/${locale}/projects`}>{dict.allProjects}</ArrowLink>}
+          action={<ArrowLink href={localePath(locale, `/projects`)}>{dict.allProjects}</ArrowLink>}
           className="mb-10 md:mb-14"
         />
         <Reveal>
@@ -165,7 +160,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </section>
       )}
 
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={`/${locale}/contact`} dict={dict} />
+      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
     </>
   )
 }

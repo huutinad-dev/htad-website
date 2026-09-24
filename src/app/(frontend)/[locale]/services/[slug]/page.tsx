@@ -10,7 +10,7 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
 import { ProjectCard } from '@/components/ProjectCard'
 import { RichText } from '@/components/RichText'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, mediaSrc, toGallery } from '@/lib/media'
 import { getHome, getService, getServices } from '@/lib/payload'
@@ -117,7 +117,7 @@ export default async function ServicePage({ params }: Props) {
             {others.map((s) => (
               <StaggerItem key={s.id}>
                 <Link
-                  href={`/${locale}/services/${s.slug}`}
+                  href={localePath(locale, `/services/${s.slug}`)}
                   className="group inline-flex items-center gap-3 rounded-full border border-white/15 px-6 py-3 transition-colors hover:border-gold hover:text-gold"
                 >
                   {s.title}
@@ -129,7 +129,7 @@ export default async function ServicePage({ params }: Props) {
         </div>
       </section>
 
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={`/${locale}/contact`} dict={dict} />
+      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
     </>
   )
 }

@@ -4,10 +4,10 @@ import { useLenis } from 'lenis/react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import type { Locale } from '@/i18n/config'
+import { LOCALE_COOKIE, localePath, stripLocalePrefix, type Locale } from '@/i18n/config'
 import type { Dictionary } from '@/lib/dictionary'
 
 type Props = {
@@ -40,14 +40,32 @@ export function Header({ locale, dict, logo, contact }: Props) {
   }, [open, lenis])
 
   const links = [
-    { href: `/${locale}`, label: dict.nav.home },
-    { href: `/${locale}/about`, label: dict.nav.about },
-    { href: `/${locale}/services`, label: dict.nav.services },
-    { href: `/${locale}/projects`, label: dict.nav.projects },
-    { href: `/${locale}/contact`, label: dict.nav.contact },
+    { href: localePath(locale), label: dict.nav.home },
+    { href: localePath(locale, `/about`), label: dict.nav.about },
+    { href: localePath(locale, `/services`), label: dict.nav.services },
+    { href: localePath(locale, `/projects`), label: dict.nav.projects },
+    { href: localePath(locale, `/contact`), label: dict.nav.contact },
   ]
-  const isActive = (href: string) => (href === `/${locale}` ? pathname === href : pathname.startsWith(href))
-  const switchTo = (target: Locale) => pathname.replace(/^\/(en|vi)(?=\/|$)/, `/${target}`)
+  const router = useRouter()
+  // keep the localStorage mirror in sync with the language the server actually rendered
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCALE_COOKIE, locale)
+    } catch {}
+  }, [locale])
+  // usePathname may include the internal `/en|/vi` segment added by the proxy rewrite
+  const path = stripLocalePrefix(pathname) || '/'
+  const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href))
+  const switchTo = (target: Locale) => {
+    if (target === locale) return
+    document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`
+    try {
+      localStorage.setItem(LOCALE_COOKIE, target)
+    } catch {
+      // storage unavailable (private mode); the cookie is what the server uses
+    }
+    router.refresh()
+  }
 
   return (
     <>
@@ -59,7 +77,7 @@ export function Header({ locale, dict, logo, contact }: Props) {
         transition={{ duration: 0.5, ease: EASE }}
       >
         <div className="container-x flex h-20 items-center justify-between">
-          <Link href={`/${locale}`} className="relative z-10 block h-11 w-[142px] md:h-14 md:w-[165px]" aria-label="Home">
+          <Link href={localePath(locale)} className="relative z-10 block h-11 w-[142px] md:h-14 md:w-[165px]" aria-label="Home">
             {logo && <Image src={logo.src} alt={logo.alt} fill priority sizes="165px" className="object-contain object-left" />}
           </Link>
 
@@ -87,13 +105,15 @@ export function Header({ locale, dict, logo, contact }: Props) {
               {(['en', 'vi'] as const).map((l, i) => (
                 <span key={l} className="flex items-center gap-1">
                   {i > 0 && <span className="text-white/30">/</span>}
-                  <Link
-                    href={switchTo(l)}
+                  <button
+                    type="button"
+                    onClick={() => switchTo(l)}
                     className={l === locale ? 'text-gold' : 'text-white/60 transition-colors hover:text-white'}
-                    aria-current={l === locale ? 'true' : undefined}
+                    aria-pressed={l === locale}
+                    lang={l}
                   >
                     {l.toUpperCase()}
-                  </Link>
+                  </button>
                 </span>
               ))}
             </div>
