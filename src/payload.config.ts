@@ -30,6 +30,13 @@ export default buildConfig({
     },
     meta: {
       titleSuffix: ' · HTAd CMS',
+      icons: [{ rel: 'icon', type: 'image/png', url: '/brand/emblem.png' }],
+    },
+    components: {
+      graphics: {
+        Logo: '/components/admin/Logo#AdminLogo',
+        Icon: '/components/admin/Logo#AdminIcon',
+      },
     },
   },
   i18n: {
