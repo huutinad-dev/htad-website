@@ -11,10 +11,12 @@ export function ProjectCard({
   project,
   locale,
   size = 'md',
+  showSubtitle = true,
 }: {
   project: Project
   locale: Locale
   size?: 'md' | 'lg'
+  showSubtitle?: boolean
 }) {
   const category = typeof project.category === 'object' ? project.category?.title : null
   return (
@@ -40,7 +42,7 @@ export function ProjectCard({
           <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">
             {project.title}
           </h3>
-          {project.subtitle && <p className="mt-1 text-sm text-muted">{project.subtitle}</p>}
+          {showSubtitle && project.subtitle && <p className="mt-1 text-sm text-muted">{project.subtitle}</p>}
         </div>
         {project.year && <span className="shrink-0 text-sm text-white/40">{project.year}</span>}
       </div>

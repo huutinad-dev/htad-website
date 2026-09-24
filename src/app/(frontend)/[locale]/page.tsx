@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 
-import { ArrowLink } from '@/components/ArrowLink'
 import { CtaBanner } from '@/components/CtaBanner'
 import { HeroSlider } from '@/components/HeroSlider'
 import { Img } from '@/components/Img'
@@ -100,7 +99,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <SectionHeading
             eyebrow={home.servicesSection?.eyebrow}
             heading={home.servicesSection?.heading}
-            action={<ArrowLink href={localePath(locale, `/services`)}>{dict.allServices}</ArrowLink>}
+            link={{ href: localePath(locale, `/services`), label: dict.allServices }}
             className="mb-10 md:mb-14"
           />
           <ServiceList
@@ -114,6 +113,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 image: src ? { src, alt: cover!.alt } : null,
               }
             })}
+            labels={{ prev: dict.previous, next: dict.next }}
           />
         </div>
       </section>
@@ -123,13 +123,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <SectionHeading
           eyebrow={home.projectsSection?.eyebrow}
           heading={home.projectsSection?.heading}
-          action={<ArrowLink href={localePath(locale, `/projects`)}>{dict.allProjects}</ArrowLink>}
+          link={{ href: localePath(locale, `/projects`), label: dict.allProjects }}
           className="mb-10 md:mb-14"
         />
         <Reveal>
           <ProjectSlider
             slides={featured.map((p) => (
-              <ProjectCard key={p.id} project={p} locale={locale} />
+              <ProjectCard key={p.id} project={p} locale={locale} showSubtitle={false} />
             ))}
             labels={{ prev: dict.previous, next: dict.next }}
           />
