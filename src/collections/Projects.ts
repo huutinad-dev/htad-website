@@ -7,12 +7,14 @@ export const Projects: CollectionConfig = {
   admin: {
     group: 'Content',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'featured', 'order', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'featured', 'updatedAt'],
   },
   access: {
     read: () => true,
   },
-  defaultSort: 'order',
+  // drag-and-drop ordering in the admin list view (stored in a hidden `_order` field)
+  orderable: true,
+  defaultSort: '_order',
   hooks: {
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
@@ -71,6 +73,5 @@ export const Projects: CollectionConfig = {
     },
     { name: 'year', type: 'text', admin: { position: 'sidebar' } },
     { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' } },
-    { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
   ],
 }

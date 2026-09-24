@@ -137,6 +137,7 @@ export interface UserAuthOperations {
  */
 export interface Service {
   id: number;
+  _order?: string | null;
   title: string;
   /**
    * Optional headline shown on the detail page.
@@ -180,7 +181,6 @@ export interface Service {
    */
   generateSlug?: boolean | null;
   slug: string;
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -228,6 +228,7 @@ export interface Media {
  */
 export interface Project {
   id: number;
+  _order?: string | null;
   title: string;
   /**
    * Client or context line, e.g. "Vietnam Professional Football Leagues".
@@ -272,7 +273,6 @@ export interface Project {
   category: number | ProjectCategory;
   year?: string | null;
   featured?: boolean | null;
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -282,13 +282,13 @@ export interface Project {
  */
 export interface ProjectCategory {
   id: number;
+  _order?: string | null;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -410,6 +410,7 @@ export interface PayloadMigration {
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   headline?: T;
   excerpt?: T;
@@ -427,7 +428,6 @@ export interface ServicesSelect<T extends boolean = true> {
   relatedProjects?: T;
   generateSlug?: T;
   slug?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -436,6 +436,7 @@ export interface ServicesSelect<T extends boolean = true> {
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   subtitle?: T;
   excerpt?: T;
@@ -451,7 +452,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   category?: T;
   year?: T;
   featured?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -460,10 +460,10 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "project-categories_select".
  */
 export interface ProjectCategoriesSelect<T extends boolean = true> {
+  _order?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }

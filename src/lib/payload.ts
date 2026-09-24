@@ -19,7 +19,7 @@ export const getAbout = cache(async (locale: Locale) =>
 )
 
 export const getServices = cache(async (locale: Locale) => {
-  const res = await (await client()).find({ collection: 'services', locale, sort: 'order', limit: 100, depth: 1 })
+  const res = await (await client()).find({ collection: 'services', locale, sort: '_order', limit: 100, depth: 1 })
   return res.docs
 })
 
@@ -35,12 +35,12 @@ export const getService = cache(async (locale: Locale, slug: string) => {
 })
 
 export const getCategories = cache(async (locale: Locale) => {
-  const res = await (await client()).find({ collection: 'project-categories', locale, sort: 'order', limit: 100 })
+  const res = await (await client()).find({ collection: 'project-categories', locale, sort: '_order', limit: 100 })
   return res.docs
 })
 
 export const getProjects = cache(async (locale: Locale) => {
-  const res = await (await client()).find({ collection: 'projects', locale, sort: 'order', limit: 200, depth: 1 })
+  const res = await (await client()).find({ collection: 'projects', locale, sort: '_order', limit: 200, depth: 1 })
   return res.docs
 })
 

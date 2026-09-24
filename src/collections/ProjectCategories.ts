@@ -8,12 +8,14 @@ export const ProjectCategories: CollectionConfig = {
   admin: {
     group: 'Content',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'order'],
+    defaultColumns: ['title', 'slug'],
   },
   access: {
     read: () => true,
   },
-  defaultSort: 'order',
+  // drag-and-drop ordering in the admin list view (stored in a hidden `_order` field)
+  orderable: true,
+  defaultSort: '_order',
   hooks: {
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
@@ -21,6 +23,5 @@ export const ProjectCategories: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
   ],
 }

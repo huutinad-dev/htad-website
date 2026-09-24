@@ -7,12 +7,14 @@ export const Services: CollectionConfig = {
   admin: {
     group: 'Content',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'order', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'updatedAt'],
   },
   access: {
     read: () => true,
   },
-  defaultSort: 'order',
+  // drag-and-drop ordering in the admin list view (stored in a hidden `_order` field)
+  orderable: true,
+  defaultSort: '_order',
   hooks: {
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
@@ -77,6 +79,5 @@ export const Services: CollectionConfig = {
       ],
     },
     slugField(),
-    { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
   ],
 }

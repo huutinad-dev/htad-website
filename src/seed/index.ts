@@ -43,11 +43,11 @@ const mediaList = (keys: string[], alt: string) =>
 
 // Categories
 const categoryIds = new Map<string, number>()
-for (const c of categories) {
+for (const c of [...categories].sort((a, b) => a.order - b.order)) {
   const doc = await payload.create({
     collection: 'project-categories',
     locale: 'en',
-    data: { title: c.title.en, slug: c.slug, order: c.order },
+    data: { title: c.title.en, slug: c.slug },
   })
   await payload.update({ collection: 'project-categories', id: doc.id, locale: 'vi', data: { title: c.title.vi } })
   categoryIds.set(c.slug, doc.id)
@@ -56,13 +56,12 @@ log(`${categories.length} categories`)
 
 // Projects
 const projectIds = new Map<string, number>()
-for (const p of projects) {
+for (const p of [...projects].sort((a, b) => a.order - b.order)) {
   const doc = await payload.create({
     collection: 'projects',
     locale: 'en',
     data: {
       slug: p.slug,
-      order: p.order,
       year: p.year,
       featured: p.featured ?? false,
       category: categoryIds.get(p.category)!,
@@ -95,13 +94,12 @@ for (const p of projects) {
 log(`${projects.length} projects`)
 
 // Services
-for (const s of services) {
+for (const s of [...services].sort((a, b) => a.order - b.order)) {
   const doc = await payload.create({
     collection: 'services',
     locale: 'en',
     data: {
       slug: s.slug,
-      order: s.order,
       cover: await media(s.cover, s.title.en),
       gallery: await mediaList(s.gallery, s.title.en),
       partnerLogos: await mediaList(s.partnerLogos ?? [], `${s.title.en} partner logo`),
