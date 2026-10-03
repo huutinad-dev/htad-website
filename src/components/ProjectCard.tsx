@@ -42,7 +42,9 @@ export function ProjectCard({
           <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">
             {project.title}
           </h3>
-          {showSubtitle && project.subtitle && <p className="mt-1 text-sm text-muted">{project.subtitle}</p>}
+          {showSubtitle && (project.partner || project.subtitle) && (
+            <p className="mt-1 text-sm text-muted">{project.partner || project.subtitle}</p>
+          )}
         </div>
         {project.year && <span className="shrink-0 text-sm text-white/40">{project.year}</span>}
       </div>

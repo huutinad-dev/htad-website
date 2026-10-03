@@ -23,6 +23,8 @@ export const AboutPage: GlobalConfig = {
               name: 'pillars',
               type: 'array',
               localized: true,
+              // no longer shown on the site (removed from the page in Oct 2026); kept so the data isn't lost
+              admin: { hidden: true },
               fields: [
                 { name: 'title', type: 'text', required: true },
                 { name: 'text', type: 'textarea' },

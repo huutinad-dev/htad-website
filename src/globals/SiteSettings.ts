@@ -36,6 +36,15 @@ export const SiteSettings: GlobalConfig = {
           label: 'Contact',
           fields: [
             {
+              name: 'contactPage',
+              label: 'Contact page',
+              type: 'group',
+              fields: [
+                { name: 'heading', type: 'text', localized: true },
+                { name: 'lead', type: 'textarea', localized: true },
+              ],
+            },
+            {
               name: 'contact',
               type: 'group',
               fields: [
@@ -56,7 +65,12 @@ export const SiteSettings: GlobalConfig = {
               type: 'array',
               fields: [
                 { name: 'label', type: 'text', required: true },
-                { name: 'url', type: 'text', required: true },
+                {
+                  name: 'url',
+                  type: 'text',
+                  required: true,
+                  admin: { description: 'Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.' },
+                },
               ],
             },
           ],

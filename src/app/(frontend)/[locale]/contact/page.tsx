@@ -5,44 +5,55 @@ import { notFound } from 'next/navigation'
 import { Arrow } from '@/components/ArrowLink'
 import { Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
+import { SocialIcon } from '@/components/SocialLinks'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { getHome, getSettings } from '@/lib/payload'
+import { getSettings } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
-  return { title: getDictionary(locale).contactUs }
+  const settings = await getSettings(locale)
+  return {
+    title: settings.contactPage?.heading || getDictionary(locale).contactUs,
+    description: settings.contactPage?.lead ?? undefined,
+  }
 }
 
 export default async function ContactPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const [settings, home] = await Promise.all([getSettings(locale), getHome(locale)])
+  const settings = await getSettings(locale)
   const dict = getDictionary(locale)
   const c = settings.contact ?? {}
 
   const rows = [
-    c.phone && { icon: 'phone', label: dict.phone, value: c.phone, href: `tel:${c.phone.replace(/[^\d+]/g, '')}` },
-    c.email && { icon: 'mail', label: dict.email, value: c.email, href: `mailto:${c.email}` },
-    c.address && { icon: 'pin', label: dict.address, value: c.address, href: c.mapUrl || null, external: true },
-  ].filter(Boolean) as { icon: IconName; label: string; value: string; href: string | null; external?: boolean }[]
+    c.email && { icon: <ContactIcon name="mail" />, label: dict.email, value: c.email, href: `mailto:${c.email}` },
+    c.address && { icon: <ContactIcon name="pin" />, label: dict.address, value: c.address, href: c.mapUrl || null, external: true },
+    ...(settings.social ?? []).map((s) => ({
+      icon: <SocialIcon url={s.url} className="h-5 w-5 md:h-6 md:w-6" />,
+      label: s.label,
+      value: s.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''),
+      href: s.url,
+      external: true,
+    })),
+  ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string; href: string | null; external?: boolean }[]
 
   return (
     <>
-      <PageHero title={home.cta?.heading || dict.contactUs} lead={home.cta?.text} />
+      <PageHero title={settings.contactPage?.heading || dict.contactUs} lead={settings.contactPage?.lead} />
 
       <section className="container-x pb-20 md:pb-32">
         {/* Same cards on every screen: horizontal rows stacked on phones/tablets,
-            3 vertical cards on desktop so values (email, address) never break mid-word. */}
-        <Stagger className="mx-auto grid max-w-2xl gap-3 md:gap-4 lg:max-w-6xl lg:grid-cols-3 lg:gap-5">
+            a 2-column grid of vertical cards on desktop so values never break mid-word. */}
+        <Stagger className="mx-auto grid max-w-2xl gap-3 md:gap-4 lg:max-w-5xl lg:grid-cols-2 lg:gap-5">
           {rows.map((row) => {
             const content = (
               <>
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold transition-colors duration-500 group-hover:bg-gold group-hover:text-ink md:h-14 md:w-14">
-                  <ContactIcon name={row.icon} />
+                  {row.icon}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="eyebrow block !text-white/40">{row.label}</span>
@@ -60,7 +71,7 @@ export default async function ContactPage({ params }: Props) {
             const cls =
               'group relative flex h-full items-center gap-4 rounded-2xl border border-line bg-surface/60 p-4 transition-colors duration-500 hover:border-gold/40 md:gap-5 md:p-6 lg:flex-col lg:items-start lg:p-8'
             return (
-              <StaggerItem key={row.label}>
+              <StaggerItem key={row.href ?? row.label}>
                 {row.href ? (
                   <a href={row.href} {...(row.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className={cls}>
                     {content}
@@ -77,11 +88,10 @@ export default async function ContactPage({ params }: Props) {
   )
 }
 
-type IconName = 'phone' | 'mail' | 'pin'
+type IconName = 'mail' | 'pin'
 
 function ContactIcon({ name }: { name: IconName }) {
   const paths: Record<IconName, React.ReactNode> = {
-    phone: <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />,
     mail: (
       <>
         <rect x="3" y="5" width="18" height="14" rx="2" />

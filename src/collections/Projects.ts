@@ -33,6 +33,19 @@ export const Projects: CollectionConfig = {
               localized: true,
               admin: { description: 'Client or context line, e.g. "Vietnam Professional Football Leagues".' },
             },
+            {
+              name: 'partner',
+              type: 'text',
+              localized: true,
+              admin: { description: 'Partner / client, e.g. "VPF × Thomas Lyte". Shown on the card and the project page.' },
+            },
+            {
+              name: 'role',
+              label: 'HTAd’s role',
+              type: 'text',
+              localized: true,
+              admin: { description: 'What HTAd did, e.g. "Consultancy & event organisation".' },
+            },
             { name: 'excerpt', type: 'textarea', localized: true },
             { name: 'body', type: 'richText', localized: true },
             {

@@ -191,6 +191,7 @@ export interface Service {
 export interface Media {
   id: number;
   alt: string;
+  prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -234,6 +235,14 @@ export interface Project {
    * Client or context line, e.g. "Vietnam Professional Football Leagues".
    */
   subtitle?: string | null;
+  /**
+   * Partner / client, e.g. "VPF × Thomas Lyte". Shown on the card and the project page.
+   */
+  partner?: string | null;
+  /**
+   * What HTAd did, e.g. "Consultancy & event organisation".
+   */
+  role?: string | null;
   excerpt?: string | null;
   body?: {
     root: {
@@ -439,6 +448,8 @@ export interface ProjectsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
   subtitle?: T;
+  partner?: T;
+  role?: T;
   excerpt?: T;
   body?: T;
   quote?: T;
@@ -473,6 +484,7 @@ export interface ProjectCategoriesSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -704,6 +716,10 @@ export interface SiteSetting {
    * Stacked logo used in the footer / contact page.
    */
   logoStacked?: (number | null) | Media;
+  contactPage?: {
+    heading?: string | null;
+    lead?: string | null;
+  };
   contact?: {
     phone?: string | null;
     email?: string | null;
@@ -718,6 +734,9 @@ export interface SiteSetting {
   social?:
     | {
         label: string;
+        /**
+         * Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.
+         */
         url: string;
         id?: string | null;
       }[]
@@ -822,6 +841,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   tagline?: T;
   logo?: T;
   logoStacked?: T;
+  contactPage?:
+    | T
+    | {
+        heading?: T;
+        lead?: T;
+      };
   contact?:
     | T
     | {

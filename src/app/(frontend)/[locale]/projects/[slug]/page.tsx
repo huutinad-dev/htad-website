@@ -93,6 +93,18 @@ export default async function ProjectPage({ params }: Props) {
                   <p>{project.year}</p>
                 </div>
               )}
+              {project.partner && (
+                <div>
+                  <p className="eyebrow mb-2">{dict.partner}</p>
+                  <p>{project.partner}</p>
+                </div>
+              )}
+              {project.role && (
+                <div>
+                  <p className="eyebrow mb-2">{dict.role}</p>
+                  <p>{project.role}</p>
+                </div>
+              )}
             </Reveal>
             {logo && (
               <Reveal delay={0.1} className="relative h-24 w-48">

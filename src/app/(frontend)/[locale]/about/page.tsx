@@ -1,17 +1,16 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { CtaBanner } from '@/components/CtaBanner'
 import { Img } from '@/components/Img'
 import { Parallax } from '@/components/motion/Parallax'
-import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
+import { Reveal } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { PageHero } from '@/components/PageHero'
 import { RichText } from '@/components/RichText'
-import { isLocale, localePath } from '@/i18n/config'
+import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
-import { getAbout, getHome } from '@/lib/payload'
+import { getAbout } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AboutPage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  const [about, home] = await Promise.all([getAbout(locale), getHome(locale)])
+  const about = await getAbout(locale)
   const dict = getDictionary(locale)
   const founder = about.founder
 
@@ -44,30 +43,6 @@ export default async function AboutPage({ params }: Props) {
             <RichText data={about.body} className="text-lg" />
           </Reveal>
         </div>
-
-        {!!about.pillars?.length && (
-          <div className="mt-28">
-            <Reveal>
-              <p className="eyebrow mb-10">{dict.network}</p>
-            </Reveal>
-            <Stagger className="grid gap-px overflow-hidden rounded-sm bg-line sm:grid-cols-2 lg:grid-cols-4">
-              {about.pillars.map((p, i) => (
-                <StaggerItem
-                  key={p.id}
-                  className="group flex gap-5 bg-ink p-6 transition-colors duration-500 hover:bg-surface sm:block md:p-8"
-                >
-                  <span className="display w-14 shrink-0 text-4xl text-gold sm:block sm:w-auto md:text-6xl">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div className="sm:mt-8">
-                    <h3 className="text-lg font-bold md:text-xl">{p.title}</h3>
-                    {p.text && <p className="mt-2 text-sm leading-relaxed text-muted md:mt-3">{p.text}</p>}
-                  </div>
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-        )}
       </section>
 
       {founder?.name && (
@@ -97,8 +72,6 @@ export default async function AboutPage({ params }: Props) {
           </div>
         </section>
       )}
-
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
     </>
   )
 }

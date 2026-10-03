@@ -10,16 +10,19 @@ import { useEffect, useState } from 'react'
 import { LOCALE_COOKIE, localePath, stripLocalePrefix, type Locale } from '@/i18n/config'
 import type { Dictionary } from '@/lib/dictionary'
 
+import { SocialLinks, type SocialLink } from './SocialLinks'
+
 type Props = {
   locale: Locale
   dict: Dictionary
   logo: { src: string; alt: string } | null
-  contact: { email?: string | null; phone?: string | null }
+  email?: string | null
+  social: SocialLink[]
 }
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-export function Header({ locale, dict, logo, contact }: Props) {
+export function Header({ locale, dict, logo, email, social }: Props) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
@@ -41,9 +44,9 @@ export function Header({ locale, dict, logo, contact }: Props) {
 
   const links = [
     { href: localePath(locale), label: dict.nav.home },
+    { href: localePath(locale, `/projects`), label: dict.nav.projects },
     { href: localePath(locale, `/about`), label: dict.nav.about },
     { href: localePath(locale, `/services`), label: dict.nav.services },
-    { href: localePath(locale, `/projects`), label: dict.nav.projects },
     { href: localePath(locale, `/contact`), label: dict.nav.contact },
   ]
   const router = useRouter()
@@ -160,13 +163,17 @@ export function Header({ locale, dict, logo, contact }: Props) {
               ))}
             </nav>
             <motion.div
-              className="space-y-1 text-sm text-muted"
+              className="space-y-5 text-sm text-muted"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {contact.email && <p>{contact.email}</p>}
-              {contact.phone && <p>{contact.phone}</p>}
+              <SocialLinks items={social} />
+              {email && (
+                <a href={`mailto:${email}`} className="block">
+                  {email}
+                </a>
+              )}
             </motion.div>
           </motion.div>
         )}

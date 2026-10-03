@@ -44,7 +44,10 @@ export default async function ProjectsPage({ params }: Props) {
         <Suspense>
           <ProjectGrid
             items={items}
-            categories={categories.map((c) => ({ slug: c.slug, title: c.title }))}
+            // hide filters with no project yet
+            categories={categories
+              .filter((c) => items.some((i) => i.categorySlug === c.slug))
+              .map((c) => ({ slug: c.slug, title: c.title }))}
             allLabel={dict.all}
           />
         </Suspense>
