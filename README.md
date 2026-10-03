@@ -34,6 +34,7 @@ DB đang dùng chung với một ứng dụng khác (schema `public`). Vì vậy
   # đọc lại SQL, đảm bảo chỉ chạm "htad".*
   npm run migrate
   ```
+- Trên Vercel, migration **tự chạy khi build**: Vercel ưu tiên script `vercel-build` (`npm run migrate && npm run build`). Vì vậy migration nào đã commit sẽ chạy trên DB production trước khi build. Migration lỗi thì build dừng và bản deploy cũ vẫn chạy.
 - **Không bao giờ** chạy `payload migrate:fresh`, `migrate:reset` hay bật `push: true`.
 
 ## Cấu trúc nội dung (CMS)
