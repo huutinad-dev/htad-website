@@ -632,7 +632,6 @@ export const settings = {
     tagline: 'Sports & entertainment media agency',
     address: 'Room 16, Floor 2, 29T1 Hoang Dao Thuy street, Hanoi, Vietnam',
     city: 'Hanoi, Vietnam',
-    footerText: 'Connecting premium sports and entertainment content with highly engaged audiences.',
     seoTitle: 'Huu Tin Trading & Advertising (HTAd)',
     seoDescription:
       'HTAd is a Vietnam-based media and content distribution agency specializing in sports and entertainment — consultancy, broadcast rights, licensing, publishing, production and sponsorship.',
@@ -641,7 +640,6 @@ export const settings = {
     tagline: 'Công ty truyền thông thể thao & giải trí',
     address: 'Phòng 16, Tầng 2, 29T1 Hoàng Đạo Thúy, Hà Nội, Việt Nam',
     city: 'Hà Nội, Việt Nam',
-    footerText: 'Kết nối nội dung thể thao và giải trí đỉnh cao với khán giả cuồng nhiệt.',
     seoTitle: 'Hữu Tín Trading & Advertising (HTAd)',
     seoDescription:
       'HTAd là công ty truyền thông và phân phối nội dung tại Việt Nam, chuyên về thể thao và giải trí — tư vấn, bản quyền phát sóng, cấp phép, xuất bản, sản xuất và tài trợ.',

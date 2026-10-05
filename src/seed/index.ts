@@ -196,7 +196,6 @@ for (const locale of ['en', 'vi'] as const) {
       tagline: c.tagline,
       ...brand,
       contact: { ...settings.contact, address: c.address, city: c.city },
-      footerText: c.footerText,
       seoTitle: c.seoTitle,
       seoDescription: c.seoDescription,
     },
