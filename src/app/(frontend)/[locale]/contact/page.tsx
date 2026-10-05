@@ -6,7 +6,6 @@ import { Arrow } from '@/components/ArrowLink'
 import { ContactForm } from '@/components/ContactForm'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
-import { SocialIcon } from '@/components/SocialLinks'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { getSettings } from '@/lib/payload'
@@ -30,16 +29,10 @@ export default async function ContactPage({ params }: Props) {
   const dict = getDictionary(locale)
   const c = settings.contact ?? {}
 
+  // Email and address only: the social links live in the footer (and the fanpage on Insights).
   const rows = [
     c.email && { icon: <ContactIcon name="mail" />, label: dict.email, value: c.email, href: `mailto:${c.email}` },
     c.address && { icon: <ContactIcon name="pin" />, label: dict.address, value: c.address, href: c.mapUrl || null, external: true },
-    ...(settings.social ?? []).map((s) => ({
-      icon: <SocialIcon url={s.url} className="h-5 w-5 md:h-6 md:w-6" />,
-      label: s.label,
-      value: s.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''),
-      href: s.url,
-      external: true,
-    })),
   ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string; href: string | null; external?: boolean }[]
 
   return (
@@ -85,8 +78,8 @@ export default async function ContactPage({ params }: Props) {
           })}
         </Stagger>
 
-        <Reveal className="mx-auto mt-16 max-w-2xl md:mt-24 lg:max-w-5xl">
-          <h2 className="display mb-8 text-3xl text-gold md:mb-10 md:text-5xl">{dict.contactForm.heading}</h2>
+        <Reveal className="mx-auto mt-20 max-w-3xl md:mt-28">
+          <h2 className="display mb-8 text-center text-3xl text-gold md:mb-12 md:text-5xl">{dict.contactForm.heading}</h2>
           <ContactForm labels={dict.contactForm} />
         </Reveal>
       </section>

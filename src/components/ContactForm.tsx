@@ -16,7 +16,7 @@ export function ContactForm({ labels }: { labels: Dictionary['contactForm'] }) {
 
   if (state.status === 'ok') {
     return (
-      <p role="status" className="rounded-2xl border border-gold/40 bg-gold/10 p-8 text-lg font-medium text-gold">
+      <p role="status" className="rounded-2xl border border-gold/40 bg-gold/10 p-8 text-center text-lg font-medium text-gold">
         {labels.success}
       </p>
     )
@@ -45,7 +45,7 @@ export function ContactForm({ labels }: { labels: Dictionary['contactForm'] }) {
       {/* honeypot for bots: hidden from visitors and assistive tech */}
       <input name="website" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
 
-      <div className="flex flex-col items-start gap-4 md:col-span-2">
+      <div className="mt-2 flex flex-col items-center gap-4 md:col-span-2">
         {(state.status === 'invalid' || state.status === 'error') && (
           <p role="alert" className="text-sm text-red-400">
             {state.status === 'invalid' ? labels.invalid : labels.error}
