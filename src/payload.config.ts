@@ -1,6 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { vi } from '@payloadcms/translations/languages/vi'
 import path from 'path'
@@ -20,6 +20,13 @@ import { locales, defaultLocale } from './i18n/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const r2Enabled = Boolean(
+  process.env.R2_BUCKET &&
+    process.env.R2_ENDPOINT &&
+    process.env.R2_ACCESS_KEY_ID &&
+    process.env.R2_SECRET_ACCESS_KEY,
+)
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
@@ -74,16 +81,25 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    // Uploads go to Vercel Blob when a token is configured (always on Vercel, whose
-    // filesystem is read-only). Without a token, files stay in the local /media folder.
+    // Uploads go to Cloudflare R2 (S3-compatible) when the R2_* variables are set (always on
+    // Vercel, whose filesystem is read-only). Without them, files stay in the local /media folder.
     // Files are still served through /api/media/file/<filename>, so stored URLs don't change.
-    vercelBlobStorage({
-      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+    s3Storage({
+      enabled: r2Enabled,
       // keep the adapter's fields (e.g. _objectKey) in the schema even when disabled,
       // so local and Vercel share one database schema / migration history
       alwaysInsertFields: true,
       collections: { media: true },
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      bucket: process.env.R2_BUCKET || '',
+      config: {
+        endpoint: process.env.R2_ENDPOINT,
+        region: 'auto',
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+        },
+      },
     }),
   ],
 })

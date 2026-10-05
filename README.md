@@ -4,12 +4,13 @@ Website portfolio của **Huu Tin Trading & Advertising (HTAd)**, xây dựng t�
 Song ngữ **EN / VI**, toàn bộ nội dung quản lý qua Payload CMS tại `/admin`.
 
 - **Stack:** Payload 3 · Next.js 16 (App Router) · PostgreSQL · Tailwind CSS 4 · Motion · Lenis · font Be Vietnam Pro (hỗ trợ đầy đủ tiếng Việt)
-- **Ảnh:** khi có `BLOB_READ_WRITE_TOKEN` (bắt buộc trên Vercel), ảnh lưu trên **Vercel Blob**; không có token thì lưu local trong `media/` (không commit). Ảnh gốc để seed nằm ở `seed-assets/`.
+- **Ảnh:** khi có đủ các biến `R2_*` (bắt buộc trên Vercel), ảnh lưu trên **Cloudflare R2**; thiếu thì lưu local trong `media/` (không commit). Ảnh gốc để seed nằm ở `seed-assets/`.
+- **Video:** không upload lên CMS. Đăng video lên YouTube rồi dán link vào trường `videoUrl` của dự án.
 
 ## Deploy (Vercel)
 
-Env: `DATABASE_URL`, `DATABASE_SCHEMA=htad`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `BLOB_READ_WRITE_TOKEN` (tạo Blob store trong tab Storage của project).
-Lần đầu chuyển ảnh local lên Blob: `npx tsx scripts/upload-media-to-blob.ts` (cần token trong `.env`).
+Env: `DATABASE_URL`, `DATABASE_SCHEMA=htad`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, và 4 biến R2: `R2_BUCKET`, `R2_ENDPOINT` (`https://<account-id>.r2.cloudflarestorage.com`), `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` (tạo bucket và API token quyền *Object Read & Write* trong Cloudflare → R2).
+Lần đầu chuyển ảnh local lên R2: `npx tsx scripts/upload-media-to-r2.ts` (cần 4 biến R2 trong `.env`).
 
 ## Cài đặt
 
