@@ -15,14 +15,27 @@ export const postHref = (post: Post, locale: Locale) =>
     ? { href: post.sourceUrl, external: true }
     : { href: localePath(locale, `/insights/${post.slug}`), external: false }
 
-export function PostCard({ post, locale, dict }: { post: Post; locale: Locale; dict: Dictionary }) {
+export function PostCard({
+  post,
+  locale,
+  dict,
+  featured,
+}: {
+  post: Post
+  locale: Locale
+  dict: Dictionary
+  /** Larger card for the newest post at the top of the list. */
+  featured?: boolean
+}) {
   const { href, external } = postHref(post, locale)
   const inner = (
-    <>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-surface">
+    // the lead story goes image-beside-text once the list is wide enough (see InsightsList)
+    <div className={featured ? '@5xl:grid @5xl:grid-cols-[3fr_2fr] @5xl:items-center @5xl:gap-12' : undefined}>
+      <div className={`relative overflow-hidden rounded-sm bg-surface ${featured ? 'aspect-[16/10] sm:aspect-[16/9]' : 'aspect-[4/3]'}`}>
         <Img
           media={asMedia(post.cover)}
-          sizes="(min-width: 1024px) 50vw, 100vw"
+          sizes={featured ? '(min-width: 1024px) 60vw, 100vw' : '(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw'}
+          priority={featured}
           className="transition-transform duration-[1.2s] ease-out-expo group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/30" />
@@ -30,17 +43,26 @@ export function PostCard({ post, locale, dict }: { post: Post; locale: Locale; d
           <Arrow className="-rotate-45" />
         </span>
       </div>
-      <div className="mt-5 flex items-start justify-between gap-6">
-        <div>
-          <p className="eyebrow mb-2">{dict.postTypes[post.type]}</p>
-          <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">{post.title}</h3>
-          {post.excerpt && <p className="mt-2 line-clamp-2 text-sm text-muted">{post.excerpt}</p>}
-        </div>
-        <time dateTime={post.publishedAt} className="shrink-0 text-sm text-white/40">
-          {formatDate(post.publishedAt, locale)}
-        </time>
+      <div className={featured ? 'mt-6 @5xl:mt-0' : 'mt-5'}>
+        <p className="eyebrow mb-3">
+          {dict.postTypes[post.type]}
+          <span className="mx-2 text-white/30">·</span>
+          <time dateTime={post.publishedAt} className="text-white/50">
+            {formatDate(post.publishedAt, locale)}
+          </time>
+        </p>
+        <h3
+          className={`font-bold leading-snug transition-colors group-hover:text-gold ${
+            featured ? 'text-2xl sm:text-3xl xl:text-4xl' : 'text-xl md:text-2xl'
+          }`}
+        >
+          {post.title}
+        </h3>
+        {post.excerpt && (
+          <p className={`text-muted ${featured ? 'mt-3 max-w-2xl text-base md:text-lg' : 'mt-2 line-clamp-2 text-sm'}`}>{post.excerpt}</p>
+        )}
       </div>
-    </>
+    </div>
   )
   return external ? (
     <a href={href} target="_blank" rel="noopener noreferrer" className="group block">
