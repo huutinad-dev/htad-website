@@ -2,26 +2,35 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+type Size = { width: number; height: number }
+
 // Facebook's Page Plugin: an iframe showing the fanpage's latest posts, no API key needed.
-// The plugin only accepts a fixed pixel size (width 180–500), so it fills its container and
-// is sized once that container is visible — it may start out hidden (collapsed on mobile).
-// If the visitor blocks Facebook embeds the frame stays empty, which is why the panel around
-// it always carries a plain link to the page as well.
+// The plugin only accepts a fixed pixel size (width 180–500), so it is sized to its container
+// and re-sized when the container changes noticeably. If the visitor blocks Facebook embeds
+// the frame stays empty, which is why the card around it always links to the page as well.
 export function FacebookFeed({ pageUrl, title, locale }: { pageUrl: string; title: string; locale: string }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState<{ width: number; height: number } | null>(null)
+  const [size, setSize] = useState<Size | null>(null)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const observer = new ResizeObserver(() => {
+    let timer: ReturnType<typeof setTimeout>
+    const measure = () => {
       if (!el.clientWidth || !el.clientHeight) return
-      setSize({ width: Math.max(180, Math.min(500, Math.floor(el.clientWidth))), height: Math.floor(el.clientHeight) })
-      // sized once: re-sizing would reload the feed and lose the visitor's scroll position
-      observer.disconnect()
+      const next = { width: Math.max(180, Math.min(500, Math.floor(el.clientWidth))), height: Math.floor(el.clientHeight) }
+      // a new size reloads the feed, so ignore small shifts
+      setSize((prev) => (prev && Math.abs(prev.width - next.width) < 24 && Math.abs(prev.height - next.height) < 48 ? prev : next))
+    }
+    const observer = new ResizeObserver(() => {
+      clearTimeout(timer)
+      timer = setTimeout(measure, 250)
     })
     observer.observe(el)
-    return () => observer.disconnect()
+    return () => {
+      clearTimeout(timer)
+      observer.disconnect()
+    }
   }, [])
 
   const src =
@@ -40,7 +49,7 @@ export function FacebookFeed({ pageUrl, title, locale }: { pageUrl: string; titl
 
   return (
     // data-lenis-prevent: let the wheel scroll the feed instead of the page
-    <div ref={ref} data-lenis-prevent className="h-full w-full">
+    <div ref={ref} data-lenis-prevent className="absolute inset-0">
       {src && (
         <iframe
           src={src}

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
 import { postTypes } from '@/collections/Posts'
-import { InsightsLayout } from '@/components/InsightsLayout'
+import { FanpageCard } from '@/components/FanpageCard'
 import { InsightsList } from '@/components/InsightsList'
 import { PageHero } from '@/components/PageHero'
 import { PostCard } from '@/components/PostCard'
@@ -32,23 +32,25 @@ export default async function InsightsPage({ params }: Props) {
   const items = posts.map((p) => ({
     id: p.id,
     type: p.type,
-    featured: <PostCard post={p} locale={locale} dict={dict} featured />,
     card: <PostCard post={p} locale={locale} dict={dict} />,
   }))
 
   return (
     <>
       <PageHero title={dict.nav.insights} lead={dict.insightsLead} />
-      <InsightsLayout locale={locale} labels={dict} fanpage={fanpage ? { url: fanpage.url, label: fanpage.label } : null}>
-        {items.length === 0 ? (
-          <p className="text-center text-muted">{dict.noInsights}</p>
-        ) : (
-          // useSearchParams in the list requires a Suspense boundary for static rendering
-          <Suspense>
-            <InsightsList items={items} types={postTypes.map((t) => ({ slug: t, title: dict.postTypes[t] }))} allLabel={dict.all} />
-          </Suspense>
-        )}
-      </InsightsLayout>
+      <section className="container-x pb-24 md:pb-32">
+        {/* useSearchParams in the list requires a Suspense boundary for static rendering */}
+        <Suspense>
+          <InsightsList
+            items={items}
+            types={postTypes.map((t) => ({ slug: t, title: dict.postTypes[t] }))}
+            allLabel={dict.all}
+            emptyLabel={dict.noInsights}
+            // the fanpage is the pinned first card of the list
+            pinned={fanpage && <FanpageCard url={fanpage.url} label={fanpage.label} locale={locale} labels={dict} />}
+          />
+        </Suspense>
+      </section>
     </>
   )
 }
