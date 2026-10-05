@@ -32,34 +32,34 @@ export default async function AboutPage({ params }: Props) {
     <>
       <PageHero title={about.heading} lead={about.lead} />
 
-      <section className="container-x pb-28 md:pb-40">
-        <div className="grid gap-16 lg:grid-cols-12">
-          <Reveal className="lg:col-span-6">
+      <section className="container-x pb-16 md:pb-24">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+          <Reveal>
+            <RichText data={about.body} className="text-justify text-lg" />
+          </Reveal>
+          <Reveal delay={0.1}>
             <Parallax className="aspect-[4/3] rounded-sm">
               <Img media={asMedia(about.image)} sizes="(min-width: 1024px) 50vw, 100vw" />
             </Parallax>
-          </Reveal>
-          <Reveal delay={0.1} className="lg:col-span-5 lg:col-start-8 lg:pt-10">
-            <RichText data={about.body} className="text-lg" />
           </Reveal>
         </div>
       </section>
 
       {founder?.name && (
-        <section className="relative overflow-hidden border-t border-line bg-surface/40 py-28 md:py-40">
-          <div className="container-x grid items-center gap-16 lg:grid-cols-12">
+        <section className="relative overflow-hidden border-t border-line bg-surface/40 py-16 md:py-24">
+          <div className="container-x grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <Reveal from="left" className="lg:col-span-5">
               <div className="relative mx-auto aspect-square max-w-md overflow-hidden rounded-sm bg-gold lg:max-w-none">
                 <Img media={asMedia(founder.photo)} sizes="(min-width: 1024px) 40vw, 100vw" />
               </div>
             </Reveal>
-            <div className="lg:col-span-6 lg:col-start-7">
+            <div className="lg:col-span-7">
               <Reveal>
                 <p className="eyebrow mb-6">{founder.role || dict.founder}</p>
               </Reveal>
               <SplitHeading text={founder.name} className="display text-5xl text-gold md:text-7xl" />
               <Reveal delay={0.15} className="mt-10">
-                <RichText data={founder.bio} />
+                <RichText data={founder.bio} className="text-justify" />
               </Reveal>
               {founder.quote && (
                 <Reveal delay={0.25}>

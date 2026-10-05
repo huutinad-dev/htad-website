@@ -40,7 +40,7 @@ export function PageHero({ eyebrow, title, lead, image, children }: Props) {
         />
         {lead && (
           <Reveal delay={0.3}>
-            <p className="mx-auto mt-8 max-w-5xl text-lg leading-relaxed text-white/80 [text-wrap:balance] md:text-xl">{lead}</p>
+            <p className="mx-auto mt-8 max-w-5xl text-lg leading-relaxed text-white/80 [text-wrap:pretty] md:text-xl">{lead}</p>
           </Reveal>
         )}
         {children && <Reveal delay={0.4} className="mt-10 flex justify-center">{children}</Reveal>}

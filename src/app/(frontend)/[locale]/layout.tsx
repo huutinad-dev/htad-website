@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Omit<Props, 'children'>): Pro
   const title = settings.seoTitle || settings.companyName
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
-    title: { default: title, template: `%s — ${settings.shortName || title}` },
+    title: { default: title, template: `%s | ${settings.shortName || title}` },
     description: settings.seoDescription ?? undefined,
     openGraph: { title, description: settings.seoDescription ?? undefined, images: og ? [og] : undefined },
   }
