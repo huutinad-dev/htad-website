@@ -47,6 +47,7 @@ export function Header({ locale, dict, logo, email, social }: Props) {
     { href: localePath(locale, `/projects`), label: dict.nav.projects },
     { href: localePath(locale, `/about`), label: dict.nav.about },
     { href: localePath(locale, `/services`), label: dict.nav.services },
+    { href: localePath(locale, `/insights`), label: dict.nav.insights },
     { href: localePath(locale, `/contact`), label: dict.nav.contact },
   ]
   const router = useRouter()

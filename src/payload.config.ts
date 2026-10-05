@@ -13,6 +13,7 @@ import { Media } from './collections/Media'
 import { Services } from './collections/Services'
 import { Projects } from './collections/Projects'
 import { ProjectCategories } from './collections/ProjectCategories'
+import { Posts } from './collections/Posts'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
@@ -58,7 +59,7 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Services, Projects, ProjectCategories, Media, Users],
+  collections: [Services, Projects, ProjectCategories, Posts, Media, Users],
   globals: [HomePage, AboutPage, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

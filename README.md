@@ -48,6 +48,7 @@ DB đang dùng chung với một ứng dụng khác (schema `public`). Vì vậy
 | Services | Collection | 7 dịch vụ: mô tả, điểm nổi bật, gallery, logo đối tác, dự án liên quan |
 | Projects | Collection | 11 dự án: danh mục, năm, gallery, link YouTube, link ngoài |
 | Project categories | Collection | Danh mục dùng để lọc dự án |
+| Insights | Collection | Bài viết tin tức / sự kiện: ảnh bìa, tóm tắt, nội dung, ngày đăng, link bài gốc (vd. bài trên fanpage Facebook). Có nháp / xuất bản — chỉ bài đã *Publish* mới hiện trên web |
 | Media | Upload | Ảnh (có focal point) |
 
 Đổi ngôn ngữ nội dung bằng bộ chọn **Locale** ở góc trên trang admin. Trường nào chưa dịch sẽ tự lấy bản tiếng Anh.
@@ -56,7 +57,7 @@ DB đang dùng chung với một ứng dụng khác (schema `public`). Vì vậy
 
 `/en` · `/vi` — Trang chủ
 `/[locale]/about` · `/[locale]/services` · `/[locale]/services/[slug]`
-`/[locale]/projects` (lọc theo `?category=`) · `/[locale]/projects/[slug]` · `/[locale]/contact`
+`/[locale]/projects` (lọc theo `?category=`) · `/[locale]/projects/[slug]` · `/[locale]/insights` (lọc theo `?category=news|event`) · `/[locale]/insights/[slug]` · `/[locale]/contact`
 
 Trang được cache (ISR, 10 phút). Khi lưu nội dung trong CMS, cache được xoá ngay (`src/hooks/revalidate.ts`).
 

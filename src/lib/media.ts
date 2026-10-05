@@ -27,3 +27,14 @@ export const toGallery = (list: Media[]) =>
   list
     .map((m) => ({ src: mediaSrc(m)!, alt: m.alt, width: m.width, height: m.height }))
     .filter((g) => g.src)
+
+export const formatDate = (date: string, locale: string) =>
+  new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
+    new Date(date),
+  )
+
+// Lexical always stores a root node, so "has a body" means it has some text or media in it.
+export const hasRichText = (data: unknown) => {
+  const children = (data as { root?: { children?: { children?: unknown[]; type?: string }[] } } | null)?.root?.children
+  return Boolean(children?.some((node) => node.type !== 'paragraph' || (node.children?.length ?? 0) > 0))
+}

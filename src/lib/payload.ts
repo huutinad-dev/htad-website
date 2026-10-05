@@ -54,3 +54,27 @@ export const getProject = cache(async (locale: Locale, slug: string) => {
   })
   return res.docs[0] ?? null
 })
+
+// Drafts stay in the admin: the site only ever lists published posts.
+export const getPosts = cache(async (locale: Locale) => {
+  const res = await (await client()).find({
+    collection: 'posts',
+    locale,
+    where: { _status: { equals: 'published' } },
+    sort: '-publishedAt',
+    limit: 200,
+    depth: 1,
+  })
+  return res.docs
+})
+
+export const getPost = cache(async (locale: Locale, slug: string) => {
+  const res = await (await client()).find({
+    collection: 'posts',
+    locale,
+    where: { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
+    limit: 1,
+    depth: 1,
+  })
+  return res.docs[0] ?? null
+})
