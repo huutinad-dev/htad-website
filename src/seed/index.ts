@@ -155,7 +155,7 @@ log('home page')
 
 // About page
 const aboutImage = await media(about.image, 'V.League trophies')
-const founderPhoto = await media(about.founderPhoto, about.founderName)
+const founderPhoto = await media(about.founderPhoto, about.founderName.en)
 for (const locale of ['en', 'vi'] as const) {
   const c = about[locale]
   await payload.updateGlobal({
@@ -168,11 +168,10 @@ for (const locale of ['en', 'vi'] as const) {
       image: aboutImage,
       pillars: c.pillars,
       founder: {
-        name: about.founderName,
+        name: about.founderName[locale],
         role: c.founderRole,
         photo: founderPhoto,
         bio: richText(...c.founderBio),
-        quote: c.founderQuote,
       },
     },
   })

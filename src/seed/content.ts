@@ -571,7 +571,7 @@ export const home = {
 export const about = {
   image: 'services/consultancy-01',
   founderPhoto: 'about/founder-01',
-  founderName: 'Nguyen Ba Phu',
+  founderName: { en: 'Nguyen Ba Phu', vi: 'Nguyễn Bá Phú' },
   en: {
     heading: 'About us',
     lead: 'Huu Tin Trading and Advertising Company Limited (HTAd) is a Vietnam-based media and content distribution agency specializing in sports and entertainment.',
@@ -591,7 +591,6 @@ export const about = {
       'In 2023, he became the only Vietnamese producer selected by FIFA for the FIFA Women’s World Cup.',
       'Leveraging his extensive network within the sports and media industry, as well as his insight into fan culture, Mr. Phu established HTAd with the vision of bridging premium international content with local audiences.',
     ],
-    founderQuote: 'Bridging premium international content with local audiences.',
   },
   vi: {
     heading: 'Về chúng tôi',
@@ -612,7 +611,6 @@ export const about = {
       'Năm 2023, ông là nhà sản xuất Việt Nam duy nhất được FIFA lựa chọn cho FIFA Women’s World Cup.',
       'Với mạng lưới quan hệ rộng trong ngành thể thao, truyền thông cùng sự thấu hiểu văn hoá người hâm mộ, ông Phú thành lập HTAd với tầm nhìn đưa những nội dung quốc tế đỉnh cao đến gần hơn với khán giả Việt Nam.',
     ],
-    founderQuote: 'Đưa nội dung quốc tế đỉnh cao đến gần hơn với khán giả Việt Nam.',
   },
 }
 
