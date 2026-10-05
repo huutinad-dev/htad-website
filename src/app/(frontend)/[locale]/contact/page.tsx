@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { Arrow } from '@/components/ArrowLink'
-import { Stagger, StaggerItem } from '@/components/motion/Reveal'
+import { ContactForm } from '@/components/ContactForm'
+import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
 import { SocialIcon } from '@/components/SocialLinks'
 import { isLocale } from '@/i18n/config'
@@ -83,6 +84,11 @@ export default async function ContactPage({ params }: Props) {
             )
           })}
         </Stagger>
+
+        <Reveal className="mx-auto mt-16 max-w-2xl md:mt-24 lg:max-w-5xl">
+          <h2 className="display mb-8 text-3xl text-gold md:mb-10 md:text-5xl">{dict.contactForm.heading}</h2>
+          <ContactForm labels={dict.contactForm} />
+        </Reveal>
       </section>
     </>
   )

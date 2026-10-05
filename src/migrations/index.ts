@@ -6,6 +6,7 @@ import * as migration_20260924_103500_add_order_keys from './20260924_103500_add
 import * as migration_20260924_103630_drop_legacy_order from './20260924_103630_drop_legacy_order';
 import * as migration_20261003_142520_add_project_partner_role_contact_page from './20261003_142520_add_project_partner_role_contact_page';
 import * as migration_20261005_161302_add_posts from './20261005_161302_add_posts';
+import * as migration_20261005_163508_add_messages from './20261005_163508_add_messages';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20261005_161302_add_posts.up,
     down: migration_20261005_161302_add_posts.down,
-    name: '20261005_161302_add_posts'
+    name: '20261005_161302_add_posts',
+  },
+  {
+    up: migration_20261005_163508_add_messages.up,
+    down: migration_20261005_163508_add_messages.down,
+    name: '20261005_163508_add_messages'
   },
 ];

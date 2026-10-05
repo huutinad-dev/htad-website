@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
@@ -14,6 +15,7 @@ import { Services } from './collections/Services'
 import { Projects } from './collections/Projects'
 import { ProjectCategories } from './collections/ProjectCategories'
 import { Posts } from './collections/Posts'
+import { Messages } from './collections/Messages'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
@@ -59,9 +61,19 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Services, Projects, ProjectCategories, Posts, Media, Users],
+  collections: [Services, Projects, ProjectCategories, Posts, Media, Messages, Users],
   globals: [HomePage, AboutPage, SiteSettings],
   editor: lexicalEditor(),
+  // Email (contact form, password reset) goes through Resend once RESEND_API_KEY is set;
+  // without it Payload only logs emails to the console. EMAIL_FROM must be an address on a
+  // domain verified in Resend — the default only delivers to the Resend account's own email.
+  email: process.env.RESEND_API_KEY
+    ? resendAdapter({
+        apiKey: process.env.RESEND_API_KEY,
+        defaultFromAddress: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+        defaultFromName: 'HTAd Website',
+      })
+    : undefined,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

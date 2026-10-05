@@ -10,6 +10,7 @@ Song ngữ **EN / VI**, toàn bộ nội dung quản lý qua Payload CMS tại `
 ## Deploy (Vercel)
 
 Env: `DATABASE_URL`, `DATABASE_SCHEMA=htad`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, và 4 biến R2: `R2_BUCKET`, `R2_ENDPOINT` (`https://<account-id>.r2.cloudflarestorage.com`), `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` (tạo bucket và API token quyền *Object Read & Write* trong Cloudflare → R2).
+Form liên hệ: tin nhắn luôn được lưu vào `/admin → Tin nhắn liên hệ`. Để đồng thời gửi email tới địa chỉ trong *Cấu hình chung*, đặt `RESEND_API_KEY` (cài Resend từ Vercel Marketplace) và `EMAIL_FROM` (địa chỉ thuộc tên miền đã xác minh trong Resend, vd. `website@htad.com.vn`).
 Lần đầu chuyển ảnh local lên R2: `npx tsx scripts/upload-media-to-r2.ts` (cần 4 biến R2 trong `.env`).
 
 ## Cài đặt

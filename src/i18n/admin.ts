@@ -47,6 +47,8 @@ const fieldLabels: Record<string, ReturnType<typeof t>> = {
   cta: t('Call to action', 'Kêu gọi hành động'),
   founder: t('Founder', 'Nhà sáng lập'),
   name: t('Name', 'Tên'),
+  company: t('Company', 'Công ty'),
+  message: t('Message', 'Nội dung'),
   bio: t('Bio', 'Tiểu sử'),
   companyName: t('Company name', 'Tên công ty'),
   shortName: t('Short name', 'Tên viết tắt'),
