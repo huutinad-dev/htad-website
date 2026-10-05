@@ -301,7 +301,7 @@ const settingsCopy = {
   },
   vi: {
     address: '29T1 Hoàng Đạo Thuý, Hà Nội, Việt Nam',
-    heading: 'Liên hệ với chúng tôi',
+    heading: 'Liên hệ',
     lead: 'Để tìm hiểu các cơ hội hợp tác bản quyền, kết nối doanh nghiệp và thực thi kế hoạch truyền thông.',
   },
 }
