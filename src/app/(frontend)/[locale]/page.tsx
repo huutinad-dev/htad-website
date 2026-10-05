@@ -59,7 +59,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             {home.hero?.subtitle && (
               <Reveal delay={0.6}>
-                <p className="max-w-2xl whitespace-pre-line text-lg leading-relaxed text-white/85 md:text-xl">{home.hero.subtitle}</p>
+                <p className="whitespace-pre-line text-lg leading-relaxed text-white/85 md:text-xl">{home.hero.subtitle}</p>
               </Reveal>
             )}
           </div>
