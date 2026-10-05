@@ -1,12 +1,13 @@
 import { slugField, type CollectionConfig } from 'payload'
 
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
+import { t, withLabels } from '../i18n/admin'
 
 export const ProjectCategories: CollectionConfig = {
   slug: 'project-categories',
-  labels: { singular: 'Project category', plural: 'Project categories' },
+  labels: { singular: t('Project category', 'Danh mục dự án'), plural: t('Project categories', 'Danh mục dự án') },
   admin: {
-    group: 'Content',
+    group: t('Content', 'Nội dung'),
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug'],
   },
@@ -20,8 +21,8 @@ export const ProjectCategories: CollectionConfig = {
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
   },
-  fields: [
+  fields: withLabels([
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-  ],
+  ]),
 }

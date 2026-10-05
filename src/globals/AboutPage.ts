@@ -1,19 +1,20 @@
 import type { GlobalConfig } from 'payload'
 
 import { revalidateGlobal } from '../hooks/revalidate'
+import { t, withLabels } from '../i18n/admin'
 
 export const AboutPage: GlobalConfig = {
   slug: 'about-page',
-  label: 'About page',
-  admin: { group: 'Pages' },
+  label: t('About page', 'Trang giới thiệu'),
+  admin: { group: t('Pages', 'Trang') },
   access: { read: () => true },
   hooks: { afterChange: [revalidateGlobal] },
-  fields: [
+  fields: withLabels([
     {
       type: 'tabs',
       tabs: [
         {
-          label: 'Company',
+          label: t('Company', 'Công ty'),
           fields: [
             { name: 'heading', type: 'text', localized: true, required: true },
             { name: 'lead', type: 'textarea', localized: true },
@@ -33,7 +34,7 @@ export const AboutPage: GlobalConfig = {
           ],
         },
         {
-          label: 'Founder',
+          label: t('Founder', 'Nhà sáng lập'),
           fields: [
             {
               name: 'founder',
@@ -50,5 +51,5 @@ export const AboutPage: GlobalConfig = {
         },
       ],
     },
-  ],
+  ]),
 }

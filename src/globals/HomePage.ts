@@ -1,8 +1,9 @@
 import type { GlobalConfig } from 'payload'
 
 import { revalidateGlobal } from '../hooks/revalidate'
+import { t, withLabels } from '../i18n/admin'
 
-const sectionIntro = (name: string, label: string) => ({
+const sectionIntro = (name: string, label: ReturnType<typeof t>) => ({
   name,
   label,
   type: 'group' as const,
@@ -15,16 +16,16 @@ const sectionIntro = (name: string, label: string) => ({
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
-  label: 'Home page',
-  admin: { group: 'Pages' },
+  label: t('Home page', 'Trang chủ'),
+  admin: { group: t('Pages', 'Trang') },
   access: { read: () => true },
   hooks: { afterChange: [revalidateGlobal] },
-  fields: [
+  fields: withLabels([
     {
       type: 'tabs',
       tabs: [
         {
-          label: 'Hero',
+          label: t('Hero', 'Phần mở đầu (Hero)'),
           fields: [
             {
               name: 'hero',
@@ -36,7 +37,7 @@ export const HomePage: GlobalConfig = {
                   type: 'textarea',
                   localized: true,
                   required: true,
-                  admin: { description: 'Each line break becomes a separately animated line.' },
+                  admin: { description: t('Each line break becomes a separately animated line.', 'Mỗi lần xuống dòng sẽ thành một dòng có hiệu ứng riêng.') },
                 },
                 { name: 'subtitle', type: 'textarea', localized: true },
                 {
@@ -44,7 +45,7 @@ export const HomePage: GlobalConfig = {
                   type: 'upload',
                   relationTo: 'media',
                   hasMany: true,
-                  admin: { description: 'Background slideshow images.' },
+                  admin: { description: t('Background slideshow images.', 'Ảnh nền trình chiếu.') },
                 },
               ],
             },
@@ -52,13 +53,13 @@ export const HomePage: GlobalConfig = {
               name: 'marquee',
               type: 'array',
               localized: true,
-              admin: { description: 'Scrolling keywords under the hero.' },
+              admin: { description: t('Scrolling keywords under the hero.', 'Các từ khoá chạy ngang bên dưới phần mở đầu.') },
               fields: [{ name: 'text', type: 'text', required: true }],
             },
           ],
         },
         {
-          label: 'Key figures',
+          label: t('Key figures', 'Số liệu'),
           fields: [
             {
               name: 'stats',
@@ -75,16 +76,16 @@ export const HomePage: GlobalConfig = {
           ],
         },
         {
-          label: 'Sections',
+          label: t('Sections', 'Các phần'),
           fields: [
-            sectionIntro('servicesSection', 'Services section'),
-            sectionIntro('projectsSection', 'Projects section'),
+            sectionIntro('servicesSection', t('Services section', 'Phần dịch vụ')),
+            sectionIntro('projectsSection', t('Projects section', 'Phần dự án')),
             {
               name: 'featuredProjects',
               type: 'relationship',
               relationTo: 'projects',
               hasMany: true,
-              admin: { description: 'Projects shown on the home page (leave empty to use "featured").' },
+              admin: { description: t('Projects shown on the home page (leave empty to use "featured").', 'Dự án hiển thị ở trang chủ (để trống sẽ dùng các dự án "nổi bật").') },
             },
             {
               name: 'partnerLogos',
@@ -104,5 +105,5 @@ export const HomePage: GlobalConfig = {
         },
       ],
     },
-  ],
+  ]),
 }

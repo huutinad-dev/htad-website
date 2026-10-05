@@ -1,11 +1,13 @@
 import type { CollectionConfig } from 'payload'
 
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
+import { t, withLabels } from '../i18n/admin'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  labels: { singular: t('Image', 'Hình ảnh'), plural: t('Media', 'Thư viện ảnh') },
   admin: {
-    group: 'Content',
+    group: t('Content', 'Nội dung'),
   },
   access: {
     read: () => true,
@@ -14,13 +16,13 @@ export const Media: CollectionConfig = {
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
   },
-  fields: [
+  fields: withLabels([
     {
       name: 'alt',
       type: 'text',
       required: true,
     },
-  ],
+  ]),
   upload: {
     staticDir: 'media',
     mimeTypes: ['image/*'],
