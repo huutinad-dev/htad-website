@@ -8,6 +8,10 @@ const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
   images: {
+    // public R2 domain (R2_PUBLIC_URL), when media are served from Cloudflare directly
+    remotePatterns: process.env.R2_PUBLIC_URL
+      ? [new URL(`${process.env.R2_PUBLIC_URL.replace(/\/+$/, '')}/**`)]
+      : [],
     // Optimized images are kept for 31 days instead of the 4-hour default: media URLs carry a
     // `?v=` version (src/lib/media.ts), so a replaced file gets a new URL rather than a stale copy.
     minimumCacheTTL: 60 * 60 * 24 * 31,

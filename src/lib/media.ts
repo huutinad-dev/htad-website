@@ -2,7 +2,8 @@ import type { Media, Partner } from '@/payload-types'
 
 export type MediaRef = number | Media | null | undefined
 
-export const asMedia = (ref: MediaRef): Media | null => (ref && typeof ref === 'object' ? ref : null)
+export const asMedia = (ref: MediaRef): Media | null =>
+  ref && typeof ref === 'object' ? ref : null
 
 export const asMediaList = (refs: MediaRef[] | null | undefined): Media[] =>
   (refs ?? []).map(asMedia).filter((m): m is Media => Boolean(m?.url))
@@ -14,12 +15,19 @@ export const mediaSrc = (media: Media | null) => {
   if (!media?.url) return null
   let path = media.url
   try {
-    path = new URL(media.url).pathname
+    const url = new URL(media.url)
+    // files served from this site: a path is enough; files on the public R2 domain stay absolute
+    path =
+      url.origin === new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000').origin
+        ? url.pathname
+        : url.href
   } catch {
     // already a path
   }
   const version = Date.parse(media.updatedAt)
-  return Number.isNaN(version) ? path : `${path}?v=${version.toString(36)}`
+  return Number.isNaN(version)
+    ? path
+    : `${path}${path.includes('?') ? '&' : '?'}v=${version.toString(36)}`
 }
 
 // Populated, visible partners that have a usable logo (relationship fields hold ids until
@@ -28,7 +36,9 @@ export const asPartnerList = (refs: (number | Partner)[] | null | undefined) =>
   (refs ?? [])
     .flatMap((ref) => {
       const logo = typeof ref === 'object' ? asMedia(ref.logo) : null
-      return typeof ref === 'object' && ref.visible !== false && logo?.url ? [{ partner: ref, logo }] : []
+      return typeof ref === 'object' && ref.visible !== false && logo?.url
+        ? [{ partner: ref, logo }]
+        : []
     })
     .sort((a, b) => (a.partner._order ?? '').localeCompare(b.partner._order ?? ''))
 
@@ -54,6 +64,10 @@ export const formatDate = (date: string, locale: string) =>
 
 // Lexical always stores a root node, so "has a body" means it has some text or media in it.
 export const hasRichText = (data: unknown) => {
-  const children = (data as { root?: { children?: { children?: unknown[]; type?: string }[] } } | null)?.root?.children
-  return Boolean(children?.some((node) => node.type !== 'paragraph' || (node.children?.length ?? 0) > 0))
+  const children = (
+    data as { root?: { children?: { children?: unknown[]; type?: string }[] } } | null
+  )?.root?.children
+  return Boolean(
+    children?.some((node) => node.type !== 'paragraph' || (node.children?.length ?? 0) > 0),
+  )
 }

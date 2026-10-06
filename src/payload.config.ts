@@ -27,11 +27,13 @@ import { locales, defaultLocale } from './i18n/config'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const r2PublicURL = process.env.R2_PUBLIC_URL?.replace(/\/+$/, '') || ''
+
 const r2Enabled = Boolean(
   process.env.R2_BUCKET &&
-    process.env.R2_ENDPOINT &&
-    process.env.R2_ACCESS_KEY_ID &&
-    process.env.R2_SECRET_ACCESS_KEY,
+  process.env.R2_ENDPOINT &&
+  process.env.R2_ACCESS_KEY_ID &&
+  process.env.R2_SECRET_ACCESS_KEY,
 )
 
 export default buildConfig({
@@ -141,7 +143,21 @@ export default buildConfig({
       alwaysInsertFields: true,
       // an explicit (empty) prefix keeps the `prefix` column in the schema whether or not R2 is
       // configured; without it, generating a migration with R2 on wants to drop that column
-      collections: { media: { prefix: '' } },
+      // With R2_PUBLIC_URL set (the bucket's public r2.dev or custom domain), media URLs point
+      // straight at Cloudflare, so images no longer go through this app or its database.
+      collections: {
+        media: r2PublicURL
+          ? {
+              prefix: '',
+              disablePayloadAccessControl: true,
+              generateFileURL: ({ filename, prefix }) =>
+                `${r2PublicURL}/${[prefix, filename]
+                  .filter((part): part is string => Boolean(part))
+                  .map((part) => encodeURIComponent(part))
+                  .join('/')}`,
+            }
+          : { prefix: '' },
+      },
       bucket: process.env.R2_BUCKET || '',
       config: {
         endpoint: process.env.R2_ENDPOINT,
