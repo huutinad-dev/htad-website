@@ -34,7 +34,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const [home, services, allProjects] = await Promise.all([getHome(locale), getServices(locale), getProjects(locale)])
   const dict = getDictionary(locale)
 
-  const slides = asMediaList(home.hero?.slides).map((m) => ({ src: mediaSrc(m)!, alt: m.alt }))
+  const slides = asMediaList(home.hero?.slides).map((m) => ({ src: mediaSrc(m)!, alt: m.alt ?? '' }))
   const chosen = (home.featuredProjects ?? []).filter((p): p is Project => typeof p === 'object')
   const featured = (chosen.length ? chosen : allProjects.filter((p) => p.featured)).slice(0, 8)
   const partners = asPartnerList(home.partners)
@@ -137,7 +137,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 href: localePath(locale, `/services/${s.slug}`),
                 title: s.title,
                 excerpt: s.excerpt,
-                image: src ? { src, alt: cover!.alt } : null,
+                image: src ? { src, alt: cover!.alt ?? '' } : null,
               }
             })}
             labels={{ prev: dict.previous, next: dict.next }}

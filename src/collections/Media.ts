@@ -20,7 +20,12 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      required: true,
+      admin: {
+        description: t(
+          'Optional. A short description of the image, read by screen readers and search engines.',
+          'Không bắt buộc. Mô tả ngắn về ảnh, dùng cho trình đọc màn hình và công cụ tìm kiếm.',
+        ),
+      },
     },
   ]),
   upload: {

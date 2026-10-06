@@ -196,7 +196,10 @@ export interface Service {
  */
 export interface Media {
   id: number;
-  alt: string;
+  /**
+   * Optional. A short description of the image, read by screen readers and search engines.
+   */
+  alt?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -238,7 +241,7 @@ export interface Partner {
   _order?: string | null;
   name: string;
   /**
-   * Transparent PNG works best.
+   * Transparent PNG works best. Larger images are scaled down to fit 500px (proportions kept) when the partner is saved.
    */
   logo: number | Media;
   /**

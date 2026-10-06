@@ -62,7 +62,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Header
             locale={locale}
             dict={dict}
-            logo={logoSrc ? { src: logoSrc, alt: logo!.alt } : null}
+            logo={logoSrc ? { src: logoSrc, alt: logo!.alt ?? '' } : null}
             email={settings.contact?.email}
             social={(settings.social ?? []).map(({ label, url }) => ({ label, url }))}
           />

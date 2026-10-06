@@ -40,7 +40,7 @@ export const youTubeId = (url?: string | null) => {
 
 export const toGallery = (list: Media[]) =>
   list
-    .map((m) => ({ src: mediaSrc(m)!, alt: m.alt, width: m.width, height: m.height }))
+    .map((m) => ({ src: mediaSrc(m)!, alt: m.alt ?? '', width: m.width, height: m.height }))
     .filter((g) => g.src)
 
 export const formatDate = (date: string, locale: string) =>

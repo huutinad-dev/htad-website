@@ -21,7 +21,7 @@ export function Img({ media, className, sizes = '100vw', priority, fit = 'cover'
   return (
     <Image
       src={src}
-      alt={media.alt}
+      alt={media.alt ?? ''}
       fill
       sizes={sizes}
       priority={priority}
