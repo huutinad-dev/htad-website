@@ -5,6 +5,7 @@ import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { vi } from '@payloadcms/translations/languages/vi'
 import path from 'path'
+import { payloadTheme } from 'payload-theme'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
@@ -20,6 +21,7 @@ import { Partners } from './collections/Partners'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
+import { adminThemeVi } from './i18n/adminTheme'
 import { locales, defaultLocale } from './i18n/config'
 
 const filename = fileURLToPath(import.meta.url)
@@ -53,6 +55,7 @@ export default buildConfig({
   i18n: {
     supportedLanguages: { en, vi },
     fallbackLanguage: 'en',
+    translations: { vi: { payloadTheme: adminThemeVi } },
   },
   localization: {
     locales: locales.map((code) => ({
@@ -95,6 +98,30 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
+    // Admin look and feel (dashboard, icon sidebar, ⌘K palette). Remove this entry and the
+    // import in app/(payload)/custom.scss to go back to the stock Payload admin.
+    payloadTheme({
+      accent: '#ffbd01',
+      font: 'inter',
+      logo: '/brand/logo-horizontal.png',
+      logoHeight: 34,
+      icon: '/brand/emblem.png',
+      nav: {
+        icons: {
+          services: 'briefcase',
+          projects: 'folder-kanban',
+          'project-categories': 'tags',
+          posts: 'newspaper',
+          partners: 'handshake',
+          media: 'image',
+          messages: 'mail',
+          users: 'users',
+          'home-page': 'house',
+          'about-page': 'info',
+          'site-settings': 'settings',
+        },
+      },
+    }),
     // Uploads go to Cloudflare R2 (S3-compatible) when the R2_* variables are set (always on
     // Vercel, whose filesystem is read-only). Without them, files stay in the local /media folder.
     // Files are still served through /api/media/file/<filename>, so stored URLs don't change.
