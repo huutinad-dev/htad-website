@@ -7,8 +7,9 @@ import type { ReactNode } from 'react'
 type Item = { id: number; type: string; card: ReactNode }
 
 /**
- * Type filter + grid of posts. `pinned` (the fanpage card) is always the first cell, whatever
- * the filter, and two rows tall from tablet up; the posts flow around and after it.
+ * Type filter + grid of posts. With no filter, `pinned` (the fanpage card) is the first cell,
+ * two rows tall from tablet up, and the posts flow around and after it. Choosing a type shows
+ * only posts of that type, without the pinned card.
  * Cards are rendered on the server and passed in.
  */
 export function InsightsList({
@@ -57,7 +58,7 @@ export function InsightsList({
       </div>
 
       <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
-        {pinned && <div className="md:row-span-2">{pinned}</div>}
+        {pinned && active === 'all' && <div className="md:row-span-2">{pinned}</div>}
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((item, i) => (
             <motion.div
