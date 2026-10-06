@@ -303,7 +303,6 @@ export interface Project {
    * Pick the shape most gallery images have. Images are never cropped; this sets how many fit per row.
    */
   galleryLayout?: ('landscape' | 'portrait') | null;
-  logo?: (number | null) | Media;
   /**
    * YouTube link — shown as a "Watch" button with an embedded player.
    */
@@ -562,7 +561,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   cover?: T;
   gallery?: T;
   galleryLayout?: T;
-  logo?: T;
   videoUrl?: T;
   externalUrl?: T;
   generateSlug?: T;

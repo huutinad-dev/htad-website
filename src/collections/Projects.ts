@@ -117,14 +117,6 @@ export const Projects: CollectionConfig = {
               },
             },
             {
-              // No longer used (partner logos come from Partners). Hidden rather than removed so
-              // the shared database needs no change while older code may still read it.
-              name: 'logo',
-              type: 'upload',
-              relationTo: 'media',
-              admin: { hidden: true },
-            },
-            {
               name: 'videoUrl',
               type: 'text',
               admin: {
