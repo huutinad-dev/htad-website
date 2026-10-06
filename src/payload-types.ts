@@ -276,6 +276,7 @@ export interface Project {
    * What HTAd did, e.g. "Consultancy & event organisation".
    */
   role?: string | null;
+  year?: string | null;
   excerpt?: string | null;
   body?: {
     root: {
@@ -317,7 +318,6 @@ export interface Project {
   generateSlug?: boolean | null;
   slug: string;
   category: number | ProjectCategory;
-  year?: string | null;
   featured?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -555,6 +555,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   partners?: T;
   partner?: T;
   role?: T;
+  year?: T;
   excerpt?: T;
   body?: T;
   quote?: T;
@@ -567,7 +568,6 @@ export interface ProjectsSelect<T extends boolean = true> {
   generateSlug?: T;
   slug?: T;
   category?: T;
-  year?: T;
   featured?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -57,6 +57,7 @@ export const Projects: CollectionConfig = {
               localized: true,
               admin: { description: t('What HTAd did, e.g. "Consultancy & event organisation".', 'Việc HTAd đã làm, vd. "Tư vấn & tổ chức sự kiện".') },
             },
+            { name: 'year', type: 'text' },
             { name: 'excerpt', type: 'textarea', localized: true },
             { name: 'body', type: 'richText', localized: true },
             {
@@ -112,7 +113,6 @@ export const Projects: CollectionConfig = {
       required: true,
       admin: { position: 'sidebar' },
     },
-    { name: 'year', type: 'text', admin: { position: 'sidebar' } },
     { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' } },
   ]),
 }
