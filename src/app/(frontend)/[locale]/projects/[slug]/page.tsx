@@ -1,5 +1,5 @@
+import type React from 'react'
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { ArrowLink } from '@/components/ArrowLink'
@@ -10,12 +10,14 @@ import { SplitHeading } from '@/components/motion/SplitHeading'
 import { RichText } from '@/components/RichText'
 import { PartnerLogo } from '@/components/PartnerLogo'
 import { VideoEmbed } from '@/components/VideoEmbed'
-import { isLocale, localePath } from '@/i18n/config'
+import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, asPartnerList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
 import { getProject } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
+
+type Fact = { label: string; value: React.ReactNode; wide?: boolean }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
@@ -53,14 +55,12 @@ export default async function ProjectPage({ params }: Props) {
           <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/40 to-ink" />
         </div>
         <div className="container-x relative pb-16 pt-40 md:pb-24">
-          {category && (
-            <Reveal>
-              <Link href={localePath(locale, `/projects?category=${category.slug}`)} className="eyebrow mb-6 inline-block hover:text-white">
-                {category.title}
-              </Link>
-            </Reveal>
-          )}
-          <SplitHeading as="h1" immediate text={project.title} className="display max-w-6xl text-5xl text-gold sm:text-6xl lg:text-8xl" />
+          <SplitHeading
+            as="h1"
+            immediate
+            text={project.title}
+            className="display max-w-6xl text-5xl text-gold sm:text-6xl lg:text-8xl"
+          />
           {project.subtitle && (
             <Reveal delay={0.3}>
               <p className="mt-6 max-w-2xl text-lg text-white/80 md:text-xl">{project.subtitle}</p>
@@ -69,92 +69,103 @@ export default async function ProjectPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Overview */}
-      <section className="container-x py-24 md:py-32">
-        <div className="grid gap-16 lg:grid-cols-12">
-          <aside className="space-y-8 lg:col-span-4">
-            <Reveal className="grid grid-cols-2 gap-6 border-t border-line pt-6 lg:grid-cols-1">
-              {category && (
-                <div>
-                  <p className="eyebrow mb-2">{dict.category}</p>
-                  <p>{category.title}</p>
+      {/* Facts: one strip across the page, each fact in its own cell */}
+      <section className="container-x pt-14 md:pt-20">
+        <Reveal>
+          <dl className="grid grid-cols-2 border-y border-line md:flex md:flex-wrap">
+            {(
+              [
+                category && { label: dict.category, value: <span>{category.title}</span> },
+                project.year && { label: dict.year, value: <span>{project.year}</span> },
+                (partners.length > 0 || project.partner) && {
+                  label: dict.partner,
+                  wide: true,
+                  value:
+                    partners.length > 0 ? (
+                      <span className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                        {partners.map(({ partner, logo }) => (
+                          <PartnerLogo key={partner.id} partner={partner}>
+                            {/* a fixed height and the logo's own proportions, so wide and tall marks sit together */}
+                            <span
+                              className="relative block h-8"
+                              style={{
+                                aspectRatio:
+                                  logo.width && logo.height
+                                    ? Math.min(logo.width / logo.height, 4.5)
+                                    : 2,
+                              }}
+                              title={partner.name}
+                            >
+                              <Img media={logo} fit="contain" sizes="160px" />
+                            </span>
+                          </PartnerLogo>
+                        ))}
+                      </span>
+                    ) : (
+                      <span>{project.partner}</span>
+                    ),
+                },
+                project.role && {
+                  label: dict.role,
+                  value: <span>{project.role}</span>,
+                  wide: true,
+                },
+              ] as (Fact | false | null | undefined | '')[]
+            )
+              .filter((fact): fact is Fact => Boolean(fact))
+              .map((fact) => (
+                <div
+                  key={fact.label}
+                  className={`border-line py-6 pr-6 md:flex-1 md:border-l md:px-8 md:first:border-l-0 md:first:pl-0 ${
+                    fact.wide ? 'col-span-2 border-t md:col-span-1 md:border-t-0' : ''
+                  } ${fact.wide ? 'md:flex-[1.6]' : ''}`}
+                >
+                  <dt className="eyebrow mb-3">{fact.label}</dt>
+                  <dd className="text-base md:text-lg">{fact.value}</dd>
                 </div>
-              )}
-              {project.year && (
-                <div>
-                  <p className="eyebrow mb-2">{dict.year}</p>
-                  <p>{project.year}</p>
-                </div>
-              )}
-              {partners.length > 0 ? (
-                <div className="col-span-2 lg:col-span-1">
-                  <p className="eyebrow mb-4">{dict.partner}</p>
-                  <ul className="flex flex-wrap items-center gap-x-8 gap-y-5">
-                    {partners.map(({ partner, logo }) => (
-                      <li key={partner.id}>
-                        <PartnerLogo partner={partner}>
-                          {/* a fixed height and the logo's own proportions, so wide and tall marks sit together */}
-                          <div
-                            className="relative h-10"
-                            style={{ aspectRatio: logo.width && logo.height ? Math.min(logo.width / logo.height, 4.5) : 2 }}
-                            title={partner.name}
-                          >
-                            <Img media={logo} fit="contain" sizes="180px" />
-                          </div>
-                        </PartnerLogo>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                // no partner picked yet: the older free-text line
-                project.partner && (
-                  <div>
-                    <p className="eyebrow mb-2">{dict.partner}</p>
-                    <p>{project.partner}</p>
-                  </div>
-                )
-              )}
-              {project.role && (
-                <div>
-                  <p className="eyebrow mb-2">{dict.role}</p>
-                  <p>{project.role}</p>
-                </div>
-              )}
+              ))}
+          </dl>
+        </Reveal>
+      </section>
+
+      {/* Story: one comfortable reading column */}
+      <section className="container-x py-16 md:py-24">
+        <div className="mx-auto max-w-3xl">
+          {project.body ? (
+            <Reveal>
+              <RichText data={project.body} className="text-lg md:text-xl" />
             </Reveal>
-            {logo && (
-              <Reveal delay={0.1} className="relative h-24 w-48">
-                <Img media={logo} fit="contain" sizes="192px" className="object-left" />
+          ) : (
+            project.excerpt && (
+              <Reveal>
+                <p className="text-xl leading-relaxed text-white/85 md:text-2xl">
+                  {project.excerpt}
+                </p>
               </Reveal>
-            )}
-            {/* the project's YouTube video: a small player in the side column, played in place */}
-            {videoId && (
-              <Reveal delay={0.15} className="max-w-sm">
-                <VideoEmbed videoId={videoId} label={dict.watchVideo} />
-              </Reveal>
-            )}
-            {project.externalUrl && (
-              <Reveal delay={0.15}>
+            )
+          )}
+          {(logo || project.externalUrl) && (
+            <Reveal delay={0.1} className="mt-12 flex flex-wrap items-center justify-center gap-8">
+              {logo && (
+                <span className="relative block h-16 w-40">
+                  <Img media={logo} fit="contain" sizes="160px" className="object-left" />
+                </span>
+              )}
+              {project.externalUrl && (
                 <ArrowLink href={project.externalUrl} external>
                   {dict.readArticle}
                 </ArrowLink>
-              </Reveal>
-            )}
-          </aside>
-          <div className="lg:col-span-7 lg:col-start-6">
-            {project.body ? (
-              <Reveal>
-                <RichText data={project.body} className="text-lg md:text-xl" />
-              </Reveal>
-            ) : (
-              project.excerpt && (
-                <Reveal>
-                  <p className="text-xl leading-relaxed text-white/85 md:text-2xl">{project.excerpt}</p>
-                </Reveal>
-              )
-            )}
-          </div>
+              )}
+            </Reveal>
+          )}
         </div>
+
+        {/* Film: the project's YouTube video, wider than the text, played in place */}
+        {videoId && (
+          <Reveal delay={0.1} className="mx-auto mt-16 max-w-5xl md:mt-20">
+            <VideoEmbed videoId={videoId} label={dict.watchVideo} />
+          </Reveal>
+        )}
       </section>
 
       {/* Slogan: centred on a single line (the type shrinks to fit the width) */}
