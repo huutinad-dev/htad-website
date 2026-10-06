@@ -10,7 +10,14 @@ const nextConfig: NextConfig = {
   images: {
     // public R2 domain (R2_PUBLIC_URL), when media are served from Cloudflare directly
     remotePatterns: process.env.R2_PUBLIC_URL
-      ? [new URL(`${process.env.R2_PUBLIC_URL.replace(/\/+$/, '')}/**`)]
+      ? [
+          // no `search` key: media URLs carry a ?v= version, and a URL object would demand none
+          {
+            protocol: 'https',
+            hostname: new URL(process.env.R2_PUBLIC_URL).hostname,
+            pathname: '/**',
+          },
+        ]
       : [],
     // Optimized images are kept for 31 days instead of the 4-hour default: media URLs carry a
     // `?v=` version (src/lib/media.ts), so a replaced file gets a new URL rather than a stale copy.
