@@ -22,13 +22,14 @@ export function ProjectCard({
   const partners =
     (project.partners ?? []).flatMap((p) => (typeof p === 'object' ? [p.name] : [])).join(' × ') ||
     project.partner
-  // a portrait cover, when there is one, replaces the landscape cover on cards (in a tall frame)
+  // a portrait cover, when there is one, replaces the landscape cover on cards; the card keeps
+  // its usual frame so the grid's layout does not change
   const portrait = asMedia(project.coverPortrait)
   return (
     <Link href={localePath(locale, `/projects/${project.slug}`)} className="group block">
       <div
         className={`relative overflow-hidden rounded-sm bg-surface ${
-          portrait ? 'aspect-[4/5]' : size === 'lg' ? 'aspect-[16/10]' : 'aspect-[4/3]'
+          size === 'lg' ? 'aspect-[16/10]' : 'aspect-[4/3]'
         }`}
       >
         <Img
