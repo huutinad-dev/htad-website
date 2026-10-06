@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/
 import { SafeImage as Image } from '@/components/SafeImage'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 import { LOCALE_COOKIE, localePath, stripLocalePrefix, type Locale } from '@/i18n/config'
 import type { Dictionary } from '@/lib/dictionary'
@@ -60,15 +60,26 @@ export function Header({ locale, dict, logo, email, social }: Props) {
   // usePathname may include the internal `/en|/vi` segment added by the proxy rewrite
   const path = stripLocalePrefix(pathname) || '/'
   const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href))
+  // The other language is a server render away. Show the choice at once (the toggle switches
+  // immediately and the page dims while the new text loads) instead of a click that seems to
+  // do nothing for a moment.
+  const [switching, startSwitch] = useTransition()
+  const [pendingLocale, setPendingLocale] = useState<Locale | null>(null)
+  const shownLocale = switching && pendingLocale ? pendingLocale : locale
+  useEffect(() => {
+    document.documentElement.toggleAttribute('data-switching-locale', switching)
+  }, [switching])
+
   const switchTo = (target: Locale) => {
-    if (target === locale) return
+    if (target === locale || switching) return
+    setPendingLocale(target)
     document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`
     try {
       localStorage.setItem(LOCALE_COOKIE, target)
     } catch {
       // storage unavailable (private mode); the cookie is what the server uses
     }
-    router.refresh()
+    startSwitch(() => router.refresh())
   }
 
   return (
@@ -114,8 +125,8 @@ export function Header({ locale, dict, logo, email, social }: Props) {
                   <button
                     type="button"
                     onClick={() => switchTo(l)}
-                    className={l === locale ? 'text-gold' : 'text-white/60 transition-colors hover:text-white'}
-                    aria-pressed={l === locale}
+                    className={l === shownLocale ? 'text-gold' : 'text-white/60 transition-colors hover:text-white'}
+                    aria-pressed={l === shownLocale}
                     lang={l}
                   >
                     {l.toUpperCase()}

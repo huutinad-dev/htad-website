@@ -111,6 +111,17 @@
   color: var(--color-gold);
 }
 
+/* switching language: the page dims softly while the other language loads (Header.tsx) */
+main,
+footer {
+  transition: opacity 250ms ease;
+}
+html[data-switching-locale] main,
+html[data-switching-locale] footer {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 /* Rich text rendered from the CMS */
 @utility prose-htad {
   color: #d4d4d4;
