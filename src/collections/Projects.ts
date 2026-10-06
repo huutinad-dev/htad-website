@@ -28,7 +28,20 @@ export const Projects: CollectionConfig = {
         {
           label: t('Content', 'Nội dung'),
           fields: [
-            { name: 'title', type: 'text', required: true, localized: true },
+            {
+              name: 'title',
+              // multi-line: a line break here is where the project page heading breaks
+              type: 'textarea',
+              required: true,
+              localized: true,
+              admin: {
+                rows: 2,
+                description: t(
+                  'Press Enter to choose where the heading breaks on the project page. Elsewhere the title shows on one line.',
+                  'Nhấn Enter để chọn chỗ xuống dòng của tiêu đề ở trang dự án. Ở các nơi khác tiêu đề hiện trên một dòng.',
+                ),
+              },
+            },
             {
               name: 'subtitle',
               type: 'text',
@@ -171,6 +184,18 @@ export const Projects: CollectionConfig = {
       required: true,
       admin: { position: 'sidebar' },
     },
-    { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' } },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        // the same switch as Partners → Visible; in the list view it saves immediately
+        components: {
+          Cell: '/components/admin/VisibleToggle#VisibleToggleCell',
+          Field: '/components/admin/VisibleToggle#VisibleToggleField',
+        },
+      },
+    },
   ]),
 }

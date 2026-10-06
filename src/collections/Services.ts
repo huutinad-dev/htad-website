@@ -85,7 +85,7 @@ export const Services: CollectionConfig = {
           fields: [
             { name: 'cover', type: 'upload', relationTo: 'media', required: true },
             { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
-            { name: 'galleryCaption', type: 'text', localized: true },
+            { name: 'galleryCaption', type: 'textarea', localized: true },
           ],
         },
         {

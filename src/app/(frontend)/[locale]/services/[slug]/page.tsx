@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { Arrow } from '@/components/ArrowLink'
 import { CtaBanner } from '@/components/CtaBanner'
 import { Gallery } from '@/components/Gallery'
 import { Img } from '@/components/Img'
@@ -18,6 +16,14 @@ import { getHome, getService, getServices } from '@/lib/payload'
 import type { Project } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
+
+// Every service is rendered ahead and cached like the other pages (ISR, see the layout's
+// `revalidate`); without this list the page was rendered from scratch on every visit. New
+// services added later are rendered on their first visit and cached from then on.
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  if (!isLocale(params.locale)) return []
+  return (await getServices(params.locale)).map((doc) => ({ slug: doc.slug }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
@@ -35,11 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServicePage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
-  const [service, services, home] = await Promise.all([
-    getService(locale, slug),
-    getServices(locale),
-    getHome(locale),
-  ])
+  const [service, home] = await Promise.all([getService(locale, slug), getHome(locale)])
   if (!service) notFound()
   const dict = getDictionary(locale)
 
@@ -47,7 +49,6 @@ export default async function ServicePage({ params }: Props) {
   const gallery = toGallery(asMediaList(service.gallery))
   const partners = asPartnerList(service.partners)
   const related = (service.relatedProjects ?? []).filter((p): p is Project => typeof p === 'object')
-  const others = services.filter((s) => s.id !== service.id)
 
   return (
     <>
@@ -115,10 +116,12 @@ export default async function ServicePage({ params }: Props) {
 
       {gallery.length > 0 && (
         <section className="container-x pb-24 md:pb-32">
-          <Gallery images={gallery} />
+          <Gallery images={gallery} layout="rows" />
           {service.galleryCaption && (
             <Reveal>
-              <p className="mt-4 max-w-2xl text-sm italic text-muted">{service.galleryCaption}</p>
+              <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-center text-sm italic text-muted">
+                {service.galleryCaption}
+              </p>
             </Reveal>
           )}
         </section>
@@ -142,27 +145,6 @@ export default async function ServicePage({ params }: Props) {
           </div>
         </section>
       )}
-
-      <section className="border-t border-line py-24">
-        <div className="container-x">
-          <Reveal>
-            <p className="eyebrow mb-8">{dict.otherServices}</p>
-          </Reveal>
-          <Stagger className="flex flex-wrap gap-3">
-            {others.map((s) => (
-              <StaggerItem key={s.id}>
-                <Link
-                  href={localePath(locale, `/services/${s.slug}`)}
-                  className="group inline-flex items-center gap-3 rounded-full border border-white/15 px-6 py-3 transition-colors hover:border-gold hover:text-gold"
-                >
-                  {s.title}
-                  <Arrow className="transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
-      </section>
 
       <CtaBanner
         heading={home.cta?.heading}

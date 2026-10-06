@@ -12,12 +12,20 @@ import { PartnerLogo } from '@/components/PartnerLogo'
 import { VideoEmbed } from '@/components/VideoEmbed'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, asPartnerList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
-import { getProject } from '@/lib/payload'
+import { asMedia, asMediaList, asPartnerList, mediaSrc, oneLine, toGallery, youTubeId } from '@/lib/media'
+import { getProject, getProjects } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 type Fact = { label: string; value: React.ReactNode; wide?: boolean }
+
+// Every project is rendered ahead and cached like the other pages (ISR, see the layout's
+// `revalidate`); without this list the page was rendered from scratch on every visit. New
+// projects added later are rendered on their first visit and cached from then on.
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  if (!isLocale(params.locale)) return []
+  return (await getProjects(params.locale)).map((doc) => ({ slug: doc.slug }))
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
@@ -26,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project) return {}
   const og = mediaSrc(asMedia(project.cover))
   return {
-    title: project.title,
+    title: oneLine(project.title),
     description: project.excerpt ?? undefined,
     openGraph: og ? { images: [og] } : undefined,
   }

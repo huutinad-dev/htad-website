@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { localePath, type Locale } from '@/i18n/config'
-import { asMedia } from '@/lib/media'
+import { asMedia, oneLine } from '@/lib/media'
 import type { Project } from '@/payload-types'
 
 import { Arrow } from './ArrowLink'
@@ -45,7 +45,7 @@ export function ProjectCard({
       <div className="mt-5 flex items-start justify-between gap-6">
         <div>
           <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">
-            {project.title}
+            {oneLine(project.title)}
           </h3>
           {showSubtitle && (partners || project.subtitle) && (
             <p className="mt-1 text-sm text-muted">{partners || project.subtitle}</p>

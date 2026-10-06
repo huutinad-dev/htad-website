@@ -1,6 +1,13 @@
 'use client'
 
-import { FieldDescription, FieldLabel, toast, useConfig, useField, useTranslation } from '@payloadcms/ui'
+import {
+  FieldDescription,
+  FieldLabel,
+  toast,
+  useConfig,
+  useField,
+  useTranslation,
+} from '@payloadcms/ui'
 import type { CheckboxFieldClientComponent, DefaultCellComponentProps } from 'payload'
 import { useState } from 'react'
 
@@ -37,7 +44,9 @@ function Switch({
         borderRadius: 999,
         cursor: busy ? 'progress' : 'pointer',
         // the admin theme's accent; the fallbacks apply if the theme is ever removed
-        background: on ? 'var(--pt-accent, var(--theme-success-500))' : 'var(--theme-elevation-250)',
+        background: on
+          ? 'var(--pt-accent, var(--theme-success-500))'
+          : 'var(--theme-elevation-250)',
         opacity: busy ? 0.6 : 1,
         transition: 'background 150ms ease',
       }}
@@ -50,7 +59,9 @@ function Switch({
           width: 16,
           height: 16,
           borderRadius: '50%',
-          background: on ? 'var(--pt-accent-contrast, var(--theme-elevation-0))' : 'var(--theme-elevation-0)',
+          background: on
+            ? 'var(--pt-accent-contrast, var(--theme-elevation-0))'
+            : 'var(--theme-elevation-0)',
           transition: 'left 150ms ease',
         }}
       />
@@ -58,13 +69,35 @@ function Switch({
   )
 }
 
-const stateLabel = (on: boolean, vi: boolean) => (vi ? (on ? 'Đang hiển thị' : 'Đang ẩn') : on ? 'Visible' : 'Hidden')
+const stateLabel = (on: boolean, vi: boolean, field?: string) =>
+  field === 'featured'
+    ? vi
+      ? on
+        ? 'Nổi bật'
+        : 'Không nổi bật'
+      : on
+        ? 'Featured'
+        : 'Not featured'
+    : vi
+      ? on
+        ? 'Đang hiển thị'
+        : 'Đang ẩn'
+      : on
+        ? 'Visible'
+        : 'Hidden'
 
 /** List view: the switch saves immediately, so an item can be shown or hidden without opening it. */
-export function VisibleToggleCell({ cellData, rowData, collectionSlug, field }: DefaultCellComponentProps) {
+export function VisibleToggleCell({
+  cellData,
+  rowData,
+  collectionSlug,
+  field,
+}: DefaultCellComponentProps) {
   const { config } = useConfig()
   const { i18n } = useTranslation()
-  const [on, setOn] = useState(cellData !== false)
+  // unset counts as on for `visible` (its default) and off for `featured`
+  const fieldName = 'name' in field ? field.name : 'visible'
+  const [on, setOn] = useState(fieldName === 'featured' ? cellData === true : cellData !== false)
   const [saving, setSaving] = useState(false)
   const vi = i18n.language === 'vi'
 
@@ -73,12 +106,15 @@ export function VisibleToggleCell({ cellData, rowData, collectionSlug, field }: 
     setOn(next)
     setSaving(true)
     try {
-      const res = await fetch(`${config.serverURL}${config.routes.api}/${collectionSlug}/${rowData.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ['name' in field ? field.name : 'visible']: next }),
-      })
+      const res = await fetch(
+        `${config.serverURL}${config.routes.api}/${collectionSlug}/${rowData.id}`,
+        {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ [fieldName]: next }),
+        },
+      )
       if (!res.ok) throw new Error(String(res.status))
     } catch {
       setOn(!next)
@@ -88,20 +124,25 @@ export function VisibleToggleCell({ cellData, rowData, collectionSlug, field }: 
     }
   }
 
-  return <Switch on={on} busy={saving} label={stateLabel(on, vi)} onToggle={toggle} />
+  return <Switch on={on} busy={saving} label={stateLabel(on, vi, fieldName)} onToggle={toggle} />
 }
 
 /** Edit form: same switch in place of the checkbox; the change is saved with the form. */
 export const VisibleToggleField: CheckboxFieldClientComponent = ({ field, path, readOnly }) => {
   const { i18n } = useTranslation()
   const { value, setValue } = useField<boolean>({ path })
-  const on = value !== false
+  const on = field.name === 'featured' ? value === true : value !== false
   const vi = i18n.language === 'vi'
 
   return (
     <div className="field-type" style={{ marginBottom: 'var(--base)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Switch on={on} busy={readOnly} label={stateLabel(on, vi)} onToggle={() => setValue(!on)} />
+        <Switch
+          on={on}
+          busy={readOnly}
+          label={stateLabel(on, vi, field.name)}
+          onToggle={() => setValue(!on)}
+        />
         <FieldLabel label={field.label} path={path} />
       </div>
       <FieldDescription description={field.admin?.description} path={path} />

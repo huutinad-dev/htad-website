@@ -262,6 +262,9 @@ export interface Media {
 export interface Project {
   id: number;
   _order?: string | null;
+  /**
+   * Press Enter to choose where the heading breaks on the project page. Elsewhere the title shows on one line.
+   */
   title: string;
   /**
    * Client or context line, e.g. "Vietnam Professional Football Leagues".

@@ -240,3 +240,12 @@
 .list-drawer:has(.list-controls .pill--style-white) .drawer__content-children {
   padding-bottom: 6rem;
 }
+
+// Sidebar: no "Dashboard" link (the logo above already goes there) and no search box. The
+// dashboard link's group is hidden with it; ⌘K still opens the command palette.
+.pt-nav__group:has(> #nav-dashboard),
+.pt-nav__group:has(> * > #nav-dashboard),
+#nav-dashboard,
+.pt-nav__search {
+  display: none;
+}

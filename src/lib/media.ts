@@ -71,3 +71,6 @@ export const hasRichText = (data: unknown) => {
     children?.some((node) => node.type !== 'paragraph' || (node.children?.length ?? 0) > 0),
   )
 }
+
+/** A multi-line title (line breaks chosen by the editor) as a single line, for cards and meta tags. */
+export const oneLine = (text: string) => text.replace(/\s*\n\s*/g, ' ').trim()

@@ -29,11 +29,18 @@ export function CtaBanner({
         />
         {text && (
           <Reveal delay={0.2}>
-            <p className="mx-auto mt-6 max-w-xl text-lg font-medium leading-relaxed text-ink/80">{text}</p>
+            <p className="mx-auto mt-6 max-w-xl text-lg font-medium leading-relaxed text-ink/80">
+              {text}
+            </p>
           </Reveal>
         )}
         <Reveal delay={0.3} className="mt-10 flex justify-center md:mt-12">
-          <ArrowLink href={href} variant="solid" className="!bg-ink !text-gold hover:!bg-white hover:!text-ink">
+          <ArrowLink
+            href={href}
+            variant="solid"
+            // twice the usual button: the one action of the band
+            className="!gap-4 !bg-ink !px-12 !py-6 !text-lg !text-gold hover:!bg-white hover:!text-ink md:!px-14 md:!py-7 md:!text-xl [&_svg]:!h-6 [&_svg]:!w-6"
+          >
             {dict.getInTouch}
           </ArrowLink>
         </Reveal>

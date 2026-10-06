@@ -7,10 +7,11 @@ import { useCallback, useEffect, useState } from 'react'
 
 export type GalleryImage = { src: string; alt: string; width?: number | null; height?: number | null }
 
-export type GalleryLayout = 'landscape' | 'portrait'
+// 'rows': one height for every image, each in its own width, rows centred (service pages)
+export type GalleryLayout = 'landscape' | 'portrait' | 'rows'
 
 // Columns per layout: wide images get fewer, wider columns; tall images more, narrower ones.
-const COLUMNS: Record<GalleryLayout, string> = {
+const COLUMNS: Record<Exclude<GalleryLayout, 'rows'>, string> = {
   landscape: 'columns-1 sm:columns-2 lg:columns-3',
   portrait: 'columns-2 md:columns-3 lg:columns-4',
 }
@@ -57,7 +58,13 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
 
   return (
     <>
-      <div className={`gap-2 md:gap-3 ${COLUMNS[layout]}`}>
+      <div
+        className={
+          layout === 'rows'
+            ? 'flex flex-wrap justify-center gap-2 md:gap-3'
+            : `gap-2 md:gap-3 ${COLUMNS[layout]}`
+        }
+      >
         {images.map((img, i) => {
           const ratio = img.width && img.height ? img.width / img.height : 4 / 3
           return (
@@ -66,7 +73,11 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
               type="button"
               onClick={() => setOpen(i)}
               aria-label={img.alt || `${i + 1} / ${images.length}`}
-              className="group relative mb-2 block w-full break-inside-avoid overflow-hidden rounded-sm bg-surface md:mb-3"
+              className={`group relative block overflow-hidden rounded-sm bg-surface ${
+                layout === 'rows'
+                  ? 'h-56 max-w-full shrink-0 sm:h-72 lg:h-96'
+                  : 'mb-2 w-full break-inside-avoid md:mb-3'
+              }`}
               style={{ aspectRatio: ratio }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

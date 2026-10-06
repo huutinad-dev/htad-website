@@ -14,6 +14,14 @@ import { getPost, getPosts } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
+// Every post is rendered ahead and cached like the other pages (ISR, see the layout's
+// `revalidate`); without this list the page was rendered from scratch on every visit. New
+// posts added later are rendered on their first visit and cached from then on.
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  if (!isLocale(params.locale)) return []
+  return (await getPosts(params.locale)).map((doc) => ({ slug: doc.slug }))
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   if (!isLocale(locale)) return {}
@@ -45,10 +53,16 @@ export default async function InsightPage({ params }: Props) {
         <div className="container-x relative pb-16 pt-40 md:pb-24">
           <Reveal>
             <p className="eyebrow mb-6">
-              {dict.postTypes[post.type]} · <time dateTime={post.publishedAt}>{formatDate(post.publishedAt, locale)}</time>
+              {dict.postTypes[post.type]} ·{' '}
+              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt, locale)}</time>
             </p>
           </Reveal>
-          <SplitHeading as="h1" immediate text={post.title} className="display max-w-5xl text-4xl text-gold sm:text-5xl lg:text-7xl" />
+          <SplitHeading
+            as="h1"
+            immediate
+            text={post.title}
+            className="display max-w-5xl text-4xl text-gold sm:text-5xl lg:text-7xl"
+          />
         </div>
       </section>
 
