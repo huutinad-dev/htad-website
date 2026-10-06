@@ -2,7 +2,7 @@
 
 import { useLenis } from 'lenis/react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
-import Image from 'next/image'
+import { SafeImage as Image } from '@/components/SafeImage'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'

@@ -92,6 +92,11 @@ export default buildConfig({
       ssl: process.env.DATABASE_URL?.includes('localhost')
         ? undefined
         : { rejectUnauthorized: false },
+      // Each serverless instance keeps its own pool, and a page with many images can start many
+      // instances at once; the database is a small one shared with another app, so keep each
+      // pool small and let idle connections go quickly.
+      max: 3,
+      idleTimeoutMillis: 10_000,
     },
     // The database is shared with another application: keep every Payload table
     // inside its own schema and never let Payload auto-push schema changes.

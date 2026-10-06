@@ -2,7 +2,7 @@
 
 import { useLenis } from 'lenis/react'
 import { AnimatePresence, motion } from 'motion/react'
-import Image from 'next/image'
+import { SafeImage as Image } from '@/components/SafeImage'
 import { useCallback, useEffect, useState } from 'react'
 
 export type GalleryImage = { src: string; alt: string; width?: number | null; height?: number | null }

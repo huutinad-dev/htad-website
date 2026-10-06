@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'motion/react'
-import Image from 'next/image'
+import { SafeImage as Image } from '@/components/SafeImage'
 import { useEffect, useState } from 'react'
 
 type Slide = { src: string; alt: string }

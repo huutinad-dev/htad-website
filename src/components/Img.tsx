@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { SafeImage as Image } from '@/components/SafeImage'
 
 import type { Media } from '@/payload-types'
 import { mediaSrc } from '@/lib/media'
