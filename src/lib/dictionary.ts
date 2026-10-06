@@ -37,7 +37,7 @@ const dictionaries = {
     year: 'Year',
     client: 'Client',
     partner: 'Partner',
-    role: 'HTAd’s role',
+    role: 'Role',
     getInTouch: 'Get in touch',
     contactUs: 'Contact us',
     contactForm: {
@@ -100,7 +100,7 @@ const dictionaries = {
     year: 'Năm',
     client: 'Khách hàng',
     partner: 'Đối tác',
-    role: 'Vai trò của HTAd',
+    role: 'Vai trò',
     getInTouch: 'Liên hệ',
     contactUs: 'Liên hệ',
     contactForm: {
