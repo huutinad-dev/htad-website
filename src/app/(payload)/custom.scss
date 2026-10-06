@@ -100,3 +100,17 @@
 .pt-nav__user-menu-sep:has(+ .pt-nav__user-menu-label) {
   display: none;
 }
+
+// Localized field labels read "Label — Tiếng Việt": Payload hard-codes the em dash. It is
+// clipped away here (text-indent pushes it out of the box) and a short hyphen is drawn in
+// its place, in the label's own colour.
+.field-label .localized {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  text-indent: -1em;
+  border-left: 0.7em solid transparent;
+  background: linear-gradient(currentColor, currentColor) no-repeat 0.15em 58% / 0.32em 1.5px;
+  background-origin: border-box;
+  background-clip: border-box;
+}

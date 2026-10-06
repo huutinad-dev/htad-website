@@ -140,6 +140,17 @@
     margin-top: 1.5em;
     margin-bottom: 0.5em;
   }
+  /* images inserted in the editor: full width of the text column, with room around them */
+  & picture,
+  & > img {
+    display: block;
+    margin-block: 2em;
+  }
+  & img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.125rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
