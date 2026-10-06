@@ -40,7 +40,6 @@ export default async function ProjectPage({ params }: Props) {
   const dict = getDictionary(locale)
 
   const cover = asMedia(project.cover)
-  const logo = asMedia(project.logo)
   const gallery = toGallery(asMediaList(project.gallery))
   const category = typeof project.category === 'object' ? project.category : null
   const videoId = youTubeId(project.videoUrl)
@@ -144,18 +143,11 @@ export default async function ProjectPage({ params }: Props) {
               </Reveal>
             )
           )}
-          {(logo || project.externalUrl) && (
-            <Reveal delay={0.1} className="mt-12 flex flex-wrap items-center justify-center gap-8">
-              {logo && (
-                <span className="relative block h-16 w-40">
-                  <Img media={logo} fit="contain" sizes="160px" className="object-left" />
-                </span>
-              )}
-              {project.externalUrl && (
-                <ArrowLink href={project.externalUrl} external>
-                  {dict.readArticle}
-                </ArrowLink>
-              )}
+          {project.externalUrl && (
+            <Reveal delay={0.1} className="mt-12 flex justify-center">
+              <ArrowLink href={project.externalUrl} external>
+                {dict.readArticle}
+              </ArrowLink>
             </Reveal>
           )}
         </div>

@@ -93,7 +93,6 @@ for (const p of [...projects].sort((a, b) => a.order - b.order)) {
       category: categoryIds.get(p.category)!,
       cover: await media(p.cover, p.title.en),
       gallery: await mediaList(p.gallery, p.title.en),
-      logo: p.logo ? await media(p.logo, `${p.title.en} logo`) : undefined,
       videoUrl: p.videoUrl,
       externalUrl: p.externalUrl,
       title: p.title.en,
