@@ -158,9 +158,7 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
             <p className="shrink-0 pb-4 pt-1 text-center text-xs tracking-widest text-white/60">
               {open! + 1} / {images.length}
             </p>
-            <LightboxButton label="Close" className="right-4 top-4" onClick={close}>
-              <path d="M6 6l12 12M18 6 6 18" />
-            </LightboxButton>
+            {/* no close button: clicking outside the image, or Esc, closes the lightbox */}
             {images.length > 1 && (
               <>
                 <LightboxButton label="Previous" className="left-4 top-[45%] -translate-y-1/2" onClick={() => step(-1)}>
