@@ -50,6 +50,10 @@ export default buildConfig({
         Logo: '/components/admin/Logo#AdminLogo',
         Icon: '/components/admin/Logo#AdminIcon',
       },
+      // the interface language follows the content locale chosen in the header
+      providers: ['/components/admin/LanguageFollowsLocale#LanguageFollowsLocale'],
+      // EN / VI switch in the header, beside the user menu
+      actions: ['/components/admin/LocaleSwitch#LocaleSwitch'],
     },
   },
   i18n: {

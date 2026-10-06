@@ -1,2 +1,102 @@
 // Admin theme; see payloadTheme() in src/payload.config.ts
 @import 'payload-theme/styles.css';
+
+// List views: centre every cell on its row (Payload aligns cells to the top, so text sat
+// higher than the thumbnail beside it).
+.collection-list .table td {
+  vertical-align: middle;
+}
+
+// Logo columns: logos are usually wide, so show the whole image in a wider frame instead of
+// cropping it to a square.
+.collection-list .table td.cell-logo {
+  .file {
+    align-items: center;
+  }
+
+  .file__thumbnail,
+  .thumbnail {
+    width: 88px;
+    max-width: 88px;
+    height: 40px;
+    min-height: 0;
+    max-height: 40px;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .thumbnail img,
+  .thumbnail svg {
+    object-fit: contain;
+  }
+}
+
+// Sidebar: the HTAd logo sits centred above the search box (the theme left-aligns it).
+.pt-nav__logo {
+  justify-content: center;
+}
+
+// List toolbar: "Create new" is as tall as the search bar it sits beside (the theme docks it
+// there but leaves it shorter, so the two looked misaligned).
+@media (min-width: 1025px) {
+  .collection-list .list-header__title-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--pt-toolbar-h, 46px);
+    margin-block: 0;
+    // the label stays centred now that the button is taller than its content
+    padding-block: 0;
+  }
+}
+
+// Document toolbar: Save and the ⋮ menu beside it share one height.
+.doc-controls__controls {
+  align-items: center;
+
+  .form-submit {
+    margin: 0;
+  }
+
+  .form-submit .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-height: 40px;
+    margin-block: 0;
+    padding-block: 0;
+  }
+
+  // the ⋮ button (32px by default)
+  .doc-controls__dots {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// Logo upload fields (Partners, Projects, Site settings): show the whole logo in a wider
+// frame, as in the list views, instead of a cropped square.
+.field-type.upload[id^='field-logo'] .upload-relationship-details__thumbnail {
+  width: 96px;
+  height: 48px;
+  min-height: 0;
+  max-height: 48px;
+  background: transparent;
+
+  img,
+  svg {
+    object-fit: contain;
+  }
+}
+
+// The language switch lives in the header (components/admin/LocaleSwitch), so the theme's
+// copy of it inside the user menus is hidden, with its heading and the divider above it.
+.pt-header-user-menu-item--locale,
+.pt-nav__user-menu-item--locale,
+.pt-header-user-menu-label,
+.pt-nav__user-menu-label,
+.pt-header-user-menu-sep:has(+ .pt-header-user-menu-label),
+.pt-nav__user-menu-sep:has(+ .pt-nav__user-menu-label) {
+  display: none;
+}

@@ -47,6 +47,8 @@ export const Partners: CollectionConfig = {
           'Optional: the full address (https://…) to open when the logo is clicked.',
           'Không bắt buộc: địa chỉ đầy đủ (https://…) sẽ mở khi bấm vào logo.',
         ),
+        // an empty link shows as an empty cell in the list, not "<No Link>"
+        components: { Cell: '/components/admin/PlainTextCell#PlainTextCell' },
       },
     },
     {
@@ -54,7 +56,6 @@ export const Partners: CollectionConfig = {
       type: 'checkbox',
       defaultValue: true,
       admin: {
-        position: 'sidebar',
         description: t('Turn off to hide this partner from the website.', 'Tắt để ẩn đối tác này khỏi website.'),
         // a switch instead of a checkbox; in the list view it saves immediately
         components: {
