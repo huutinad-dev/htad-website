@@ -77,7 +77,8 @@ export const Services: CollectionConfig = {
               relationTo: 'partners',
               hasMany: true,
               admin: {
-                // pick only: partners are edited in the Partners list
+                // pick only: partners are created and edited in the Partners list
+                allowCreate: false,
                 allowEdit: false,
                 description: t(
                   'Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).',

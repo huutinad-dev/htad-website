@@ -46,7 +46,8 @@ export const Projects: CollectionConfig = {
               relationTo: 'partners',
               hasMany: true,
               admin: {
-                // pick only: partners are edited in the Partners list
+                // pick only: partners are created and edited in the Partners list
+                allowCreate: false,
                 allowEdit: false,
                 description: t(
                   'Partners / clients of this project, picked from the Partners list. Their logos show on the project page.',
