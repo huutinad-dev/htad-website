@@ -297,7 +297,14 @@ export interface Project {
    * Optional slogan / tagline highlighted on the page.
    */
   quote?: string | null;
+  /**
+   * Landscape. The project page banner, and the project cards when there is no portrait cover.
+   */
   cover: number | Media;
+  /**
+   * Optional. If set, the project cards (home page, Projects list, services) use it instead of the cover.
+   */
+  coverPortrait?: (number | null) | Media;
   gallery?: (number | Media)[] | null;
   /**
    * Pick the shape most gallery images have. Images are never cropped; this sets how many fit per row.
@@ -559,6 +566,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   body?: T;
   quote?: T;
   cover?: T;
+  coverPortrait?: T;
   gallery?: T;
   galleryLayout?: T;
   videoUrl?: T;

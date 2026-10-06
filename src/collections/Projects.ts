@@ -94,7 +94,30 @@ export const Projects: CollectionConfig = {
         {
           label: t('Media', 'Hình ảnh'),
           fields: [
-            { name: 'cover', type: 'upload', relationTo: 'media', required: true },
+            {
+              name: 'cover',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              admin: {
+                description: t(
+                  'Landscape. The project page banner, and the project cards when there is no portrait cover.',
+                  'Ảnh ngang. Dùng làm banner trang dự án, và cho thẻ dự án khi không có ảnh bìa dọc.',
+                ),
+              },
+            },
+            {
+              name: 'coverPortrait',
+              label: t('Portrait cover', 'Ảnh bìa dọc'),
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description: t(
+                  'Optional. If set, the project cards (home page, Projects list, services) use it instead of the cover.',
+                  'Không bắt buộc. Nếu có, thẻ dự án (trang chủ, danh sách Dự án, dịch vụ) dùng ảnh này thay cho ảnh bìa.',
+                ),
+              },
+            },
             { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
             {
               name: 'galleryLayout',
