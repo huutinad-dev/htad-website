@@ -71,6 +71,7 @@ export interface Config {
     projects: Project;
     'project-categories': ProjectCategory;
     posts: Post;
+    partners: Partner;
     media: Media;
     messages: Message;
     users: User;
@@ -85,6 +86,7 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -176,9 +178,9 @@ export interface Service {
   gallery?: (number | Media)[] | null;
   galleryCaption?: string | null;
   /**
-   * Transparent PNG logos of partners / rights.
+   * Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).
    */
-  partnerLogos?: (number | Media)[] | null;
+  partners?: (number | Partner)[] | null;
   relatedProjects?: (number | Project)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -195,10 +197,6 @@ export interface Service {
 export interface Media {
   id: number;
   alt: string;
-  /**
-   * Optional, for partner logos: the full address (https://…) to open when the logo is clicked.
-   */
-  link?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -230,6 +228,25 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Transparent PNG works best.
+   */
+  logo: number | Media;
+  /**
+   * Optional: the full address (https://…) to open when the logo is clicked.
+   */
+  link?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -432,6 +449,10 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'partners';
+        value: number | Partner;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -504,7 +525,7 @@ export interface ServicesSelect<T extends boolean = true> {
   cover?: T;
   gallery?: T;
   galleryCaption?: T;
-  partnerLogos?: T;
+  partners?: T;
   relatedProjects?: T;
   generateSlug?: T;
   slug?: T;
@@ -569,11 +590,22 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  logo?: T;
+  link?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  link?: T;
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
@@ -738,7 +770,10 @@ export interface HomePage {
    * Projects shown on the home page (leave empty to use "featured").
    */
   featuredProjects?: (number | Project)[] | null;
-  partnerLogos?: (number | Media)[] | null;
+  /**
+   * Partners shown on the home page. Their order follows the Partners list (drag to reorder there).
+   */
+  partners?: (number | Partner)[] | null;
   cta?: {
     heading?: string | null;
     text?: string | null;
@@ -893,7 +928,7 @@ export interface HomePageSelect<T extends boolean = true> {
         text?: T;
       };
   featuredProjects?: T;
-  partnerLogos?: T;
+  partners?: T;
   cta?:
     | T
     | {

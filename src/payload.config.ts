@@ -16,6 +16,7 @@ import { Projects } from './collections/Projects'
 import { ProjectCategories } from './collections/ProjectCategories'
 import { Posts } from './collections/Posts'
 import { Messages } from './collections/Messages'
+import { Partners } from './collections/Partners'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
@@ -61,7 +62,7 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Services, Projects, ProjectCategories, Posts, Media, Messages, Users],
+  collections: [Services, Projects, ProjectCategories, Posts, Partners, Media, Messages, Users],
   globals: [HomePage, AboutPage, SiteSettings],
   editor: lexicalEditor(),
   // Email (contact form, password reset) goes through Resend once RESEND_API_KEY is set;
@@ -102,7 +103,9 @@ export default buildConfig({
       // keep the adapter's fields (e.g. _objectKey) in the schema even when disabled,
       // so local and Vercel share one database schema / migration history
       alwaysInsertFields: true,
-      collections: { media: true },
+      // an explicit (empty) prefix keeps the `prefix` column in the schema whether or not R2 is
+      // configured; without it, generating a migration with R2 on wants to drop that column
+      collections: { media: { prefix: '' } },
       bucket: process.env.R2_BUCKET || '',
       config: {
         endpoint: process.env.R2_ENDPOINT,

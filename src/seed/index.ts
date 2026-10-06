@@ -15,10 +15,17 @@ import { richText } from './lexical'
 
 const ASSETS = path.resolve(process.cwd(), 'seed-assets')
 
+// This script deletes every service, project, category, partner and media file before
+// recreating them. The project's .env may point at the shared production database, so it only
+// runs against a local one unless explicitly told otherwise.
+if (!/@?(localhost|127\.0\.0\.1)[:/]/.test(process.env.DATABASE_URL ?? '') && process.env.SEED_ALLOW_REMOTE !== 'yes') {
+  throw new Error('Refusing to seed: DATABASE_URL is not a local database. Set SEED_ALLOW_REMOTE=yes to wipe and reseed it anyway.')
+}
+
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
 
-for (const collection of ['services', 'projects', 'project-categories', 'media'] as const) {
+for (const collection of ['services', 'projects', 'project-categories', 'partners', 'media'] as const) {
   await payload.delete({ collection, where: { id: { exists: true } } })
 }
 log('cleared existing content')
@@ -40,6 +47,25 @@ const media = async (key: string, alt: string) => {
 }
 const mediaList = (keys: string[], alt: string) =>
   Promise.all(keys.map((k, i) => media(k, `${alt} ${i + 1}`)))
+
+// One partner per logo; the same logo used twice is the same partner.
+const partnerCache = new Map<string, number>()
+const partnerList = async (keys: string[], name: string) => {
+  const ids: number[] = []
+  for (const [i, key] of keys.entries()) {
+    let id = partnerCache.get(key)
+    if (!id) {
+      const doc = await payload.create({
+        collection: 'partners',
+        data: { name: `${name} ${i + 1}`, logo: await media(key, `${name} ${i + 1} logo`) },
+      })
+      id = doc.id
+      partnerCache.set(key, id)
+    }
+    ids.push(id)
+  }
+  return ids
+}
 
 // Categories
 const categoryIds = new Map<string, number>()
@@ -102,7 +128,7 @@ for (const s of [...services].sort((a, b) => a.order - b.order)) {
       slug: s.slug,
       cover: await media(s.cover, s.title.en),
       gallery: await mediaList(s.gallery, s.title.en),
-      partnerLogos: await mediaList(s.partnerLogos ?? [], `${s.title.en} partner logo`),
+      partners: await partnerList(s.partnerLogos ?? [], `${s.title.en} partner`),
       relatedProjects: (s.relatedProjects ?? []).map((slug) => projectIds.get(slug)!),
       title: s.title.en,
       headline: s.headline?.en,
@@ -131,7 +157,7 @@ log(`${services.length} services`)
 // Home page
 const homeShared = {
   slides: await mediaList(home.slides, 'HTAd'),
-  partnerLogos: await mediaList(home.partnerLogos, 'Partner logo'),
+  partners: await partnerList(home.partnerLogos, 'Partner'),
   featured: projects.filter((p) => p.featured).map((p) => projectIds.get(p.slug)!),
 }
 for (const locale of ['en', 'vi'] as const) {
@@ -146,7 +172,7 @@ for (const locale of ['en', 'vi'] as const) {
       servicesSection: c.servicesSection,
       projectsSection: c.projectsSection,
       featuredProjects: homeShared.featured,
-      partnerLogos: homeShared.partnerLogos,
+      partners: homeShared.partners,
       cta: c.cta,
     },
   })

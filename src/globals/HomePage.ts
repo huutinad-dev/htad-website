@@ -88,10 +88,11 @@ export const HomePage: GlobalConfig = {
               admin: { description: t('Projects shown on the home page (leave empty to use "featured").', 'Dự án hiển thị ở trang chủ (để trống sẽ dùng các dự án "nổi bật").') },
             },
             {
-              name: 'partnerLogos',
-              type: 'upload',
-              relationTo: 'media',
+              name: 'partners',
+              type: 'relationship',
+              relationTo: 'partners',
               hasMany: true,
+              admin: { description: t('Partners shown on the home page. Their order follows the Partners list (drag to reorder there).', 'Các đối tác hiển thị ở trang chủ. Thứ tự theo danh sách Đối tác (kéo thả ở đó để sắp xếp).') },
             },
             {
               name: 'cta',

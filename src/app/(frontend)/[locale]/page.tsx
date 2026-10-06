@@ -14,7 +14,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { ServiceList } from '@/components/ServiceList'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, mediaSrc } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, mediaSrc } from '@/lib/media'
 import { getHome, getProjects, getServices } from '@/lib/payload'
 import type { Project } from '@/payload-types'
 
@@ -37,7 +37,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const slides = asMediaList(home.hero?.slides).map((m) => ({ src: mediaSrc(m)!, alt: m.alt }))
   const chosen = (home.featuredProjects ?? []).filter((p): p is Project => typeof p === 'object')
   const featured = (chosen.length ? chosen : allProjects.filter((p) => p.featured)).slice(0, 8)
-  const logos = asMediaList(home.partnerLogos)
+  const partners = asPartnerList(home.partners)
 
   return (
     <>
@@ -76,19 +76,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Marquee items={(home.marquee ?? []).map((m) => m.text)} />
 
       {/* Partners */}
-      {logos.length > 0 && (
+      {partners.length > 0 && (
         <section className="border-y border-line py-12 md:py-16">
           <div className="container-x">
             <Reveal>
               <p className="eyebrow mb-10 text-center">{dict.partners}</p>
             </Reveal>
             <Stagger className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:gap-x-16">
-              {logos.map((logo) => {
+              {partners.map(({ partner, logo }) => {
                 const { width, height } = logoBox(logo.width, logo.height)
                 return (
-                  <StaggerItem key={logo.id}>
+                  <StaggerItem key={partner.id}>
                     {/* sized in em so the whole row scales down on small screens */}
-                    <PartnerLogo media={logo}>
+                    <PartnerLogo partner={partner}>
                       <div className="relative text-[11px] md:text-base" style={{ width: `${width}em`, height: `${height}em` }}>
                         <Img media={logo} fit="contain" sizes="200px" />
                       </div>

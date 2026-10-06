@@ -30,7 +30,7 @@ const fieldLabels: Record<string, ReturnType<typeof t>> = {
   galleryCaption: t('Gallery caption', 'Chú thích thư viện ảnh'),
   logo: t('Logo', 'Logo'),
   logoStacked: t('Stacked logo', 'Logo dạng xếp dọc'),
-  partnerLogos: t('Partner logos', 'Logo đối tác'),
+  partners: t('Partners', 'Đối tác'),
   slides: t('Slides', 'Ảnh trình chiếu'),
   alt: t('Alt text', 'Mô tả ảnh'),
   videoUrl: t('Video URL', 'Link video'),

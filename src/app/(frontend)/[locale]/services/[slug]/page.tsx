@@ -13,7 +13,7 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { RichText } from '@/components/RichText'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, mediaSrc, toGallery } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, mediaSrc, toGallery } from '@/lib/media'
 import { getHome, getService, getServices } from '@/lib/payload'
 import type { Project } from '@/payload-types'
 
@@ -37,7 +37,7 @@ export default async function ServicePage({ params }: Props) {
 
   const cover = asMedia(service.cover)
   const gallery = toGallery(asMediaList(service.gallery))
-  const logos = asMediaList(service.partnerLogos)
+  const partners = asPartnerList(service.partners)
   const related = (service.relatedProjects ?? []).filter((p): p is Project => typeof p === 'object')
   const others = services.filter((s) => s.id !== service.id)
 
@@ -65,10 +65,10 @@ export default async function ServicePage({ params }: Props) {
                 ))}
               </Stagger>
             )}
-            {logos.length > 0 && (
+            {partners.length > 0 && (
               <Reveal delay={0.1} className="flex flex-wrap items-center gap-8">
-                {logos.map((logo) => (
-                  <PartnerLogo key={logo.id} media={logo}>
+                {partners.map(({ partner, logo }) => (
+                  <PartnerLogo key={partner.id} partner={partner}>
                     <div className="relative h-24 w-32">
                       <Img media={logo} fit="contain" sizes="128px" />
                     </div>

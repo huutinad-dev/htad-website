@@ -22,16 +22,6 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: true,
     },
-    {
-      name: 'link',
-      type: 'text',
-      admin: {
-        description: t(
-          'Optional, for partner logos: the full address (https://…) to open when the logo is clicked.',
-          'Không bắt buộc, dùng cho logo đối tác: địa chỉ đầy đủ (https://…) sẽ mở khi bấm vào logo.',
-        ),
-      },
-    },
   ]),
   upload: {
     staticDir: 'media',
