@@ -18,7 +18,6 @@ export function ProjectCard({
   size?: 'md' | 'lg'
   showSubtitle?: boolean
 }) {
-  const category = typeof project.category === 'object' ? project.category?.title : null
   // picked partners by name; projects without any still use the older free-text line
   const partners =
     (project.partners ?? []).flatMap((p) => (typeof p === 'object' && p.visible !== false ? [p.name] : [])).join(' × ') ||
@@ -42,7 +41,6 @@ export function ProjectCard({
       </div>
       <div className="mt-5 flex items-start justify-between gap-6">
         <div>
-          {category && <p className="eyebrow mb-2">{category}</p>}
           <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">
             {project.title}
           </h3>

@@ -13,7 +13,7 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { RichText } from '@/components/RichText'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, asPartnerList, mediaSrc, toGallery } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, hasRichText, mediaSrc, toGallery } from '@/lib/media'
 import { getHome, getService, getServices } from '@/lib/payload'
 import type { Project } from '@/payload-types'
 
@@ -25,13 +25,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = await getService(locale, slug)
   if (!service) return {}
   const og = mediaSrc(asMedia(service.cover))
-  return { title: service.title, description: service.excerpt, openGraph: og ? { images: [og] } : undefined }
+  return {
+    title: service.title,
+    description: service.excerpt,
+    openGraph: og ? { images: [og] } : undefined,
+  }
 }
 
 export default async function ServicePage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
-  const [service, services, home] = await Promise.all([getService(locale, slug), getServices(locale), getHome(locale)])
+  const [service, services, home] = await Promise.all([
+    getService(locale, slug),
+    getServices(locale),
+    getHome(locale),
+  ])
   if (!service) notFound()
   const dict = getDictionary(locale)
 
@@ -45,40 +53,65 @@ export default async function ServicePage({ params }: Props) {
     <>
       <PageHero
         title={service.title}
-        lead={service.headline || service.excerpt}
+        // the excerpt repeats the opening of the body, so it only leads when there is no body
+        lead={service.headline || (hasRichText(service.body) ? undefined : service.excerpt)}
         image={cover}
       />
 
-      <section className="container-x py-24 md:py-32">
-        <div className="grid gap-16 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <RichText data={service.body} className="text-lg md:text-xl" />
+      {/* Intro: one centred reading column */}
+      {hasRichText(service.body) && (
+        <section className="container-x pt-16 md:pt-24">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <RichText data={service.body} className="text-xl md:text-2xl [&_p]:leading-relaxed" />
           </Reveal>
-          <div className="space-y-10 lg:col-span-4 lg:col-start-9">
-            {!!service.highlights?.length && (
-              <Stagger className="border-t border-line">
-                {service.highlights.map((h) => (
-                  <StaggerItem key={h.id} className="flex gap-4 border-b border-line py-5">
-                    <span className="mt-2 h-2 w-2 shrink-0 rotate-45 bg-gold" />
-                    <span className="text-white/85">{h.text}</span>
-                  </StaggerItem>
-                ))}
-              </Stagger>
-            )}
-            {partners.length > 0 && (
-              <Reveal delay={0.1} className="flex flex-wrap items-center gap-8">
-                {partners.map(({ partner, logo }) => (
-                  <PartnerLogo key={partner.id} partner={partner}>
-                    <div className="relative h-24 w-32">
-                      <Img media={logo} fit="contain" sizes="128px" />
-                    </div>
+        </section>
+      )}
+
+      {/* What we do: the highlights as a grid of numbered cells */}
+      {!!service.highlights?.length && (
+        <section className="container-x py-16 md:py-24">
+          <Stagger className="grid border-l border-t border-line sm:grid-cols-2 lg:grid-cols-3">
+            {service.highlights.map((h, i) => (
+              <StaggerItem
+                key={h.id}
+                className="flex flex-col gap-6 border-b border-r border-line p-6 md:p-8"
+              >
+                <span className="display text-3xl text-gold md:text-4xl">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="text-base leading-relaxed text-white/85 md:text-lg">{h.text}</span>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </section>
+      )}
+
+      {partners.length > 0 && (
+        <section className="container-x pb-16 md:pb-24">
+          <Reveal className="flex flex-col items-center gap-8">
+            <p className="eyebrow">{dict.partners}</p>
+            <ul className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+              {partners.map(({ partner, logo }) => (
+                <li key={partner.id}>
+                  <PartnerLogo partner={partner}>
+                    {/* a fixed height and the logo's own proportions, so wide and tall marks sit together */}
+                    <span
+                      className="relative block h-14"
+                      style={{
+                        aspectRatio:
+                          logo.width && logo.height ? Math.min(logo.width / logo.height, 4.5) : 2,
+                      }}
+                      title={partner.name}
+                    >
+                      <Img media={logo} fit="contain" sizes="240px" />
+                    </span>
                   </PartnerLogo>
-                ))}
-              </Reveal>
-            )}
-          </div>
-        </div>
-      </section>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+      )}
 
       {gallery.length > 0 && (
         <section className="container-x pb-24 md:pb-32">
@@ -98,7 +131,9 @@ export default async function ServicePage({ params }: Props) {
         <section className="border-t border-line py-24 md:py-32">
           <div className="container-x">
             <Reveal>
-              <h2 className="display mb-14 text-4xl text-gold md:text-6xl">{dict.relatedProjects}</h2>
+              <h2 className="display mb-14 text-4xl text-gold md:text-6xl">
+                {dict.relatedProjects}
+              </h2>
             </Reveal>
             <div className="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
               {related.map((p, i) => (
@@ -132,7 +167,12 @@ export default async function ServicePage({ params }: Props) {
         </div>
       </section>
 
-      <CtaBanner heading={home.cta?.heading} text={home.cta?.text} href={localePath(locale, `/contact`)} dict={dict} />
+      <CtaBanner
+        heading={home.cta?.heading}
+        text={home.cta?.text}
+        href={localePath(locale, `/contact`)}
+        dict={dict}
+      />
     </>
   )
 }

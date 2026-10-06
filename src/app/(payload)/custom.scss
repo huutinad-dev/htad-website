@@ -192,3 +192,16 @@
   height: 64px;
   width: auto;
 }
+
+// Upload previews (picking a new file, and an image's own edit view): show the whole image
+// in its frame. Thumbnails default to `cover`, which cut wide logos down to a few letters.
+.file-field__thumbnail-wrap,
+.file-details__thumbnail,
+.file-details .thumbnail {
+  background: var(--theme-elevation-100);
+
+  img,
+  svg {
+    object-fit: contain !important;
+  }
+}
