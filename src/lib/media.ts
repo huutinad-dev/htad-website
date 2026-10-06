@@ -8,13 +8,18 @@ export const asMediaList = (refs: MediaRef[] | null | undefined): Media[] =>
   (refs ?? []).map(asMedia).filter((m): m is Media => Boolean(m?.url))
 
 // Payload returns absolute URLs when serverURL is set; next/image only needs the path.
+// `?v=` changes whenever the media document is saved, so optimized images and CDN copies
+// can be cached for a long time and still refresh when an editor replaces a file.
 export const mediaSrc = (media: Media | null) => {
   if (!media?.url) return null
+  let path = media.url
   try {
-    return new URL(media.url).pathname
+    path = new URL(media.url).pathname
   } catch {
-    return media.url
+    // already a path
   }
+  const version = Date.parse(media.updatedAt)
+  return Number.isNaN(version) ? path : `${path}?v=${version.toString(36)}`
 }
 
 export const youTubeId = (url?: string | null) => {
