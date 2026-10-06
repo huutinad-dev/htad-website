@@ -114,3 +114,55 @@
   background-origin: border-box;
   background-clip: border-box;
 }
+
+// Sidebar group order: Content, Pages, then Admin. The sidebar lists groups in the order
+// their first entry appears (collections before globals), which would put Pages last, so the
+// two groups are re-ordered here by what they contain.
+.pt-nav__group:has(#nav-global-home-page) {
+  order: 1;
+}
+.pt-nav__group:has(#nav-users) {
+  order: 2;
+}
+
+// Drawers as centred dialogs. Payload opens "upload new", "choose from existing" and every
+// other side task in a panel that slides in from the right and covers almost the whole page,
+// which reads as leaving the page. From tablet up they are a centred popup over the dimmed
+// page instead; on phones the full-height panel stays, as there is no room for a dialog.
+@media (min-width: 768px) {
+  .drawer {
+    align-items: center;
+    justify-content: center;
+  }
+
+  // the strip beside the panel that closes it on click becomes the whole backdrop
+  .drawer__close {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    flex-grow: 0;
+  }
+
+  .drawer__content {
+    display: flex;
+    flex-direction: column;
+    // Payload sets the panel width inline, per nesting level
+    width: min(68rem, calc(100vw - 4rem)) !important;
+    max-height: calc(100vh - 4rem);
+    border: 1px solid var(--theme-border-color);
+    border-radius: calc(var(--pt-radius-card, 12px) + 4px);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 0.45);
+    transform: translateY(12px) scale(0.98);
+  }
+
+  .drawer--is-open .drawer__content {
+    transform: none;
+  }
+
+  // the dialog is as tall as its content, and scrolls inside once it reaches the limit
+  .drawer__content-children {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+  }
+}

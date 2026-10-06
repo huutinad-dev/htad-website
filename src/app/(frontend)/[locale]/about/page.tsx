@@ -47,17 +47,27 @@ export default async function AboutPage({ params }: Props) {
 
       {founder?.name && (
         <section className="relative overflow-hidden border-t border-line bg-surface/40 py-16 md:py-24">
-          <div className="container-x grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="container-x grid items-center gap-10 lg:grid-cols-12 lg:items-start lg:gap-12">
             <Reveal from="left" className="lg:col-span-5">
               <div className="relative mx-auto aspect-square max-w-md overflow-hidden rounded-sm bg-gold lg:max-w-none">
                 <Img media={asMedia(founder.photo)} sizes="(min-width: 1024px) 40vw, 100vw" />
               </div>
             </Reveal>
             <div className="lg:col-span-7">
-              <Reveal>
-                <p className="eyebrow mb-6">{founder.role || dict.founder}</p>
-              </Reveal>
-              <SplitHeading text={founder.name} className="display text-5xl text-gold md:text-7xl" />
+              {/* Desktop: the tops of the name's capitals line up with the top of the photo.
+                  The label floats above that line, and the negative margin removes the space
+                  between the top of the heading's box and its capitals: 0.2em of padding that
+                  SplitHeading keeps for accents, plus the line's own leading (larger in
+                  Vietnamese, whose line height leaves room for stacked accents). */}
+              <div className="relative">
+                <Reveal className="lg:absolute lg:bottom-full lg:left-0">
+                  <p className="eyebrow mb-6 lg:mb-14">{founder.role || dict.founder}</p>
+                </Reveal>
+                <SplitHeading
+                  text={founder.name}
+                  className="display text-5xl text-gold md:text-7xl lg:-mt-[0.28em] lg:[&:lang(vi)]:-mt-[0.41em]"
+                />
+              </div>
               <Reveal delay={0.15} className="mt-10">
                 <RichText data={founder.bio} className="text-justify" />
               </Reveal>
