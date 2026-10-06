@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { Img } from '@/components/Img'
-import { Parallax } from '@/components/motion/Parallax'
 import { Reveal } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { PageHero } from '@/components/PageHero'
@@ -13,6 +12,9 @@ import { asMedia } from '@/lib/media'
 import { getAbout } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string }> }
+
+/** Tallest the About image is drawn, in rem (a square logo is then this wide too). */
+const IMAGE_MAX_REM = 26
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
@@ -27,6 +29,8 @@ export default async function AboutPage({ params }: Props) {
   const about = await getAbout(locale)
   const dict = getDictionary(locale)
   const founder = about.founder
+  const image = asMedia(about.image)
+  const imageRatio = image?.width && image?.height ? image.width / image.height : 4 / 3
 
   return (
     <>
@@ -37,11 +41,18 @@ export default async function AboutPage({ params }: Props) {
           <Reveal>
             <RichText data={about.body} className="text-justify text-lg" />
           </Reveal>
-          <Reveal delay={0.1}>
-            <Parallax className="aspect-[4/3] rounded-sm">
-              <Img media={asMedia(about.image)} sizes="(min-width: 1024px) 50vw, 100vw" />
-            </Parallax>
-          </Reveal>
+          {image && (
+            <Reveal delay={0.1}>
+              {/* Shown whole, in its own proportions, and no taller than IMAGE_MAX_REM: the
+                  image may be a photo or a logo, so nothing is cropped to a fixed frame. */}
+              <div
+                className="relative mx-auto w-full"
+                style={{ aspectRatio: imageRatio, maxWidth: `${Math.min(imageRatio * IMAGE_MAX_REM, 44)}rem` }}
+              >
+                <Img media={image} fit="contain" sizes="(min-width: 1024px) 50vw, 100vw" />
+              </div>
+            </Reveal>
+          )}
         </div>
       </section>
 
@@ -61,7 +72,7 @@ export default async function AboutPage({ params }: Props) {
                   Vietnamese, whose line height leaves room for stacked accents). */}
               <div className="relative">
                 <Reveal className="lg:absolute lg:bottom-full lg:left-0">
-                  <p className="eyebrow mb-6 lg:mb-14">{founder.role || dict.founder}</p>
+                  <p className="eyebrow mb-6 lg:mb-2">{founder.role || dict.founder}</p>
                 </Reveal>
                 <SplitHeading
                   text={founder.name}
