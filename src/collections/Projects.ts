@@ -52,7 +52,7 @@ export const Projects: CollectionConfig = {
             },
             {
               name: 'role',
-              label: t('Role', 'Vai trò'),
+              label: t('HTAd’s role', 'Vai trò của HTAd'),
               type: 'text',
               localized: true,
               admin: { description: t('What HTAd did, e.g. "Consultancy & event organisation".', 'Việc HTAd đã làm, vd. "Tư vấn & tổ chức sự kiện".') },
