@@ -74,8 +74,10 @@ export function Header({ locale, dict, logo, email, social }: Props) {
   return (
     <>
       <motion.header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-          solid && !open ? 'border-b border-white/5 bg-ink/80 backdrop-blur-md' : 'bg-transparent'
+        // the border is always there and only its colour changes: adding it on scroll made it
+        // fade in from the default border colour (white), which flashed a white line
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ${
+          solid && !open ? 'border-white/5 bg-ink/80 backdrop-blur-md' : 'border-transparent bg-transparent'
         }`}
         animate={{ y: hidden && !open ? '-100%' : '0%' }}
         transition={{ duration: 0.5, ease: EASE }}

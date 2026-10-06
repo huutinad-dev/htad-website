@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Arrow } from './ArrowLink'
 import { ProjectSlider } from './ProjectSlider'
@@ -15,7 +15,7 @@ type Item = {
   image: { src: string; alt: string } | null
 }
 
-// Desktop: index-style list where hovering a row swaps the sticky preview image.
+// Desktop: index-style list where hovering a row swaps the preview image beside it.
 // Mobile/tablet: a swipeable slider of image cards (a long list is hard to scan on a phone).
 export function ServiceList({
   items,
@@ -30,6 +30,25 @@ export function ServiceList({
   const [preview, setPreview] = useState(0)
   const image = items[preview]?.image
 
+  // The preview is exactly as tall as the list at rest, so it sits still while the page scrolls.
+  // Hovering a row opens its excerpt and makes the list taller, so it is only measured while
+  // no excerpt is open: the image doesn't resize under the pointer.
+  const listRef = useRef<HTMLUListElement>(null)
+  const [restHeight, setRestHeight] = useState<number | null>(null)
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    const measure = () => {
+      if (list.querySelector('[data-excerpt]')) return
+      const next = list.offsetHeight
+      if (next > 0) setRestHeight(next)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(list)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <>
       <div className="lg:hidden">
@@ -41,7 +60,7 @@ export function ServiceList({
         />
       </div>
       <div className="hidden gap-12 lg:grid lg:grid-cols-12">
-        <ul className="border-t border-line lg:col-span-7" onMouseLeave={() => setActive(null)}>
+        <ul ref={listRef} className="self-start border-t border-line lg:col-span-7" onMouseLeave={() => setActive(null)}>
           {items.map((item, i) => (
             <motion.li
               key={item.href}
@@ -74,6 +93,7 @@ export function ServiceList({
                   <AnimatePresence initial={false}>
                     {active === i && (
                       <motion.span
+                        data-excerpt
                         className="hidden overflow-hidden lg:block"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
@@ -96,7 +116,10 @@ export function ServiceList({
         </ul>
 
         <div className="hidden lg:col-span-5 lg:block">
-          <div className="sticky top-28 aspect-[4/5] overflow-hidden rounded-sm bg-surface">
+          <div
+            className={`relative overflow-hidden rounded-sm bg-surface ${restHeight ? '' : 'aspect-[4/5]'}`}
+            style={restHeight ? { height: restHeight } : undefined}
+          >
             <AnimatePresence initial={false}>
               {image && (
                 <motion.div

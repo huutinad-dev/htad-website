@@ -15,7 +15,7 @@ type Props = {
 
 export function SectionHeading({ eyebrow, heading, text, link, className }: Props) {
   return (
-    <div className={`flex items-center gap-4 lg:items-end lg:justify-between lg:gap-8 ${className ?? ''}`}>
+    <div className={`flex items-center gap-4 lg:justify-between lg:gap-8 ${className ?? ''}`}>
       <div className="min-w-0 flex-1">
         {eyebrow && (
           <Reveal>
