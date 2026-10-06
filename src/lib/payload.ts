@@ -50,7 +50,7 @@ export const getProject = cache(async (locale: Locale, slug: string) => {
     locale,
     where: { slug: { equals: slug } },
     limit: 1,
-    depth: 1,
+    depth: 2, // partners → their logos,
   })
   return res.docs[0] ?? null
 })

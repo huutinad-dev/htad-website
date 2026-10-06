@@ -8,10 +8,11 @@ import { Img } from '@/components/Img'
 import { Reveal } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { RichText } from '@/components/RichText'
-import { VideoButton } from '@/components/VideoButton'
+import { PartnerLogo } from '@/components/PartnerLogo'
+import { VideoEmbed } from '@/components/VideoEmbed'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
 import { getProject } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -41,6 +42,7 @@ export default async function ProjectPage({ params }: Props) {
   const gallery = toGallery(asMediaList(project.gallery))
   const category = typeof project.category === 'object' ? project.category : null
   const videoId = youTubeId(project.videoUrl)
+  const partners = asPartnerList(project.partners)
 
   return (
     <>
@@ -50,13 +52,6 @@ export default async function ProjectPage({ params }: Props) {
           <Img media={cover} priority className="animate-kenburns" />
           <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/40 to-ink" />
         </div>
-        {videoId && (
-          <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
-            <Reveal delay={0.5} from="none">
-              <VideoButton videoId={videoId} label={dict.watchVideo} variant="round" />
-            </Reveal>
-          </div>
-        )}
         <div className="container-x relative pb-16 pt-40 md:pb-24">
           {category && (
             <Reveal>
@@ -91,11 +86,34 @@ export default async function ProjectPage({ params }: Props) {
                   <p>{project.year}</p>
                 </div>
               )}
-              {project.partner && (
-                <div>
-                  <p className="eyebrow mb-2">{dict.partner}</p>
-                  <p>{project.partner}</p>
+              {partners.length > 0 ? (
+                <div className="col-span-2 lg:col-span-1">
+                  <p className="eyebrow mb-4">{dict.partner}</p>
+                  <ul className="flex flex-wrap items-center gap-x-8 gap-y-5">
+                    {partners.map(({ partner, logo }) => (
+                      <li key={partner.id}>
+                        <PartnerLogo partner={partner}>
+                          {/* a fixed height and the logo's own proportions, so wide and tall marks sit together */}
+                          <div
+                            className="relative h-10"
+                            style={{ aspectRatio: logo.width && logo.height ? Math.min(logo.width / logo.height, 4.5) : 2 }}
+                            title={partner.name}
+                          >
+                            <Img media={logo} fit="contain" sizes="180px" />
+                          </div>
+                        </PartnerLogo>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              ) : (
+                // no partner picked yet: the older free-text line
+                project.partner && (
+                  <div>
+                    <p className="eyebrow mb-2">{dict.partner}</p>
+                    <p>{project.partner}</p>
+                  </div>
+                )
               )}
               {project.role && (
                 <div>
@@ -109,14 +127,19 @@ export default async function ProjectPage({ params }: Props) {
                 <Img media={logo} fit="contain" sizes="192px" className="object-left" />
               </Reveal>
             )}
-            <Reveal delay={0.15} className="flex flex-wrap gap-3">
-              {videoId && <VideoButton videoId={videoId} label={dict.watchVideo} />}
-              {project.externalUrl && (
+            {/* the project's YouTube video: a small player in the side column, played in place */}
+            {videoId && (
+              <Reveal delay={0.15} className="max-w-sm">
+                <VideoEmbed videoId={videoId} label={dict.watchVideo} />
+              </Reveal>
+            )}
+            {project.externalUrl && (
+              <Reveal delay={0.15}>
                 <ArrowLink href={project.externalUrl} external>
                   {dict.readArticle}
                 </ArrowLink>
-              )}
-            </Reveal>
+              </Reveal>
+            )}
           </aside>
           <div className="lg:col-span-7 lg:col-start-6">
             {project.body ? (
@@ -130,18 +153,24 @@ export default async function ProjectPage({ params }: Props) {
                 </Reveal>
               )
             )}
-            {project.quote && (
-              <Reveal delay={0.1}>
-                <p className="display mt-14 text-4xl text-gold md:text-6xl">{project.quote}</p>
-              </Reveal>
-            )}
           </div>
         </div>
       </section>
 
+      {/* Slogan: centred on a single line (the type shrinks to fit the width) */}
+      {project.quote && (
+        <section className="container-x pb-16 text-center md:pb-24">
+          <SplitHeading
+            as="p"
+            text={project.quote.replace(/\s*\n\s*/g, ' ')}
+            className="display fit-line text-gold [--fit-max:3rem] sm:[--fit-max:4.5rem] md:[--fit-pad:5rem] xl:[--fit-max:6rem]"
+          />
+        </section>
+      )}
+
       {gallery.length > 0 && (
         <section className="container-x pb-24 md:pb-32">
-          <Gallery images={gallery} columns={gallery.length > 3 ? 3 : 2} />
+          <Gallery images={gallery} layout={project.galleryLayout ?? 'landscape'} />
         </section>
       )}
     </>

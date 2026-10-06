@@ -85,7 +85,7 @@ export default async function ServicePage({ params }: Props) {
           <Reveal>
             <p className="eyebrow mb-8">{dict.gallery}</p>
           </Reveal>
-          <Gallery images={gallery} columns={gallery.length > 2 ? 3 : 2} />
+          <Gallery images={gallery} />
           {service.galleryCaption && (
             <Reveal>
               <p className="mt-4 max-w-2xl text-sm italic text-muted">{service.galleryCaption}</p>

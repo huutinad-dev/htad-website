@@ -19,6 +19,10 @@ export function ProjectCard({
   showSubtitle?: boolean
 }) {
   const category = typeof project.category === 'object' ? project.category?.title : null
+  // picked partners by name; projects without any still use the older free-text line
+  const partners =
+    (project.partners ?? []).flatMap((p) => (typeof p === 'object' && p.visible !== false ? [p.name] : [])).join(' × ') ||
+    project.partner
   return (
     <Link href={localePath(locale, `/projects/${project.slug}`)} className="group block">
       <div
@@ -42,8 +46,8 @@ export function ProjectCard({
           <h3 className="text-xl font-bold leading-snug transition-colors group-hover:text-gold md:text-2xl">
             {project.title}
           </h3>
-          {showSubtitle && (project.partner || project.subtitle) && (
-            <p className="mt-1 text-sm text-muted">{project.partner || project.subtitle}</p>
+          {showSubtitle && (partners || project.subtitle) && (
+            <p className="mt-1 text-sm text-muted">{partners || project.subtitle}</p>
           )}
         </div>
         {project.year && <span className="shrink-0 text-sm text-white/40">{project.year}</span>}

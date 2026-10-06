@@ -268,8 +268,9 @@ export interface Project {
    */
   subtitle?: string | null;
   /**
-   * Partner / client, e.g. "VPF × Thomas Lyte". Shown on the card and the project page.
+   * Partners / clients of this project, picked from the Partners list. Their logos show on the project page.
    */
+  partners?: (number | Partner)[] | null;
   partner?: string | null;
   /**
    * What HTAd did, e.g. "Consultancy & event organisation".
@@ -297,6 +298,10 @@ export interface Project {
   quote?: string | null;
   cover: number | Media;
   gallery?: (number | Media)[] | null;
+  /**
+   * Pick the shape most gallery images have. Images are never cropped; this sets how many fit per row.
+   */
+  galleryLayout?: ('landscape' | 'portrait') | null;
   logo?: (number | null) | Media;
   /**
    * YouTube link — shown as a "Watch" button with an embedded player.
@@ -547,6 +552,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
   subtitle?: T;
+  partners?: T;
   partner?: T;
   role?: T;
   excerpt?: T;
@@ -554,6 +560,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   quote?: T;
   cover?: T;
   gallery?: T;
+  galleryLayout?: T;
   logo?: T;
   videoUrl?: T;
   externalUrl?: T;

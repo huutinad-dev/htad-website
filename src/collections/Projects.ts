@@ -36,10 +36,19 @@ export const Projects: CollectionConfig = {
               admin: { description: t('Client or context line, e.g. "Vietnam Professional Football Leagues".', 'Dòng khách hàng hoặc bối cảnh, vd. "Vietnam Professional Football Leagues".') },
             },
             {
+              name: 'partners',
+              type: 'relationship',
+              relationTo: 'partners',
+              hasMany: true,
+              admin: { description: t('Partners / clients of this project, picked from the Partners list. Their logos show on the project page.', 'Đối tác / khách hàng của dự án, chọn từ danh sách Đối tác. Logo của họ hiển thị ở trang dự án.') },
+            },
+            {
+              // Replaced by `partners`. Still shown on the site for projects that have no partner
+              // picked yet; hidden in the admin and kept so the text isn't lost.
               name: 'partner',
               type: 'text',
               localized: true,
-              admin: { description: t('Partner / client, e.g. "VPF × Thomas Lyte". Shown on the card and the project page.', 'Đối tác / khách hàng, vd. "VPF × Thomas Lyte". Hiển thị trên thẻ và trang dự án.') },
+              admin: { hidden: true },
             },
             {
               name: 'role',
@@ -63,6 +72,23 @@ export const Projects: CollectionConfig = {
           fields: [
             { name: 'cover', type: 'upload', relationTo: 'media', required: true },
             { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
+            {
+              name: 'galleryLayout',
+              label: t('Gallery layout', 'Kiểu hiển thị thư viện ảnh'),
+              type: 'radio',
+              defaultValue: 'landscape',
+              options: [
+                { label: t('Landscape (wide images)', 'Ngang (ảnh nằm ngang)'), value: 'landscape' },
+                { label: t('Portrait (tall images)', 'Dọc (ảnh đứng)'), value: 'portrait' },
+              ],
+              admin: {
+                layout: 'horizontal',
+                description: t(
+                  'Pick the shape most gallery images have. Images are never cropped; this sets how many fit per row.',
+                  'Chọn theo dạng của đa số ảnh. Ảnh không bị cắt; tuỳ chọn này quyết định số ảnh mỗi hàng.',
+                ),
+              },
+            },
             { name: 'logo', type: 'upload', relationTo: 'media' },
             {
               name: 'videoUrl',
