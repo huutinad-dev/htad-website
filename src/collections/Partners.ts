@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { PARTNER_LOGO_MAX, resizePartnerLogo } from '../hooks/resizePartnerLogo'
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
 import { t, withLabels } from '../i18n/admin'
 
@@ -19,7 +20,8 @@ export const Partners: CollectionConfig = {
   orderable: true,
   defaultSort: '_order',
   hooks: {
-    afterChange: [revalidateCollection],
+    // resize first, so the cache purge that follows already sees the smaller logo
+    afterChange: [resizePartnerLogo, revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
   },
   fields: withLabels([
@@ -29,7 +31,12 @@ export const Partners: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       required: true,
-      admin: { description: t('Transparent PNG works best.', 'Nên dùng PNG nền trong suốt.') },
+      admin: {
+        description: t(
+          `Transparent PNG works best. Larger images are scaled down to fit ${PARTNER_LOGO_MAX}px (proportions kept) when the partner is saved.`,
+          `Nên dùng PNG nền trong suốt. Ảnh lớn hơn sẽ tự thu về tối đa ${PARTNER_LOGO_MAX}px (giữ tỉ lệ) khi lưu đối tác.`,
+        ),
+      },
     },
     {
       name: 'link',
