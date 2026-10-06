@@ -205,3 +205,38 @@
     object-fit: contain !important;
   }
 }
+
+// Picking several images from the library: the "Select N" button (the only white pill in the
+// list controls, and only rendered once something is ticked) becomes a large bar pinned to
+// the bottom of the dialog instead of a small pill beside the search box.
+.list-drawer .list-controls .pill--style-white {
+  position: fixed;
+  left: 50%;
+  bottom: 3rem;
+  z-index: 10;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14rem;
+  height: 52px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--pt-accent, var(--theme-success-500));
+  color: var(--pt-accent-contrast, var(--theme-elevation-0));
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.5);
+  }
+}
+
+// room under the last row of images so the bar never covers them
+.list-drawer:has(.list-controls .pill--style-white) .drawer__content-children {
+  padding-bottom: 6rem;
+}
