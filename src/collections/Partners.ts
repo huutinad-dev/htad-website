@@ -4,14 +4,15 @@ import { PARTNER_LOGO_MAX, resizePartnerLogo } from '../hooks/resizePartnerLogo'
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
 import { t, withLabels } from '../i18n/admin'
 
-// The partner list. The home page and each service pick which partners to show from here.
+// The partner list. The home page shows every visible partner, in this list's order;
+// each service picks its own partners from here.
 export const Partners: CollectionConfig = {
   slug: 'partners',
   labels: { singular: t('Partner', 'Đối tác'), plural: t('Partners', 'Đối tác') },
   admin: {
     group: t('Content', 'Nội dung'),
     useAsTitle: 'name',
-    defaultColumns: ['name', 'logo', 'link'],
+    defaultColumns: ['name', 'logo', 'link', 'visible'],
   },
   access: {
     read: () => true,
@@ -46,6 +47,15 @@ export const Partners: CollectionConfig = {
           'Optional: the full address (https://…) to open when the logo is clicked.',
           'Không bắt buộc: địa chỉ đầy đủ (https://…) sẽ mở khi bấm vào logo.',
         ),
+      },
+    },
+    {
+      name: 'visible',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description: t('Untick to hide this partner from the website.', 'Bỏ chọn để ẩn đối tác này khỏi website.'),
       },
     },
   ]),

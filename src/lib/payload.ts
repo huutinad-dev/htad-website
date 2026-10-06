@@ -55,6 +55,18 @@ export const getProject = cache(async (locale: Locale, slug: string) => {
   return res.docs[0] ?? null
 })
 
+// Every partner not switched off in the admin, in the list's drag-and-drop order.
+export const getPartners = cache(async () => {
+  const res = await (await client()).find({
+    collection: 'partners',
+    where: { visible: { not_equals: false } },
+    sort: '_order',
+    limit: 200,
+    depth: 1,
+  })
+  return res.docs
+})
+
 // Drafts stay in the admin: the site only ever lists published posts.
 export const getPosts = cache(async (locale: Locale) => {
   const res = await (await client()).find({

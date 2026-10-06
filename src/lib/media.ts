@@ -22,13 +22,13 @@ export const mediaSrc = (media: Media | null) => {
   return Number.isNaN(version) ? path : `${path}?v=${version.toString(36)}`
 }
 
-// Populated partners that have a usable logo (relationship fields hold ids until populated),
-// in the order of the Partners list, which editors arrange by drag-and-drop in the admin.
+// Populated, visible partners that have a usable logo (relationship fields hold ids until
+// populated), in the order of the Partners list, which editors arrange by drag-and-drop.
 export const asPartnerList = (refs: (number | Partner)[] | null | undefined) =>
   (refs ?? [])
     .flatMap((ref) => {
       const logo = typeof ref === 'object' ? asMedia(ref.logo) : null
-      return typeof ref === 'object' && logo?.url ? [{ partner: ref, logo }] : []
+      return typeof ref === 'object' && ref.visible !== false && logo?.url ? [{ partner: ref, logo }] : []
     })
     .sort((a, b) => (a.partner._order ?? '').localeCompare(b.partner._order ?? ''))
 

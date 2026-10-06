@@ -248,6 +248,10 @@ export interface Partner {
    * Optional: the full address (https://…) to open when the logo is clicked.
    */
   link?: string | null;
+  /**
+   * Untick to hide this partner from the website.
+   */
+  visible?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -600,6 +604,7 @@ export interface PartnersSelect<T extends boolean = true> {
   name?: T;
   logo?: T;
   link?: T;
+  visible?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -773,9 +778,6 @@ export interface HomePage {
    * Projects shown on the home page (leave empty to use "featured").
    */
   featuredProjects?: (number | Project)[] | null;
-  /**
-   * Partners shown on the home page. Their order follows the Partners list (drag to reorder there).
-   */
   partners?: (number | Partner)[] | null;
   cta?: {
     heading?: string | null;

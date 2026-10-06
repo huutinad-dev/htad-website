@@ -15,7 +15,7 @@ import { ServiceList } from '@/components/ServiceList'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, asPartnerList, mediaSrc } from '@/lib/media'
-import { getHome, getProjects, getServices } from '@/lib/payload'
+import { getHome, getPartners, getProjects, getServices } from '@/lib/payload'
 import type { Project } from '@/payload-types'
 
 // Partner logos have very different shapes (shields vs. wide wordmarks). Giving each the
@@ -31,13 +31,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const [home, services, allProjects] = await Promise.all([getHome(locale), getServices(locale), getProjects(locale)])
+  const [home, services, allProjects, allPartners] = await Promise.all([
+    getHome(locale),
+    getServices(locale),
+    getProjects(locale),
+    getPartners(),
+  ])
   const dict = getDictionary(locale)
 
   const slides = asMediaList(home.hero?.slides).map((m) => ({ src: mediaSrc(m)!, alt: m.alt ?? '' }))
   const chosen = (home.featuredProjects ?? []).filter((p): p is Project => typeof p === 'object')
   const featured = (chosen.length ? chosen : allProjects.filter((p) => p.featured)).slice(0, 8)
-  const partners = asPartnerList(home.partners)
+  const partners = asPartnerList(allPartners)
 
   return (
     <>

@@ -92,7 +92,9 @@ export const HomePage: GlobalConfig = {
               type: 'relationship',
               relationTo: 'partners',
               hasMany: true,
-              admin: { description: t('Partners shown on the home page. Their order follows the Partners list (drag to reorder there).', 'Các đối tác hiển thị ở trang chủ. Thứ tự theo danh sách Đối tác (kéo thả ở đó để sắp xếp).') },
+              // No longer used: the home page now shows every visible partner (see Partners).
+              // Hidden rather than removed so the shared database needs no change yet.
+              admin: { hidden: true },
             },
             {
               name: 'cta',
