@@ -249,7 +249,7 @@ export interface Partner {
    */
   link?: string | null;
   /**
-   * Turn off to hide this partner from the website.
+   * Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.
    */
   visible?: boolean | null;
   updatedAt: string;

@@ -20,7 +20,7 @@ export function ProjectCard({
 }) {
   // picked partners by name; projects without any still use the older free-text line
   const partners =
-    (project.partners ?? []).flatMap((p) => (typeof p === 'object' && p.visible !== false ? [p.name] : [])).join(' × ') ||
+    (project.partners ?? []).flatMap((p) => (typeof p === 'object' ? [p.name] : [])).join(' × ') ||
     project.partner
   return (
     <Link href={localePath(locale, `/projects/${project.slug}`)} className="group block">

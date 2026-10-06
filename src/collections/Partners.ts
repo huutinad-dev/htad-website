@@ -4,8 +4,8 @@ import { PARTNER_LOGO_MAX, resizePartnerLogo } from '../hooks/resizePartnerLogo'
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
 import { t, withLabels } from '../i18n/admin'
 
-// The partner list. The home page shows every visible partner, in this list's order;
-// each service picks its own partners from here.
+// The partner list. The home page strip shows the partners switched to visible, in this
+// list's order; projects and services pick their own partners here and always show them.
 export const Partners: CollectionConfig = {
   slug: 'partners',
   labels: { singular: t('Partner', 'Đối tác'), plural: t('Partners', 'Đối tác') },
@@ -56,7 +56,10 @@ export const Partners: CollectionConfig = {
       type: 'checkbox',
       defaultValue: true,
       admin: {
-        description: t('Turn off to hide this partner from the website.', 'Tắt để ẩn đối tác này khỏi website.'),
+        description: t(
+          'Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.',
+          'Hiển thị đối tác trong dải đối tác ở trang chủ. Dự án và dịch vụ luôn hiện các đối tác đã được chọn.',
+        ),
         // a switch instead of a checkbox; in the list view it saves immediately
         components: {
           Cell: '/components/admin/VisibleToggle#VisibleToggleCell',

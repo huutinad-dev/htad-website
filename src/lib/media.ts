@@ -30,15 +30,15 @@ export const mediaSrc = (media: Media | null) => {
     : `${path}${path.includes('?') ? '&' : '?'}v=${version.toString(36)}`
 }
 
-// Populated, visible partners that have a usable logo (relationship fields hold ids until
+// Populated partners that have a usable logo (relationship fields hold ids until
 // populated), in the order of the Partners list, which editors arrange by drag-and-drop.
+// `visible` is not checked here: it only decides the home page strip (getPartners), while a
+// partner picked on a project or service always shows there.
 export const asPartnerList = (refs: (number | Partner)[] | null | undefined) =>
   (refs ?? [])
     .flatMap((ref) => {
       const logo = typeof ref === 'object' ? asMedia(ref.logo) : null
-      return typeof ref === 'object' && ref.visible !== false && logo?.url
-        ? [{ partner: ref, logo }]
-        : []
+      return typeof ref === 'object' && logo?.url ? [{ partner: ref, logo }] : []
     })
     .sort((a, b) => (a.partner._order ?? '').localeCompare(b.partner._order ?? ''))
 

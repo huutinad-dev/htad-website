@@ -33,21 +33,34 @@ export const Services: CollectionConfig = {
               name: 'headline',
               type: 'text',
               localized: true,
-              admin: { description: t('Optional headline shown on the detail page.', 'Tiêu đề phụ (không bắt buộc) hiển thị ở trang chi tiết.') },
+              admin: {
+                description: t(
+                  'Optional headline shown on the detail page.',
+                  'Tiêu đề phụ (không bắt buộc) hiển thị ở trang chi tiết.',
+                ),
+              },
             },
             {
               name: 'excerpt',
               type: 'textarea',
               required: true,
               localized: true,
-              admin: { description: t('Short summary used on cards and the home page.', 'Tóm tắt ngắn dùng trên thẻ và trang chủ.') },
+              admin: {
+                description: t(
+                  'Short summary used on cards and the home page.',
+                  'Tóm tắt ngắn dùng trên thẻ và trang chủ.',
+                ),
+              },
             },
             { name: 'body', type: 'richText', localized: true },
             {
               name: 'highlights',
               type: 'array',
               localized: true,
-              labels: { singular: t('Highlight', 'Điểm nổi bật'), plural: t('Highlights', 'Điểm nổi bật') },
+              labels: {
+                singular: t('Highlight', 'Điểm nổi bật'),
+                plural: t('Highlights', 'Điểm nổi bật'),
+              },
               fields: [{ name: 'text', type: 'text', required: true }],
             },
           ],
@@ -63,7 +76,14 @@ export const Services: CollectionConfig = {
               type: 'relationship',
               relationTo: 'partners',
               hasMany: true,
-              admin: { description: t('Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).', 'Đối tác / đơn vị bản quyền của dịch vụ này. Thứ tự theo danh sách Đối tác (kéo thả ở đó để sắp xếp).') },
+              admin: {
+                // pick only: partners are edited in the Partners list
+                allowEdit: false,
+                description: t(
+                  'Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).',
+                  'Đối tác / đơn vị bản quyền của dịch vụ này. Thứ tự theo danh sách Đối tác (kéo thả ở đó để sắp xếp).',
+                ),
+              },
             },
           ],
         },

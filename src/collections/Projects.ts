@@ -33,14 +33,26 @@ export const Projects: CollectionConfig = {
               name: 'subtitle',
               type: 'text',
               localized: true,
-              admin: { description: t('Client or context line, e.g. "Vietnam Professional Football Leagues".', 'Dòng khách hàng hoặc bối cảnh, vd. "Vietnam Professional Football Leagues".') },
+              admin: {
+                description: t(
+                  'Client or context line, e.g. "Vietnam Professional Football Leagues".',
+                  'Dòng khách hàng hoặc bối cảnh, vd. "Vietnam Professional Football Leagues".',
+                ),
+              },
             },
             {
               name: 'partners',
               type: 'relationship',
               relationTo: 'partners',
               hasMany: true,
-              admin: { description: t('Partners / clients of this project, picked from the Partners list. Their logos show on the project page.', 'Đối tác / khách hàng của dự án, chọn từ danh sách Đối tác. Logo của họ hiển thị ở trang dự án.') },
+              admin: {
+                // pick only: partners are edited in the Partners list
+                allowEdit: false,
+                description: t(
+                  'Partners / clients of this project, picked from the Partners list. Their logos show on the project page.',
+                  'Đối tác / khách hàng của dự án, chọn từ danh sách Đối tác. Logo của họ hiển thị ở trang dự án.',
+                ),
+              },
             },
             {
               // Replaced by `partners`. Still shown on the site for projects that have no partner
@@ -55,7 +67,12 @@ export const Projects: CollectionConfig = {
               label: t('HTAd’s role', 'Vai trò của HTAd'),
               type: 'text',
               localized: true,
-              admin: { description: t('What HTAd did, e.g. "Consultancy & event organisation".', 'Việc HTAd đã làm, vd. "Tư vấn & tổ chức sự kiện".') },
+              admin: {
+                description: t(
+                  'What HTAd did, e.g. "Consultancy & event organisation".',
+                  'Việc HTAd đã làm, vd. "Tư vấn & tổ chức sự kiện".',
+                ),
+              },
             },
             { name: 'year', type: 'text' },
             { name: 'excerpt', type: 'textarea', localized: true },
@@ -64,7 +81,12 @@ export const Projects: CollectionConfig = {
               name: 'quote',
               type: 'text',
               localized: true,
-              admin: { description: t('Optional slogan / tagline highlighted on the page.', 'Slogan / khẩu hiệu (không bắt buộc) được làm nổi bật trên trang.') },
+              admin: {
+                description: t(
+                  'Optional slogan / tagline highlighted on the page.',
+                  'Slogan / khẩu hiệu (không bắt buộc) được làm nổi bật trên trang.',
+                ),
+              },
             },
           ],
         },
@@ -79,7 +101,10 @@ export const Projects: CollectionConfig = {
               type: 'radio',
               defaultValue: 'landscape',
               options: [
-                { label: t('Landscape (wide images)', 'Ngang (ảnh nằm ngang)'), value: 'landscape' },
+                {
+                  label: t('Landscape (wide images)', 'Ngang (ảnh nằm ngang)'),
+                  value: 'landscape',
+                },
                 { label: t('Portrait (tall images)', 'Dọc (ảnh đứng)'), value: 'portrait' },
               ],
               admin: {
@@ -94,12 +119,22 @@ export const Projects: CollectionConfig = {
             {
               name: 'videoUrl',
               type: 'text',
-              admin: { description: t('YouTube link — shown as a "Watch" button with an embedded player.', 'Link YouTube — hiển thị thành nút "Xem video" kèm trình phát nhúng.') },
+              admin: {
+                description: t(
+                  'YouTube link — shown as a "Watch" button with an embedded player.',
+                  'Link YouTube — hiển thị thành nút "Xem video" kèm trình phát nhúng.',
+                ),
+              },
             },
             {
               name: 'externalUrl',
               type: 'text',
-              admin: { description: t('Optional external link (press article, campaign page…).', 'Link ngoài không bắt buộc (bài báo, trang chiến dịch…).') },
+              admin: {
+                description: t(
+                  'Optional external link (press article, campaign page…).',
+                  'Link ngoài không bắt buộc (bài báo, trang chiến dịch…).',
+                ),
+              },
             },
           ],
         },
