@@ -36,7 +36,8 @@ function Switch({
         border: 'none',
         borderRadius: 999,
         cursor: busy ? 'progress' : 'pointer',
-        background: on ? 'var(--theme-success-500)' : 'var(--theme-elevation-250)',
+        // the admin theme's accent; the fallbacks apply if the theme is ever removed
+        background: on ? 'var(--pt-accent, var(--theme-success-500))' : 'var(--theme-elevation-250)',
         opacity: busy ? 0.6 : 1,
         transition: 'background 150ms ease',
       }}
@@ -49,7 +50,7 @@ function Switch({
           width: 16,
           height: 16,
           borderRadius: '50%',
-          background: 'var(--theme-elevation-0)',
+          background: on ? 'var(--pt-accent-contrast, var(--theme-elevation-0))' : 'var(--theme-elevation-0)',
           transition: 'left 150ms ease',
         }}
       />
