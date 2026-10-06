@@ -63,14 +63,6 @@ export const Services: CollectionConfig = {
               },
               fields: [{ name: 'text', type: 'text', required: true }],
             },
-          ],
-        },
-        {
-          label: t('Media', 'Hình ảnh'),
-          fields: [
-            { name: 'cover', type: 'upload', relationTo: 'media', required: true },
-            { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
-            { name: 'galleryCaption', type: 'text', localized: true },
             {
               name: 'partners',
               type: 'relationship',
@@ -86,6 +78,14 @@ export const Services: CollectionConfig = {
                 ),
               },
             },
+          ],
+        },
+        {
+          label: t('Media', 'Hình ảnh'),
+          fields: [
+            { name: 'cover', type: 'upload', relationTo: 'media', required: true },
+            { name: 'gallery', type: 'upload', relationTo: 'media', hasMany: true },
+            { name: 'galleryCaption', type: 'text', localized: true },
           ],
         },
         {

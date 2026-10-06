@@ -87,7 +87,7 @@ export default async function ServicePage({ params }: Props) {
       )}
 
       {partners.length > 0 && (
-        <section className="container-x pb-16 md:pb-24">
+        <section className="container-x pb-16 pt-16 md:pb-24 md:pt-24">
           <Reveal className="flex flex-col items-center gap-8">
             <p className="eyebrow">{dict.partners}</p>
             <ul className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
@@ -115,9 +115,6 @@ export default async function ServicePage({ params }: Props) {
 
       {gallery.length > 0 && (
         <section className="container-x pb-24 md:pb-32">
-          <Reveal>
-            <p className="eyebrow mb-8">{dict.gallery}</p>
-          </Reveal>
           <Gallery images={gallery} />
           {service.galleryCaption && (
             <Reveal>

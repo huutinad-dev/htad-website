@@ -174,19 +174,42 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
-  cover: number | Media;
-  gallery?: (number | Media)[] | null;
-  galleryCaption?: string | null;
   /**
    * Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).
    */
   partners?: (number | Partner)[] | null;
+  cover: number | Media;
+  gallery?: (number | Media)[] | null;
+  galleryCaption?: string | null;
   relatedProjects?: (number | Project)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Transparent PNG works best. Larger images are scaled down to fit 500px (proportions kept) when the partner is saved.
+   */
+  logo: number | Media;
+  /**
+   * Optional: the full address (https://…) to open when the logo is clicked.
+   */
+  link?: string | null;
+  /**
+   * Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.
+   */
+  visible?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -231,29 +254,6 @@ export interface Media {
       filename?: string | null;
     };
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: number;
-  _order?: string | null;
-  name: string;
-  /**
-   * Transparent PNG works best. Larger images are scaled down to fit 500px (proportions kept) when the partner is saved.
-   */
-  logo: number | Media;
-  /**
-   * Optional: the full address (https://…) to open when the logo is clicked.
-   */
-  link?: string | null;
-  /**
-   * Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.
-   */
-  visible?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -540,10 +540,10 @@ export interface ServicesSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
+  partners?: T;
   cover?: T;
   gallery?: T;
   galleryCaption?: T;
-  partners?: T;
   relatedProjects?: T;
   generateSlug?: T;
   slug?: T;
