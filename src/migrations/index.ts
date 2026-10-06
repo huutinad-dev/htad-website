@@ -8,6 +8,7 @@ import * as migration_20261003_142520_add_project_partner_role_contact_page from
 import * as migration_20261005_161302_add_posts from './20261005_161302_add_posts';
 import * as migration_20261005_163508_add_messages from './20261005_163508_add_messages';
 import * as migration_20261005_170009_localize_founder_name from './20261005_170009_localize_founder_name';
+import * as migration_20261006_075551_add_media_link from './20261006_075551_add_media_link';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20261005_170009_localize_founder_name.up,
     down: migration_20261005_170009_localize_founder_name.down,
-    name: '20261005_170009_localize_founder_name'
+    name: '20261005_170009_localize_founder_name',
+  },
+  {
+    up: migration_20261006_075551_add_media_link.up,
+    down: migration_20261006_075551_add_media_link.down,
+    name: '20261006_075551_add_media_link'
   },
 ];

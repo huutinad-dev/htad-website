@@ -8,6 +8,7 @@ import { Gallery } from '@/components/Gallery'
 import { Img } from '@/components/Img'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { PageHero } from '@/components/PageHero'
+import { PartnerLogo } from '@/components/PartnerLogo'
 import { ProjectCard } from '@/components/ProjectCard'
 import { RichText } from '@/components/RichText'
 import { isLocale, localePath } from '@/i18n/config'
@@ -67,9 +68,11 @@ export default async function ServicePage({ params }: Props) {
             {logos.length > 0 && (
               <Reveal delay={0.1} className="flex flex-wrap items-center gap-8">
                 {logos.map((logo) => (
-                  <div key={logo.id} className="relative h-24 w-32">
-                    <Img media={logo} fit="contain" sizes="128px" />
-                  </div>
+                  <PartnerLogo key={logo.id} media={logo}>
+                    <div className="relative h-24 w-32">
+                      <Img media={logo} fit="contain" sizes="128px" />
+                    </div>
+                  </PartnerLogo>
                 ))}
               </Reveal>
             )}

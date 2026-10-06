@@ -7,6 +7,7 @@ import { Marquee } from '@/components/Marquee'
 import { Counter } from '@/components/motion/Counter'
 import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
+import { PartnerLogo } from '@/components/PartnerLogo'
 import { ProjectCard } from '@/components/ProjectCard'
 import { ProjectSlider } from '@/components/ProjectSlider'
 import { SectionHeading } from '@/components/SectionHeading'
@@ -87,9 +88,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 return (
                   <StaggerItem key={logo.id}>
                     {/* sized in em so the whole row scales down on small screens */}
-                    <div className="relative text-[11px] md:text-base" style={{ width: `${width}em`, height: `${height}em` }}>
-                      <Img media={logo} fit="contain" sizes="200px" />
-                    </div>
+                    <PartnerLogo media={logo}>
+                      <div className="relative text-[11px] md:text-base" style={{ width: `${width}em`, height: `${height}em` }}>
+                        <Img media={logo} fit="contain" sizes="200px" />
+                      </div>
+                    </PartnerLogo>
                   </StaggerItem>
                 )
               })}

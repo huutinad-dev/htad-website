@@ -62,6 +62,7 @@ const fieldLabels: Record<string, ReturnType<typeof t>> = {
   mapUrl: t('Map URL', 'Link bản đồ'),
   social: t('Social links', 'Liên kết mạng xã hội'),
   url: t('URL', 'Đường dẫn'),
+  link: t('Link', 'Liên kết'),
   footerText: t('Footer text', 'Nội dung footer'),
   seoTitle: t('SEO title', 'Tiêu đề SEO'),
   seoDescription: t('SEO description', 'Mô tả SEO'),

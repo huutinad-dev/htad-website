@@ -195,6 +195,10 @@ export interface Service {
 export interface Media {
   id: number;
   alt: string;
+  /**
+   * Optional, for partner logos: the full address (https://…) to open when the logo is clicked.
+   */
+  link?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -569,6 +573,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  link?: T;
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
