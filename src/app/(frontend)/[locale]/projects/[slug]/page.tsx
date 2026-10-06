@@ -12,7 +12,7 @@ import { VideoButton } from '@/components/VideoButton'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, mediaSrc, toGallery, youTubeId } from '@/lib/media'
-import { getProject, getProjects } from '@/lib/payload'
+import { getProject } from '@/lib/payload'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProjectPage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
-  const [project, projects] = await Promise.all([getProject(locale, slug), getProjects(locale)])
+  const project = await getProject(locale, slug)
   if (!project) notFound()
   const dict = getDictionary(locale)
 
@@ -41,8 +41,6 @@ export default async function ProjectPage({ params }: Props) {
   const gallery = toGallery(asMediaList(project.gallery))
   const category = typeof project.category === 'object' ? project.category : null
   const videoId = youTubeId(project.videoUrl)
-  const next = projects[(projects.findIndex((p) => p.id === project.id) + 1) % projects.length]
-  const nextCover = asMedia(next?.cover)
 
   return (
     <>
@@ -145,22 +143,6 @@ export default async function ProjectPage({ params }: Props) {
         <section className="container-x pb-24 md:pb-32">
           <Gallery images={gallery} columns={gallery.length > 3 ? 3 : 2} />
         </section>
-      )}
-
-      {/* Next project */}
-      {next && next.id !== project.id && (
-        <Link href={localePath(locale, `/projects/${next.slug}`)} className="group relative block overflow-hidden border-t border-line">
-          <div className="absolute inset-0 opacity-40 transition-opacity duration-700 group-hover:opacity-70">
-            <Img media={nextCover} sizes="100vw" className="transition-transform duration-[1.5s] ease-out-expo group-hover:scale-105" />
-            <div className="absolute inset-0 bg-ink/60" />
-          </div>
-          <div className="container-x relative py-28 md:py-40">
-            <p className="eyebrow mb-6">{dict.nextProject}</p>
-            <p className="display max-w-5xl text-5xl text-white transition-colors duration-500 group-hover:text-gold md:text-8xl">
-              {next.title}
-            </p>
-          </div>
-        </Link>
       )}
     </>
   )

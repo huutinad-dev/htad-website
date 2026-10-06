@@ -3,10 +3,14 @@
 import { useLenis } from 'lenis/react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 // "Watch video" button that opens an embedded YouTube player in a modal.
 export function VideoButton({ videoId, label, variant = 'pill' }: { videoId: string; label: string; variant?: 'pill' | 'round' }) {
   const [open, setOpen] = useState(false)
+  // portals need the document, which only exists in the browser
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const lenis = useLenis()
 
   useEffect(() => {
@@ -49,8 +53,13 @@ export function VideoButton({ videoId, label, variant = 'pill' }: { videoId: str
         </button>
       )}
 
-      <AnimatePresence>
-        {open && (
+      {/* Rendered on <body>: the button often sits inside a transformed element (centred with
+          translate, or mid-animation), and a transform makes `position: fixed` relative to that
+          element, which shrank the player to the size of the button. */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
           <motion.div
             className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/95 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }}
@@ -87,8 +96,10 @@ export function VideoButton({ videoId, label, variant = 'pill' }: { videoId: str
               </svg>
             </button>
           </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </>
   )
 }
