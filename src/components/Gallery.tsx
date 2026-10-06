@@ -43,6 +43,11 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
     return () => window.removeEventListener('keydown', onKey)
   }, [open, close, step, lenis])
 
+  const gridSizes =
+    layout === 'portrait'
+      ? '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw'
+      : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+
   // ref callback for the current thumbnail
   const scrollThumbIntoView = (el: HTMLButtonElement | null) =>
     el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
@@ -72,7 +77,7 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
                 src={img.src}
                 alt={img.alt}
                 fill
-                sizes={layout === 'portrait' ? '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'}
+                sizes={gridSizes}
                 className="object-cover transition-transform duration-[1.2s] ease-out-expo group-hover:scale-105"
               />
               <span className="absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/30" />
@@ -105,8 +110,23 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Image src={current.src} alt={current.alt} fill sizes="100vw" className="object-contain" />
+                {/* the grid's copy of this image is already in the browser cache (same sizes, so the
+                    same file is picked): it shows at once, and the sharp copy fades in over it */}
+                <Image src={current.src} alt="" fill sizes={gridSizes} className="object-contain" />
+                <LightboxImage key={current.src} src={current.src} alt={current.alt} />
               </motion.div>
+            </div>
+
+            {/* the images either side load in the background, so the arrows switch instantly */}
+            <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
+              {[-1, 1].map((d) => {
+                const img = images[(open! + d + images.length) % images.length]
+                return img === current ? null : (
+                  <div key={img.src} className="relative h-px w-px">
+                    <Image src={img.src} alt="" fill sizes={LIGHTBOX_SIZES} loading="eager" />
+                  </div>
+                )
+              })}
             </div>
 
             {/* thumbnail strip: jump to any image; the current one is outlined and kept in view */}
@@ -153,6 +173,25 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+// Lightbox width: the image box, not the whole screen (smaller files than '100vw' on large displays)
+const LIGHTBOX_SIZES = '(min-width: 768px) calc(100vw - 10rem), 100vw'
+
+// The full-size image of the lightbox, transparent until it has loaded.
+function LightboxImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false)
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={LIGHTBOX_SIZES}
+      priority
+      onLoad={() => setLoaded(true)}
+      className={`object-contain transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+    />
   )
 }
 

@@ -166,3 +166,29 @@
     min-height: 0;
   }
 }
+
+// Login: a single compact card instead of the theme's split layout. The decorative left panel
+// goes, and the HTAd logo above the form is drawn much larger.
+.template-minimal:has(.pt-login-hero) {
+  width: min(460px, 100%);
+}
+
+.template-minimal__wrap:has(.pt-login-hero) {
+  min-height: 0;
+  padding: 48px 40px 40px;
+
+  .pt-login-hero {
+    display: none;
+  }
+}
+
+.pt-login__logo {
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.pt-login__logo-img,
+.pt-login__logo .graphic-logo {
+  height: 64px;
+  width: auto;
+}
