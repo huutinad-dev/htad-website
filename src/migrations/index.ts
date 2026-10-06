@@ -10,6 +10,7 @@ import * as migration_20261005_163508_add_messages from './20261005_163508_add_m
 import * as migration_20261005_170009_localize_founder_name from './20261005_170009_localize_founder_name';
 import * as migration_20261006_075551_add_media_link from './20261006_075551_add_media_link';
 import * as migration_20261006_080145_add_partners from './20261006_080145_add_partners';
+import * as migration_20261006_081500_cleanup_partner_logos from './20261006_081500_cleanup_partner_logos';
 
 export const migrations = [
   {
@@ -71,5 +72,10 @@ export const migrations = [
     up: migration_20261006_080145_add_partners.up,
     down: migration_20261006_080145_add_partners.down,
     name: '20261006_080145_add_partners'
+  },
+  {
+    up: migration_20261006_081500_cleanup_partner_logos.up,
+    down: migration_20261006_081500_cleanup_partner_logos.down,
+    name: '20261006_081500_cleanup_partner_logos'
   },
 ];
