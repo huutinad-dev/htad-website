@@ -22,6 +22,8 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { VisibleToggleCell as VisibleToggleCell_55a8275ba09150027012ffa19148fe2e } from '../../../components/admin/VisibleToggle'
+import { VisibleToggleField as VisibleToggleField_55a8275ba09150027012ffa19148fe2e } from '../../../components/admin/VisibleToggle'
 import { AdminIcon as AdminIcon_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { AdminLogo as AdminLogo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -53,6 +55,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "/components/admin/VisibleToggle#VisibleToggleCell": VisibleToggleCell_55a8275ba09150027012ffa19148fe2e,
+  "/components/admin/VisibleToggle#VisibleToggleField": VisibleToggleField_55a8275ba09150027012ffa19148fe2e,
   "/components/admin/Logo#AdminIcon": AdminIcon_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/Logo#AdminLogo": AdminLogo_91a09b539d3c86b0aebf520e7564ce08,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,

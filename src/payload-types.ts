@@ -249,7 +249,7 @@ export interface Partner {
    */
   link?: string | null;
   /**
-   * Untick to hide this partner from the website.
+   * Turn off to hide this partner from the website.
    */
   visible?: boolean | null;
   updatedAt: string;

@@ -85,7 +85,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <section className="border-y border-line py-12 md:py-16">
           <div className="container-x">
             <Reveal>
-              <p className="eyebrow mb-10 text-center">{dict.partners}</p>
+              <p className="eyebrow mb-10 text-center !text-2xl !font-bold md:mb-12">{dict.partners}</p>
             </Reveal>
             <Stagger className="flex flex-wrap items-center justify-center gap-x-10 gap-y-8 md:gap-x-16">
               {partners.map(({ partner, logo }) => {

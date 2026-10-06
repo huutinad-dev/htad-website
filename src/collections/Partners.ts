@@ -55,7 +55,12 @@ export const Partners: CollectionConfig = {
       defaultValue: true,
       admin: {
         position: 'sidebar',
-        description: t('Untick to hide this partner from the website.', 'Bỏ chọn để ẩn đối tác này khỏi website.'),
+        description: t('Turn off to hide this partner from the website.', 'Tắt để ẩn đối tác này khỏi website.'),
+        // a switch instead of a checkbox; in the list view it saves immediately
+        components: {
+          Cell: '/components/admin/VisibleToggle#VisibleToggleCell',
+          Field: '/components/admin/VisibleToggle#VisibleToggleField',
+        },
       },
     },
   ]),
