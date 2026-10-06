@@ -144,11 +144,13 @@ export function Gallery({ images, layout = 'landscape' }: { images: GalleryImage
                     aria-label={`${i + 1} / ${images.length}`}
                     aria-current={i === open}
                     onClick={() => setOpen(i)}
-                    className={`relative h-14 w-20 shrink-0 overflow-hidden rounded-sm transition-opacity duration-300 md:h-16 md:w-24 ${
+                    // a fixed height; the width follows the image, so nothing is cropped
+                    style={{ aspectRatio: img.width && img.height ? img.width / img.height : 4 / 3 }}
+                    className={`relative h-14 shrink-0 overflow-hidden rounded-sm transition-opacity duration-300 md:h-16 ${
                       i === open ? 'opacity-100 outline outline-2 outline-offset-2 outline-gold' : 'opacity-40 hover:opacity-80'
                     }`}
                   >
-                    <Image src={img.src} alt="" fill sizes="96px" className="object-cover" />
+                    <Image src={img.src} alt="" fill sizes="160px" className="object-cover" />
                   </button>
                 ))}
               </div>
