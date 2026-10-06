@@ -15,6 +15,7 @@ import * as migration_20261006_082133_media_alt_optional from './20261006_082133
 import * as migration_20261006_083627_partner_visible from './20261006_083627_partner_visible';
 import * as migration_20261006_095547_project_partners from './20261006_095547_project_partners';
 import * as migration_20261006_100121_project_gallery_layout from './20261006_100121_project_gallery_layout';
+import * as migration_20261006_110624_drop_project_logo from './20261006_110624_drop_project_logo';
 
 export const migrations = [
   {
@@ -100,6 +101,11 @@ export const migrations = [
   {
     up: migration_20261006_100121_project_gallery_layout.up,
     down: migration_20261006_100121_project_gallery_layout.down,
-    name: '20261006_100121_project_gallery_layout'
+    name: '20261006_100121_project_gallery_layout',
+  },
+  {
+    up: migration_20261006_110624_drop_project_logo.up,
+    down: migration_20261006_110624_drop_project_logo.down,
+    name: '20261006_110624_drop_project_logo'
   },
 ];
