@@ -43,10 +43,14 @@ export const toGallery = (list: Media[]) =>
     .map((m) => ({ src: mediaSrc(m)!, alt: m.alt ?? '', width: m.width, height: m.height }))
     .filter((g) => g.src)
 
+// English: "05 Oct 2026". Vietnamese spells the month out ("05 tháng 10, 2026"): its short
+// form, "thg 10", reads as an odd abbreviation.
 export const formatDate = (date: string, locale: string) =>
-  new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-    new Date(date),
-  )
+  new Intl.DateTimeFormat(locale === 'vi' ? 'vi-VN' : 'en-GB', {
+    day: '2-digit',
+    month: locale === 'vi' ? 'long' : 'short',
+    year: 'numeric',
+  }).format(new Date(date))
 
 // Lexical always stores a root node, so "has a body" means it has some text or media in it.
 export const hasRichText = (data: unknown) => {

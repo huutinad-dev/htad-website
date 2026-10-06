@@ -7,7 +7,7 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { PostCard } from '@/components/PostCard'
 import { RichText } from '@/components/RichText'
-import { isLocale, localePath } from '@/i18n/config'
+import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, formatDate, hasRichText, mediaSrc } from '@/lib/media'
 import { getPost, getPosts } from '@/lib/payload'
@@ -64,14 +64,13 @@ export default async function InsightPage({ params }: Props) {
               <RichText data={post.body} className="mt-10 text-lg" />
             </Reveal>
           )}
-          <Reveal delay={0.15} className="mt-12 flex flex-wrap gap-3">
-            {post.sourceUrl && (
+          {post.sourceUrl && (
+            <Reveal delay={0.15} className="mt-12">
               <ArrowLink href={post.sourceUrl} external variant="solid">
                 {dict.viewOriginal}
               </ArrowLink>
-            )}
-            <ArrowLink href={localePath(locale, '/insights')}>{dict.allInsights}</ArrowLink>
-          </Reveal>
+            </Reveal>
+          )}
         </div>
       </article>
 

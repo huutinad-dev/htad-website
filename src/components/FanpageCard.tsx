@@ -7,7 +7,7 @@ type Props = {
   url: string
   label: string
   locale: string
-  labels: Pick<Dictionary, 'fanpageLive' | 'fanpageButton'>
+  labels: Pick<Dictionary, 'fanpageButton'>
 }
 
 // The fanpage as the pinned first "post" of the Insights list: where a post has its cover
@@ -27,8 +27,6 @@ export function FanpageCard({ url, label, locale, labels }: Props) {
               <span className="relative h-2 w-2 rounded-full bg-gold" />
             </span>
             Facebook
-            <span className="text-white/30">·</span>
-            <span className="truncate text-white/50">{labels.fanpageLive}</span>
           </p>
           <h3 className="text-xl font-bold leading-snug md:text-2xl">{label}</h3>
         </div>
