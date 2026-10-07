@@ -42,8 +42,10 @@ export function SplitHeading({ text, as = 'h2', className, lineClassName, delay 
       initial="hidden"
       {...trigger}
     >
+      {/* each mask gets room for accents above and descenders below; the negative margin takes
+          both back, so explicit lines sit exactly one line-height apart, like wrapped ones */}
       {lines.map((text, i) => (
-        <span key={i} aria-hidden className="-mt-[0.2em] block overflow-hidden pb-[0.08em] pt-[0.2em]">
+        <span key={i} aria-hidden className="-mt-[0.28em] block overflow-hidden pb-[0.08em] pt-[0.2em]">
           <motion.span className={`block ${lineClassName ?? ''}`} variants={line} custom={i + delay / 0.12}>
             {text}
           </motion.span>

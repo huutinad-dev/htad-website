@@ -47,17 +47,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-svh items-end overflow-hidden">
+      <section className="relative flex min-h-[78svh] items-end overflow-hidden md:min-h-svh">
         <HeroSlider slides={slides} />
-        <div className="container-x relative z-10 pb-24 pt-40 md:pb-32">
+        <div className="container-x relative z-10 pb-16 pt-32 md:pb-32 md:pt-40">
           <SplitHeading
             as="h1"
             immediate
             delay={0.2}
             text={home.hero?.title ?? ''}
-            className="display text-[11.5vw] text-gold [text-wrap:balance] md:fit-line md:[--fit-max:8.5vw] md:[--fit-pad:5rem]"
+            className="display text-[15vw] text-gold [text-wrap:balance] md:fit-line md:[--fit-max:8.5vw] md:[--fit-pad:5rem]"
           />
-          <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mt-8 flex flex-col gap-8 md:mt-10 lg:flex-row lg:items-end lg:justify-between">
             {home.hero?.subtitle && (
               <Reveal delay={0.6}>
                 <p className="whitespace-pre-line text-lg leading-relaxed text-white/85 md:text-xl">{home.hero.subtitle}</p>
