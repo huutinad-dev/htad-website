@@ -50,11 +50,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative flex min-h-svh items-end overflow-hidden">
         <HeroSlider slides={slides} />
         <div className="container-x relative z-10 pb-24 pt-40 md:pb-32">
-          {home.hero?.eyebrow && (
-            <Reveal delay={0.1}>
-              <p className="eyebrow mb-8">{home.hero.eyebrow}</p>
-            </Reveal>
-          )}
           <SplitHeading
             as="h1"
             immediate

@@ -499,7 +499,6 @@ export const home = {
   ],
   en: {
     hero: {
-      eyebrow: 'Huu Tin Trading & Advertising',
       title: 'Premium content.\nEngaged audiences.',
       subtitle:
         'A Vietnam-based media and content distribution agency specializing in sports and entertainment.',
@@ -534,7 +533,6 @@ export const home = {
   },
   vi: {
     hero: {
-      eyebrow: 'Hữu Tín Trading & Advertising',
       title: 'Nội dung đỉnh cao.\nKhán giả cuồng nhiệt.',
       subtitle: 'Công ty truyền thông và phân phối nội dung tại Việt Nam, chuyên về thể thao và giải trí.',
     },

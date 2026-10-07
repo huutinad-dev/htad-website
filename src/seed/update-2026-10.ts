@@ -207,14 +207,12 @@ for (const slug of OLD_CATEGORIES) {
 
 const homeCopy = {
   en: {
-    eyebrow: 'Huu Tin Trading & Advertising Company Limited',
     title: 'Premium content.\nTrusted partners.',
     subtitle:
       'Vietnam-based media agency specializing in sports and entertainment.\n\nWe provide strategic advisory and media services to leagues, clubs, rights holders, and corporations across global markets.',
     cta: 'Every opportunity begins with a connection.',
   },
   vi: {
-    eyebrow: 'Công ty TNHH Thương mại và Quảng cáo Hữu Tín',
     title: 'Uy tín. Kết nối.\nCơ hội.',
     subtitle:
       'Hữu Tín là công ty truyền thông chuyên về lĩnh vực thể thao và giải trí, hoạt động tại Việt Nam.\n\nChúng tôi cung cấp dịch vụ tư vấn chiến lược và truyền thông cho các doanh nghiệp, giải đấu, câu lạc bộ và đơn vị sở hữu bản quyền trên thị trường quốc tế.',
@@ -228,7 +226,7 @@ for (const locale of ['en', 'vi'] as const) {
     slug: 'home-page',
     locale,
     data: {
-      hero: { ...current.hero, eyebrow: c.eyebrow, title: c.title, subtitle: c.subtitle },
+      hero: { ...current.hero, title: c.title, subtitle: c.subtitle },
       // "Bỏ chữ nhỏ bên dưới": heading + button only
       cta: { heading: c.cta, text: null },
     },

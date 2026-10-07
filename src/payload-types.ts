@@ -751,7 +751,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface HomePage {
   id: number;
   hero: {
-    eyebrow?: string | null;
     /**
      * Each line break becomes a separately animated line.
      */
@@ -914,7 +913,6 @@ export interface HomePageSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        eyebrow?: T;
         title?: T;
         subtitle?: T;
         slides?: T;

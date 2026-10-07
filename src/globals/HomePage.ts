@@ -31,7 +31,6 @@ export const HomePage: GlobalConfig = {
               name: 'hero',
               type: 'group',
               fields: [
-                { name: 'eyebrow', type: 'text', localized: true },
                 {
                   name: 'title',
                   type: 'textarea',
