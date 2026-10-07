@@ -873,6 +873,16 @@ export interface SiteSetting {
    * Stacked logo used in the footer / contact page.
    */
   logoStacked?: (number | null) | Media;
+  social?:
+    | {
+        label: string;
+        /**
+         * Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   contactPage?: {
     heading?: string | null;
     lead?: string | null;
@@ -888,16 +898,6 @@ export interface SiteSetting {
      */
     mapUrl?: string | null;
   };
-  social?:
-    | {
-        label: string;
-        /**
-         * Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.
-         */
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
   footerText?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -997,6 +997,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   tagline?: T;
   logo?: T;
   logoStacked?: T;
+  social?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
   contactPage?:
     | T
     | {
@@ -1012,13 +1019,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         address?: T;
         city?: T;
         mapUrl?: T;
-      };
-  social?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        id?: T;
       };
   footerText?: T;
   seoTitle?: T;

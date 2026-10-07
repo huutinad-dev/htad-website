@@ -31,6 +31,19 @@ export const SiteSettings: GlobalConfig = {
               relationTo: 'media',
               admin: { description: t('Stacked logo used in the footer / contact page.', 'Logo xếp dọc dùng ở footer / trang liên hệ.') },
             },
+            {
+              name: 'social',
+              type: 'array',
+              fields: [
+                { name: 'label', type: 'text', required: true },
+                {
+                  name: 'url',
+                  type: 'text',
+                  required: true,
+                  admin: { description: t('Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.', 'Link Facebook / YouTube / Instagram / TikTok / LinkedIn sẽ có biểu tượng riêng.') },
+                },
+              ],
+            },
           ],
         },
         {
@@ -58,19 +71,6 @@ export const SiteSettings: GlobalConfig = {
                   name: 'mapUrl',
                   type: 'text',
                   admin: { description: t('Google Maps link for the address.', 'Link Google Maps của địa chỉ.') },
-                },
-              ],
-            },
-            {
-              name: 'social',
-              type: 'array',
-              fields: [
-                { name: 'label', type: 'text', required: true },
-                {
-                  name: 'url',
-                  type: 'text',
-                  required: true,
-                  admin: { description: t('Facebook / YouTube / Instagram / TikTok / LinkedIn links get their own icon.', 'Link Facebook / YouTube / Instagram / TikTok / LinkedIn sẽ có biểu tượng riêng.') },
                 },
               ],
             },
