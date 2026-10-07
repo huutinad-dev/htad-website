@@ -16,7 +16,7 @@ export const SiteSettings: GlobalConfig = {
         {
           label: t('Brand', 'Thương hiệu'),
           fields: [
-            { name: 'companyName', type: 'text', required: true },
+            { name: 'companyName', type: 'text', required: true, localized: true },
             { name: 'shortName', type: 'text' },
             { name: 'tagline', type: 'text', localized: true },
             {
