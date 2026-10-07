@@ -42,8 +42,10 @@ export function Footer({ dict, settings }: { dict: Dictionary; settings: SiteSet
         </Reveal>
 
         <div className="border-t border-line py-6 text-center text-xs text-white/40">
-          <p>
-            © {new Date().getFullYear()} {settings.companyName}. {dict.rights}
+          <p className="[text-wrap:balance]">
+            © {new Date().getFullYear()} {settings.companyName}.{' '}
+            {/* own line on phones, so the two sentences don't wrap into each other */}
+            <span className="block md:inline">{dict.rights}</span>
           </p>
         </div>
       </div>
