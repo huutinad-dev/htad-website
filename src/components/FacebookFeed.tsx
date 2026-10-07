@@ -4,11 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 
 type Size = { width: number; height: number }
 
-// Height of the plugin's small page header. Facebook currently renders it broken (an empty box
-// over a clipped page name), and the card already names the page, so the frame is made this much
-// taller and shifted up to hide it inside the card's overflow-hidden well.
-const HEADER = 70
-
 // Facebook's Page Plugin: an iframe showing the fanpage's latest posts, no API key needed.
 // The plugin only accepts a fixed pixel size (width 180–500), so it is sized to its container
 // and re-sized when the container changes noticeably. If the visitor blocks Facebook embeds
@@ -44,7 +39,7 @@ export function FacebookFeed({ pageUrl, title, locale }: { pageUrl: string; titl
       href: pageUrl,
       tabs: 'timeline',
       width: String(size.width),
-      height: String(size.height + HEADER),
+      height: String(size.height),
       small_header: 'true',
       hide_cover: 'true',
       show_facepile: 'false',
@@ -60,10 +55,9 @@ export function FacebookFeed({ pageUrl, title, locale }: { pageUrl: string; titl
           src={src}
           title={title}
           width={size.width}
-          height={size.height + HEADER}
+          height={size.height}
           loading="lazy"
           className="mx-auto block border-0"
-          style={{ marginTop: -HEADER }}
           allow="encrypted-media; picture-in-picture; web-share"
         />
       )}
