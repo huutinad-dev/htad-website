@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 
 import { PageHero } from '@/components/PageHero'
 import { ProjectCard } from '@/components/ProjectCard'
@@ -8,6 +7,7 @@ import { ProjectGrid } from '@/components/ProjectGrid'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { getCategories, getHome, getProjects } from '@/lib/payload'
+import { pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -15,10 +15,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const home = await getHome(locale)
-  return {
+  return pageMetadata(locale, {
+    path: '/projects',
     title: home.projectsSection?.heading || getDictionary(locale).nav.projects,
-    description: home.projectsSection?.text ?? undefined,
-  }
+    description: home.projectsSection?.text,
+  })
 }
 
 export default async function ProjectsPage({ params }: Props) {
@@ -40,17 +41,14 @@ export default async function ProjectsPage({ params }: Props) {
         lead={home.projectsSection?.text}
       />
       <section className="container-x pb-28 md:pb-40">
-        {/* useSearchParams in the grid requires a Suspense boundary for static rendering */}
-        <Suspense>
-          <ProjectGrid
-            items={items}
-            // hide filters with no project yet
-            categories={categories
-              .filter((c) => items.some((i) => i.categorySlug === c.slug))
-              .map((c) => ({ slug: c.slug, title: c.title }))}
-            allLabel={dict.all}
-          />
-        </Suspense>
+        <ProjectGrid
+          items={items}
+          // hide filters with no project yet
+          categories={categories
+            .filter((c) => items.some((i) => i.categorySlug === c.slug))
+            .map((c) => ({ slug: c.slug, title: c.title }))}
+          allLabel={dict.all}
+        />
       </section>
     </>
   )

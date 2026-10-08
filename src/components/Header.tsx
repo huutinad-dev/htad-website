@@ -57,12 +57,15 @@ export function Header({ locale, dict, logo, email, social }: Props) {
       localStorage.setItem(LOCALE_COOKIE, locale)
     } catch {}
   }, [locale])
-  // usePathname may include the internal `/en|/vi` segment added by the proxy rewrite
+  // the page's path without its language (`/vi/about` → `/about`), to compare links and switch language
   const path = stripLocalePrefix(pathname) || '/'
-  const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href))
-  // The other language is a server render away. Show the choice at once (the toggle switches
-  // immediately and the page dims while the new text loads) instead of a click that seems to
-  // do nothing for a moment.
+  const isActive = (href: string) => {
+    const target = stripLocalePrefix(href) || '/'
+    return target === '/' ? path === '/' : path.startsWith(target)
+  }
+  // The other language is another URL (`/about` ↔ `/vi/about`), a server render away. Show the
+  // choice at once (the toggle switches immediately and the page dims while the new text loads)
+  // instead of a click that seems to do nothing for a moment.
   const [switching, startSwitch] = useTransition()
   const [pendingLocale, setPendingLocale] = useState<Locale | null>(null)
   const shownLocale = switching && pendingLocale ? pendingLocale : locale
@@ -79,7 +82,8 @@ export function Header({ locale, dict, logo, email, social }: Props) {
     } catch {
       // storage unavailable (private mode); the cookie is what the server uses
     }
-    startSwitch(() => router.refresh())
+    // same page, same filter (`?category=`), other language
+    startSwitch(() => router.push(`${localePath(target, path)}${window.location.search}`, { scroll: false }))
   }
 
   return (

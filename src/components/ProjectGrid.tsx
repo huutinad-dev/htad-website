@@ -2,25 +2,37 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import type { ReactNode } from 'react'
+import { Suspense, type ReactNode } from 'react'
 
 import { projectCell, projectColumnClass, projectColumnsClass, splitColumns } from './ProjectCard'
 
 type Item = { id: number; categorySlug: string; card: ReactNode }
 
-// Category filter with animated re-layout. Cards are rendered on the server and passed in.
-export function ProjectGrid({
-  items,
-  categories,
-  allLabel,
-}: {
+type Props = {
   items: Item[]
   categories: { slug: string; title: string }[]
   allLabel: string
-}) {
-  const router = useRouter()
+}
+
+// Category filter with animated re-layout. Cards are rendered on the server and passed in.
+// The filter comes from the URL (`?category=`), which a statically rendered page only knows in
+// the browser: the server HTML is the unfiltered grid, so every project link is in the page
+// source for search engines, and the browser then applies the filter.
+export function ProjectGrid(props: Props) {
+  return (
+    <Suspense fallback={<Grid {...props} active="all" />}>
+      <GridFromUrl {...props} />
+    </Suspense>
+  )
+}
+
+function GridFromUrl(props: Props) {
   const params = useSearchParams()
-  const active = params.get('category') ?? 'all'
+  return <Grid {...props} active={params.get('category') ?? 'all'} />
+}
+
+function Grid({ items, categories, allLabel, active }: Props & { active: string }) {
+  const router = useRouter()
   const visible = active === 'all' ? items : items.filter((i) => i.categorySlug === active)
 
   const select = (slug: string) => {

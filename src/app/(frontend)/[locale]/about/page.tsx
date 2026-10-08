@@ -10,6 +10,7 @@ import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
 import { getAbout } from '@/lib/payload'
+import { pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const about = await getAbout(locale)
-  return { title: about.heading, description: about.lead ?? undefined }
+  return pageMetadata(locale, { path: '/about', title: about.heading, description: about.lead, content: about.body, image: about.image })
 }
 
 export default async function AboutPage({ params }: Props) {

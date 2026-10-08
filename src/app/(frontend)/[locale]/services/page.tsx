@@ -12,6 +12,7 @@ import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
 import { getHome, getServices } from '@/lib/payload'
+import { pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -19,7 +20,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const home = await getHome(locale)
-  return { title: getDictionary(locale).nav.services, description: home.servicesSection?.text ?? undefined }
+  return pageMetadata(locale, {
+    path: '/services',
+    title: getDictionary(locale).nav.services,
+    description: home.servicesSection?.text,
+  })
 }
 
 export default async function ServicesPage({ params }: Props) {

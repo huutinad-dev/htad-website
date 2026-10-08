@@ -2,9 +2,17 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import type { ReactNode } from 'react'
+import { Suspense, type ReactNode } from 'react'
 
 type Item = { id: number; type: string; card: ReactNode }
+
+type Props = {
+  items: Item[]
+  types: { slug: string; title: string }[]
+  allLabel: string
+  emptyLabel: string
+  pinned?: ReactNode
+}
 
 /**
  * Type filter + grid of posts. With no filter, `pinned` (the fanpage card) is the first cell,
@@ -12,22 +20,23 @@ type Item = { id: number; type: string; card: ReactNode }
  * only posts of that type, without the pinned card.
  * Cards are rendered on the server and passed in.
  */
-export function InsightsList({
-  items,
-  types,
-  allLabel,
-  emptyLabel,
-  pinned,
-}: {
-  items: Item[]
-  types: { slug: string; title: string }[]
-  allLabel: string
-  emptyLabel: string
-  pinned?: ReactNode
-}) {
-  const router = useRouter()
+export function InsightsList(props: Props) {
+  // the server HTML is the unfiltered list (every post link in the page source, for search
+  // engines); the `?category=` filter is read in the browser
+  return (
+    <Suspense fallback={<List {...props} active="all" />}>
+      <ListFromUrl {...props} />
+    </Suspense>
+  )
+}
+
+function ListFromUrl(props: Props) {
   const params = useSearchParams()
-  const active = params.get('category') ?? 'all'
+  return <List {...props} active={params.get('category') ?? 'all'} />
+}
+
+function List({ items, types, allLabel, emptyLabel, pinned, active }: Props & { active: string }) {
+  const router = useRouter()
   const visible = active === 'all' ? items : items.filter((i) => i.type === active)
 
   const select = (slug: string) => router.replace(slug === 'all' ? '?' : `?category=${slug}`, { scroll: false })

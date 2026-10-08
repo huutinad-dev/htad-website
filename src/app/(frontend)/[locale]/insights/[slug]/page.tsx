@@ -7,10 +7,11 @@ import { Reveal, Stagger, StaggerItem } from '@/components/motion/Reveal'
 import { SplitHeading } from '@/components/motion/SplitHeading'
 import { PostCard } from '@/components/PostCard'
 import { RichText } from '@/components/RichText'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, formatDate, hasRichText, mediaSrc } from '@/lib/media'
-import { getPost, getPosts } from '@/lib/payload'
+import { getPost, getPosts, getSettings } from '@/lib/payload'
+import { absoluteUrl, breadcrumbs, richTextToPlain, JsonLd, pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -27,24 +28,48 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isLocale(locale)) return {}
   const post = await getPost(locale, slug)
   if (!post) return {}
-  const og = mediaSrc(asMedia(post.cover))
-  return {
+  return pageMetadata(locale, {
+    path: `/insights/${post.slug}`,
     title: post.title,
-    description: post.excerpt ?? undefined,
-    openGraph: { type: 'article', publishedTime: post.publishedAt, images: og ? [og] : undefined },
-  }
+    description: post.excerpt,
+    content: post.body,
+    image: post.cover,
+    article: { publishedTime: post.publishedAt, modifiedTime: post.updatedAt },
+  })
 }
 
 export default async function InsightPage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
-  const [post, posts] = await Promise.all([getPost(locale, slug), getPosts(locale)])
+  const [post, posts, settings] = await Promise.all([getPost(locale, slug), getPosts(locale), getSettings(locale)])
   if (!post) notFound()
   const dict = getDictionary(locale)
+  const cover = mediaSrc(asMedia(post.cover))
   const more = posts.filter((p) => p.id !== post.id).slice(0, 2)
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'NewsArticle',
+          headline: post.title,
+          description: post.excerpt || richTextToPlain(post.body).slice(0, 300) || undefined,
+          image: cover ? [absoluteUrl(cover)] : undefined,
+          datePublished: post.publishedAt,
+          dateModified: post.updatedAt,
+          mainEntityOfPage: absoluteUrl(localePath(locale, `/insights/${post.slug}`)),
+          inLanguage: locale,
+          publisher: { '@type': 'Organization', name: settings.companyName, url: absoluteUrl(localePath(locale)) },
+        }}
+      />
+      <JsonLd
+        data={breadcrumbs(locale, [
+          { name: dict.nav.home, path: '/' },
+          { name: dict.nav.insights, path: '/insights' },
+          { name: post.title, path: `/insights/${post.slug}` },
+        ])}
+      />
       <section className="relative flex min-h-[80svh] items-end overflow-hidden">
         <div className="absolute inset-0">
           <Img media={asMedia(post.cover)} priority className="animate-kenburns" />

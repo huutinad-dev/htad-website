@@ -10,6 +10,7 @@ import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, mediaSrc } from '@/lib/media'
 import { getSettings } from '@/lib/payload'
+import { siteUrl } from '@/lib/seo'
 
 import './globals.css'
 
@@ -36,13 +37,11 @@ export async function generateMetadata({ params }: Omit<Props, 'children'>): Pro
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const settings = await getSettings(locale)
-  const og = mediaSrc(asMedia(settings.ogImage))
   const title = settings.seoTitle || settings.companyName
+  // pages add their description, canonical URL and Open Graph through pageMetadata (src/lib/seo.tsx)
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+    metadataBase: new URL(siteUrl()),
     title: { default: title, template: `%s | ${settings.shortName || title}` },
-    description: settings.seoDescription ?? undefined,
-    openGraph: { title, description: settings.seoDescription ?? undefined, images: og ? [og] : undefined },
   }
 }
 

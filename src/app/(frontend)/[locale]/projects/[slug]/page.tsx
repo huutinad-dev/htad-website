@@ -12,8 +12,9 @@ import { PartnerLogo } from '@/components/PartnerLogo'
 import { VideoEmbed } from '@/components/VideoEmbed'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, asPartnerList, mediaSrc, oneLine, toGallery, youTubeId } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, oneLine, toGallery, youTubeId } from '@/lib/media'
 import { getProject, getProjects } from '@/lib/payload'
+import { breadcrumbs, JsonLd, pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -32,12 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isLocale(locale)) return {}
   const project = await getProject(locale, slug)
   if (!project) return {}
-  const og = mediaSrc(asMedia(project.cover))
-  return {
+  return pageMetadata(locale, {
+    path: `/projects/${project.slug}`,
     title: oneLine(project.title),
-    description: project.excerpt ?? undefined,
-    openGraph: og ? { images: [og] } : undefined,
-  }
+    description: project.excerpt,
+    content: project.body,
+    image: project.cover,
+  })
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -55,6 +57,13 @@ export default async function ProjectPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbs(locale, [
+          { name: dict.nav.home, path: '/' },
+          { name: dict.nav.projects, path: '/projects' },
+          { name: oneLine(project.title), path: `/projects/${project.slug}` },
+        ])}
+      />
       {/* Hero */}
       <section className="relative flex min-h-svh items-end overflow-hidden">
         <div className="absolute inset-0">

@@ -9,6 +9,7 @@ import { PageHero } from '@/components/PageHero'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { getSettings } from '@/lib/payload'
+import { pageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -16,10 +17,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   if (!isLocale(locale)) return {}
   const settings = await getSettings(locale)
-  return {
+  return pageMetadata(locale, {
+    path: '/contact',
     title: settings.contactPage?.heading || getDictionary(locale).contactUs,
-    description: settings.contactPage?.lead ?? undefined,
-  }
+    description: settings.contactPage?.lead,
+  })
 }
 
 export default async function ContactPage({ params }: Props) {

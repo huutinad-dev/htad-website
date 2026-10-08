@@ -56,9 +56,12 @@ DB đang dùng chung với một ứng dụng khác (schema `public`). Vì vậy
 
 ## Trang
 
-`/en` · `/vi` — Trang chủ
-`/[locale]/about` · `/[locale]/services` · `/[locale]/services/[slug]`
-`/[locale]/projects` (lọc theo `?category=`) · `/[locale]/projects/[slug]` · `/[locale]/insights` (lọc theo `?category=news|event`) · `/[locale]/insights/[slug]` · `/[locale]/contact`
+Tiếng Anh không có tiền tố, tiếng Việt nằm dưới `/vi` (vd. `/about` và `/vi/about`), để Google index được cả hai bản. Ngôn ngữ chọn bằng nút EN/VI được nhớ trong cookie: mở URL không tiền tố khi đã chọn tiếng Việt sẽ chuyển sang bản `/vi`.
+
+`/` · `/vi` — Trang chủ
+`/about` · `/services` · `/services/[slug]`
+`/projects` (lọc theo `?category=`) · `/projects/[slug]` · `/insights` (lọc theo `?category=news|event`) · `/insights/[slug]` · `/contact`
+`/sitemap.xml` · `/robots.txt` — cho công cụ tìm kiếm (`src/app/sitemap.ts`, `src/app/robots.ts`); mô tả, canonical, hreflang và dữ liệu cấu trúc nằm ở `src/lib/seo.tsx`
 
 Trang được cache (ISR, 10 phút). Khi lưu nội dung trong CMS, cache được xoá ngay (`src/hooks/revalidate.ts`).
 

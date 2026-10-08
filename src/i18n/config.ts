@@ -6,13 +6,16 @@ export const isLocale = (value: string): value is Locale =>
   (locales as readonly string[]).includes(value)
 
 /**
- * The language is not part of the URL: it's remembered in this cookie (and mirrored to
- * localStorage). `src/proxy.ts` reads the cookie and rewrites `/about` to the `[locale]` route.
+ * English, the default, has unprefixed URLs (`/about`); Vietnamese lives under `/vi` (`/vi/about`),
+ * so each language has its own URL that search engines can index. `src/proxy.ts` rewrites
+ * unprefixed URLs to the `[locale]` route as `en`. A language picked with the header switch is
+ * remembered in this cookie, and an unprefixed URL then redirects to its `/vi` version.
  */
 export const LOCALE_COOKIE = 'htad-locale'
 
-/** Public URL for a page. Kept as a helper so links stay in one place if URLs change again. */
-/** `/vi/about` → `/about` (used when a pathname still carries the internal locale segment). */
+/** `/vi/about` → `/about` (also strips the internal `/en` segment a rewritten pathname may carry). */
 export const stripLocalePrefix = (pathname: string) => pathname.replace(/^\/(en|vi)(?=\/|$)/, '')
 
-export const localePath = (_locale: Locale, path = '') => path || '/'
+/** Public URL of a page in a language: `localePath('vi', '/about')` → `/vi/about`. */
+export const localePath = (locale: Locale, path = '') =>
+  locale === defaultLocale ? path || '/' : `/${locale}${path === '/' ? '' : path}`
