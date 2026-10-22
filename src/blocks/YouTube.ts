@@ -7,6 +7,8 @@ export const YouTubeBlock: Block = {
   slug: 'youtube',
   interfaceName: 'YouTubeBlock',
   labels: { singular: t('YouTube video', 'Video YouTube'), plural: t('YouTube videos', 'Video YouTube') },
+  // the block's own name ("Untitled…" in its header) is not shown anywhere on the site
+  admin: { disableBlockName: true },
   fields: [
     {
       name: 'url',
