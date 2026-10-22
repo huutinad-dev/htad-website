@@ -10,7 +10,7 @@ export const Partners: CollectionConfig = {
   slug: 'partners',
   labels: { singular: t('Partner', 'Đối tác'), plural: t('Partners', 'Đối tác') },
   admin: {
-    group: t('Library', 'Thư viện'),
+    group: t('Content', 'Nội dung'),
     useAsTitle: 'name',
     defaultColumns: ['name', 'logo', 'link', 'visible'],
   },

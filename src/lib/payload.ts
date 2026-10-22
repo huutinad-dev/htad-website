@@ -80,6 +80,17 @@ export const getProducts = cache(async (locale: Locale) => {
   return res.docs
 })
 
+export const getProduct = cache(async (locale: Locale, slug: string) => {
+  const res = await (await client()).find({
+    collection: 'products',
+    locale,
+    where: { and: [{ slug: { equals: slug } }, { visible: { not_equals: false } }] },
+    limit: 1,
+    depth: 1,
+  })
+  return res.docs[0] ?? null
+})
+
 // Drafts stay in the admin: the site only ever lists published posts.
 export const getPosts = cache(async (locale: Locale) => {
   const res = await (await client()).find({

@@ -10,6 +10,15 @@ export const Projects: CollectionConfig = {
     group: t('Content', 'Nội dung'),
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'featured', 'updatedAt'],
+    components: {
+      // project categories have no sidebar entry; they open from here
+      beforeListTable: [
+        {
+          path: '/components/admin/ListLink#ListLink',
+          clientProps: { collection: 'project-categories', label: t('Project categories', 'Danh mục dự án') },
+        },
+      ],
+    },
   },
   access: {
     read: () => true,

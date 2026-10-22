@@ -7,9 +7,18 @@ export const ProjectCategories: CollectionConfig = {
   slug: 'project-categories',
   labels: { singular: t('Project category', 'Danh mục dự án'), plural: t('Project categories', 'Danh mục dự án') },
   admin: {
-    group: t('Content', 'Nội dung'),
+    // rarely edited, so no sidebar entry: it opens from a link on the Projects list
+    group: false,
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug'],
+    components: {
+      beforeListTable: [
+        {
+          path: '/components/admin/ListLink#ListLink',
+          clientProps: { collection: 'projects', label: t('Projects', 'Dự án'), back: true },
+        },
+      ],
+    },
   },
   access: {
     read: () => true,

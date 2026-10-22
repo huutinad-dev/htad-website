@@ -1,10 +1,11 @@
-import type { CollectionConfig } from 'payload'
+import { slugField, type CollectionConfig } from 'payload'
 
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
 import { t, withLabels } from '../i18n/admin'
 
 // Products the company sells elsewhere (its books on Shopee, its own website…). The Shop page
-// lists the visible ones in this list's order; each card links out to where it is sold.
+// lists the visible ones in this list's order; each has its own page (/shop/<slug>), and the
+// card and the page link out to where it is sold.
 export const Products: CollectionConfig = {
   slug: 'products',
   labels: { singular: t('Product', 'Sản phẩm'), plural: t('Products', 'Sản phẩm') },
@@ -26,11 +27,31 @@ export const Products: CollectionConfig = {
   fields: withLabels([
     { name: 'title', type: 'text', required: true, localized: true },
     {
-      name: 'author',
-      type: 'text',
-      admin: {
-        description: t('Optional, e.g. the author of the book.', 'Không bắt buộc, vd. tác giả của cuốn sách.'),
-      },
+      type: 'row',
+      fields: [
+        {
+          name: 'authors',
+          label: t('Authors', 'Tác giả'),
+          type: 'text',
+          hasMany: true,
+          admin: {
+            placeholder: t('Type a name, then press Enter', 'Gõ tên rồi nhấn Enter'),
+            description: t(
+              'Optional, one or more, shown on the product page in this order.',
+              'Không bắt buộc, một hoặc nhiều người, hiện ở trang sản phẩm theo thứ tự này.',
+            ),
+          },
+        },
+        {
+          name: 'year',
+          label: t('Year published', 'Năm xuất bản'),
+          type: 'text',
+          admin: {
+            placeholder: '2026',
+            description: t('Optional, shown on the product page.', 'Không bắt buộc, hiện ở trang sản phẩm.'),
+          },
+        },
+      ],
     },
     {
       name: 'cover',
@@ -51,7 +72,28 @@ export const Products: CollectionConfig = {
         description: t('Optional, shown as typed, e.g. "189.000đ".', 'Không bắt buộc, hiện đúng như nhập, vd. "189.000đ".'),
       },
     },
-    { name: 'excerpt', type: 'textarea', localized: true },
+    {
+      name: 'excerpt',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        description: t(
+          'Short description on the Shop card and at the top of the product page.',
+          'Mô tả ngắn trên thẻ ở trang Shop và ở đầu trang sản phẩm.',
+        ),
+      },
+    },
+    {
+      name: 'body',
+      type: 'richText',
+      localized: true,
+      admin: {
+        description: t(
+          'Optional. The full description on the product page (contents, about the author, images, videos…).',
+          'Không bắt buộc. Mô tả đầy đủ ở trang sản phẩm (nội dung sách, tác giả, hình ảnh, video…).',
+        ),
+      },
+    },
     {
       name: 'links',
       type: 'array',
@@ -79,6 +121,14 @@ export const Products: CollectionConfig = {
         },
       ],
     },
+    {
+      // Replaced by `authors` (its values were copied there). Hidden and kept so the column
+      // isn't dropped while deployed code still reads it.
+      name: 'author',
+      type: 'text',
+      admin: { hidden: true },
+    },
+    slugField(),
     {
       name: 'visible',
       type: 'checkbox',

@@ -74,8 +74,8 @@ export default buildConfig({
     fallback: true,
   },
   // The order here is the sidebar order within each group (and of the groups, see custom.scss):
-  // the content in the order of the site menu, then the shop, the shared library, admin.
-  collections: [Projects, ProjectCategories, Services, Posts, Products, Media, Partners, Messages, Users],
+  // the content in the order of the site menu, then the shop, the media library, admin.
+  collections: [Projects, ProjectCategories, Services, Posts, Partners, Products, Media, Messages, Users],
   globals: [HomePage, AboutPage, SiteSettings],
   // the editor's default tools, plus a YouTube video block (in the "+" / "/" menu)
   editor: lexicalEditor({
@@ -138,6 +138,24 @@ export default buildConfig({
           'about-page': 'info',
           'site-settings': 'settings',
           products: 'shopping-bag',
+        },
+      },
+    }),
+    // Our own admin home (components/admin/Dashboard), laid out like the website. It goes after
+    // payloadTheme, which installs its dashboard in the same slot.
+    (incoming) => ({
+      ...incoming,
+      admin: {
+        ...incoming.admin,
+        components: {
+          ...incoming.admin?.components,
+          views: {
+            ...incoming.admin?.components?.views,
+            dashboard: {
+              ...incoming.admin?.components?.views?.dashboard,
+              Component: '/components/admin/Dashboard#Dashboard',
+            },
+          },
         },
       },
     }),

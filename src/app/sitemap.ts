@@ -44,6 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((p) => !postHref(p, defaultLocale).external)
       .flatMap((p) => page(`/insights/${p.slug}`, p.updatedAt)),
     ...(products.length ? page('/shop', products.map((p) => p.updatedAt).sort().at(-1)) : []),
+    ...products.filter((p) => p.slug).flatMap((p) => page(`/shop/${p.slug}`, p.updatedAt)),
     ...page('/contact', settings.updatedAt),
   ]
 }

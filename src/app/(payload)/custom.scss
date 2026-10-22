@@ -115,7 +115,7 @@
   background-clip: border-box;
 }
 
-// Sidebar group order follows the site: Pages, Content, Shop, Library, then Admin. The sidebar
+// Sidebar group order follows the site: Pages, Content, Shop, Library (media), then Admin. The sidebar
 // lists groups in the order their first entry appears (collections before globals), which would
 // put Pages last, so Pages and Admin are moved here by what they contain; the rest keep the
 // order of the collections in payload.config.ts.
@@ -249,4 +249,343 @@
 #nav-dashboard,
 .pt-nav__search {
   display: none;
+}
+
+// Dashboard (components/admin/Dashboard.tsx): a greeting with quick actions, one card per
+// section of the website, then messages and recent edits.
+.htad-dash {
+  --dash-gap: 16px;
+  padding-top: 28px;
+  padding-bottom: 64px;
+
+  a {
+    text-decoration: none;
+  }
+
+  &__hero {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    overflow: hidden;
+    padding: 32px;
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--pt-radius-card, 12px);
+    background:
+      radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--pt-accent, #ffbd01) 22%, transparent), transparent 55%),
+      var(--theme-elevation-50);
+  }
+  &__eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pt-accent, #ffbd01);
+  }
+  &__title {
+    margin: 0;
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.15;
+  }
+  &__lead {
+    margin: 10px 0 0;
+    color: var(--theme-elevation-600);
+  }
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--pt-radius-ctl, 8px);
+    background: var(--theme-elevation-0);
+    color: var(--theme-text);
+    font-size: 14px;
+    font-weight: 600;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--pt-accent, #ffbd01);
+      color: var(--pt-accent, #ffbd01);
+    }
+    &--solid {
+      border-color: var(--pt-accent, #ffbd01);
+      background: var(--pt-accent, #ffbd01);
+      color: var(--pt-accent-contrast, #111);
+
+      &:hover {
+        background: var(--pt-accent-hover, #ffd24d);
+        color: var(--pt-accent-contrast, #111);
+      }
+    }
+  }
+
+  &__heading {
+    margin: 36px 0 14px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--theme-elevation-500);
+  }
+
+  &__sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: var(--dash-gap);
+  }
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 190px;
+    padding: 18px;
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--pt-radius-card, 12px);
+    background: var(--theme-elevation-50);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--pt-accent, #ffbd01) 55%, var(--theme-border-color));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+  &__card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    h3 {
+      flex: 1;
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--pt-accent, #ffbd01) 14%, transparent);
+    color: var(--pt-accent, #ffbd01);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  &__live {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    color: var(--theme-elevation-500);
+    font-size: 14px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background: var(--theme-elevation-100);
+      color: var(--pt-accent, #ffbd01);
+    }
+  }
+  &__count {
+    margin: 6px 0 0;
+    color: var(--theme-elevation-600);
+    font-size: 14px;
+
+    strong {
+      margin-right: 4px;
+      color: var(--theme-text);
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+  }
+  &__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--theme-elevation-100);
+      color: var(--theme-elevation-700);
+      font-size: 12px;
+    }
+  }
+  &__card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    // a fixed height, so the row lines up whether or not the card has an "Add" pill
+    height: 46px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--theme-border-color);
+    font-size: 13px;
+    font-weight: 600;
+
+    a {
+      color: var(--theme-text);
+      &:hover {
+        color: var(--pt-accent, #ffbd01);
+      }
+    }
+  }
+  &__add {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--pt-accent, #ffbd01) 14%, transparent);
+    color: var(--pt-accent, #ffbd01) !important;
+
+    &:hover {
+      background: var(--pt-accent, #ffbd01);
+      color: var(--pt-accent-contrast, #111) !important;
+    }
+  }
+
+  &__columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--dash-gap);
+    margin-top: 36px;
+  }
+  &__panel {
+    padding: 18px 18px 8px;
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--pt-radius-card, 12px);
+    background: var(--theme-elevation-50);
+  }
+  &__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+
+    h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    a {
+      color: var(--theme-elevation-600);
+      font-size: 13px;
+      font-weight: 600;
+      &:hover {
+        color: var(--pt-accent, #ffbd01);
+      }
+    }
+  }
+  &__muted {
+    margin-left: 6px;
+    color: var(--theme-elevation-500);
+    font-weight: 500;
+  }
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li + li {
+      border-top: 1px solid var(--theme-border-color);
+    }
+    a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 4px;
+      color: var(--theme-text);
+      border-radius: var(--pt-radius-item, 6px);
+
+      &:hover strong {
+        color: var(--pt-accent, #ffbd01);
+      }
+    }
+    time {
+      flex-shrink: 0;
+      color: var(--theme-elevation-500);
+      font-size: 12px;
+    }
+  }
+  &__list-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+
+    strong,
+    span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    strong {
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+    span {
+      color: var(--theme-elevation-500);
+      font-size: 13px;
+    }
+  }
+  &__avatar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--pt-accent, #ffbd01) 18%, transparent);
+    color: var(--pt-accent, #ffbd01);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  &__tag {
+    flex-shrink: 0;
+    min-width: 72px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--theme-elevation-100);
+    color: var(--theme-elevation-700);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+  }
+  &__empty {
+    margin: 8px 0 14px;
+    color: var(--theme-elevation-500);
+    font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    &__hero {
+      padding: 22px;
+    }
+    &__columns {
+      grid-template-columns: 1fr;
+    }
+  }
 }

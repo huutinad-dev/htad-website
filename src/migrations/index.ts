@@ -22,6 +22,9 @@ import * as migration_20261007_051210_site_settings_company_name_localized from 
 import * as migration_20261007_051440_drop_site_settings_company_name from './20261007_051440_drop_site_settings_company_name';
 import * as migration_20261022_083016_project_external_label from './20261022_083016_project_external_label';
 import * as migration_20261022_083255_products from './20261022_083255_products';
+import * as migration_20261022_092456_product_pages from './20261022_092456_product_pages';
+import * as migration_20261022_092723_product_year from './20261022_092723_product_year';
+import * as migration_20261022_093042_product_authors from './20261022_093042_product_authors';
 
 export const migrations = [
   {
@@ -142,6 +145,21 @@ export const migrations = [
   {
     up: migration_20261022_083255_products.up,
     down: migration_20261022_083255_products.down,
-    name: '20261022_083255_products'
+    name: '20261022_083255_products',
+  },
+  {
+    up: migration_20261022_092456_product_pages.up,
+    down: migration_20261022_092456_product_pages.down,
+    name: '20261022_092456_product_pages',
+  },
+  {
+    up: migration_20261022_092723_product_year.up,
+    down: migration_20261022_092723_product_year.down,
+    name: '20261022_092723_product_year',
+  },
+  {
+    up: migration_20261022_093042_product_authors.up,
+    down: migration_20261022_093042_product_authors.down,
+    name: '20261022_093042_product_authors'
   },
 ];

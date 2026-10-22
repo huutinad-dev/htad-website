@@ -71,9 +71,9 @@ export interface Config {
     'project-categories': ProjectCategory;
     services: Service;
     posts: Post;
+    partners: Partner;
     products: Product;
     media: Media;
-    partners: Partner;
     messages: Message;
     users: User;
     'payload-kv': PayloadKv;
@@ -87,9 +87,9 @@ export interface Config {
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    partners: PartnersSelect<false> | PartnersSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -404,9 +404,13 @@ export interface Product {
   _order?: string | null;
   title: string;
   /**
-   * Optional, e.g. the author of the book.
+   * Optional, one or more, shown on the product page in this order.
    */
-  author?: string | null;
+  authors?: string[] | null;
+  /**
+   * Optional, shown on the product page.
+   */
+  year?: string | null;
   /**
    * Portrait (3:4), e.g. the book cover. The image is never cropped.
    */
@@ -415,7 +419,28 @@ export interface Product {
    * Optional, shown as typed, e.g. "189.000đ".
    */
   price?: string | null;
+  /**
+   * Short description on the Shop card and at the top of the product page.
+   */
   excerpt?: string | null;
+  /**
+   * Optional. The full description on the product page (contents, about the author, images, videos…).
+   */
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * Where to buy it. Each link is a button on the product card, the first one highlighted.
    */
@@ -424,6 +449,12 @@ export interface Product {
     url: string;
     id?: string | null;
   }[];
+  author?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   /**
    * Shows this product on the Shop page.
    */
@@ -512,16 +543,16 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'partners';
+        value: number | Partner;
+      } | null)
+    | ({
         relationTo: 'products';
         value: number | Product;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'partners';
-        value: number | Partner;
       } | null)
     | ({
         relationTo: 'messages';
@@ -660,15 +691,30 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  logo?: T;
+  link?: T;
+  visible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
-  author?: T;
+  authors?: T;
+  year?: T;
   cover?: T;
   price?: T;
   excerpt?: T;
+  body?: T;
   links?:
     | T
     | {
@@ -676,6 +722,9 @@ export interface ProductsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  author?: T;
+  generateSlug?: T;
+  slug?: T;
   visible?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -723,19 +772,6 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners_select".
- */
-export interface PartnersSelect<T extends boolean = true> {
-  _order?: T;
-  name?: T;
-  logo?: T;
-  link?: T;
-  visible?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
