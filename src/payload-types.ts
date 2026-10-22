@@ -71,6 +71,7 @@ export interface Config {
     projects: Project;
     'project-categories': ProjectCategory;
     posts: Post;
+    products: Product;
     partners: Partner;
     media: Media;
     messages: Message;
@@ -86,6 +87,7 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
@@ -318,9 +320,13 @@ export interface Project {
    */
   videoUrl?: string | null;
   /**
-   * Optional external link (press article, campaign page…).
+   * Optional external link (press article, campaign page, book shop…).
    */
   externalUrl?: string | null;
+  /**
+   * Text on the link button, e.g. "Buy on Shopee" or "Website". Empty shows "Read more".
+   */
+  externalLabel?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -388,6 +394,42 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  _order?: string | null;
+  title: string;
+  /**
+   * Optional, e.g. the author of the book.
+   */
+  author?: string | null;
+  /**
+   * Portrait (3:4), e.g. the book cover. The image is never cropped.
+   */
+  cover: number | Media;
+  /**
+   * Optional, shown as typed, e.g. "189.000đ".
+   */
+  price?: string | null;
+  excerpt?: string | null;
+  /**
+   * Where to buy it. Each link is a button on the product card, the first one highlighted.
+   */
+  links: {
+    label: string;
+    url: string;
+    id?: string | null;
+  }[];
+  /**
+   * Shows this product on the Shop page.
+   */
+  visible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -468,6 +510,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'posts';
         value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
       } | null)
     | ({
         relationTo: 'partners';
@@ -574,6 +620,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   galleryLayout?: T;
   videoUrl?: T;
   externalUrl?: T;
+  externalLabel?: T;
   generateSlug?: T;
   slug?: T;
   category?: T;
@@ -610,6 +657,28 @@ export interface PostsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  author?: T;
+  cover?: T;
+  price?: T;
+  excerpt?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  visible?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1037,6 +1106,20 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "YouTubeBlock".
+ */
+export interface YouTubeBlock {
+  url: string;
+  /**
+   * Optional, shown under the video.
+   */
+  caption?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'youtube';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

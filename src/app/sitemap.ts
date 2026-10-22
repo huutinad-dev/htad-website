@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 
 import { postHref } from '@/components/PostCard'
 import { defaultLocale, localePath, locales } from '@/i18n/config'
-import { getAbout, getHome, getPosts, getProjects, getServices, getSettings } from '@/lib/payload'
+import { getAbout, getHome, getPosts, getProducts, getProjects, getServices, getSettings } from '@/lib/payload'
 import { absoluteUrl, languageAlternates } from '@/lib/seo'
 
 // Rebuilt with the pages (same 10-minute window), so new projects and posts are listed soon after
@@ -12,13 +12,14 @@ export const revalidate = 600
 // Every page in both languages (`/about`, `/vi/about`), each entry naming its other-language
 // versions. Slugs and dates are shared by the languages, so they are read once.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [settings, home, about, services, projects, posts] = await Promise.all([
+  const [settings, home, about, services, projects, posts, products] = await Promise.all([
     getSettings(defaultLocale),
     getHome(defaultLocale),
     getAbout(defaultLocale),
     getServices(defaultLocale),
     getProjects(defaultLocale),
     getPosts(defaultLocale),
+    getProducts(defaultLocale),
   ])
   const page = (path: string, updatedAt?: string | null) =>
     locales.map((locale) => ({
@@ -42,6 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...posts
       .filter((p) => !postHref(p, defaultLocale).external)
       .flatMap((p) => page(`/insights/${p.slug}`, p.updatedAt)),
+    ...(products.length ? page('/shop', products.map((p) => p.updatedAt).sort().at(-1)) : []),
     ...page('/contact', settings.updatedAt),
   ]
 }

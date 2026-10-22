@@ -20,6 +20,8 @@ import * as migration_20261006_160713_project_cover_portrait from './20261006_16
 import * as migration_20261007_022517_drop_home_hero_eyebrow from './20261007_022517_drop_home_hero_eyebrow';
 import * as migration_20261007_051210_site_settings_company_name_localized from './20261007_051210_site_settings_company_name_localized';
 import * as migration_20261007_051440_drop_site_settings_company_name from './20261007_051440_drop_site_settings_company_name';
+import * as migration_20261022_083016_project_external_label from './20261022_083016_project_external_label';
+import * as migration_20261022_083255_products from './20261022_083255_products';
 
 export const migrations = [
   {
@@ -130,6 +132,16 @@ export const migrations = [
   {
     up: migration_20261007_051440_drop_site_settings_company_name.up,
     down: migration_20261007_051440_drop_site_settings_company_name.down,
-    name: '20261007_051440_drop_site_settings_company_name'
+    name: '20261007_051440_drop_site_settings_company_name',
+  },
+  {
+    up: migration_20261022_083016_project_external_label.up,
+    down: migration_20261022_083016_project_external_label.down,
+    name: '20261022_083016_project_external_label',
+  },
+  {
+    up: migration_20261022_083255_products.up,
+    down: migration_20261022_083255_products.down,
+    name: '20261022_083255_products'
   },
 ];

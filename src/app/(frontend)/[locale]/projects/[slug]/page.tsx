@@ -163,7 +163,7 @@ export default async function ProjectPage({ params }: Props) {
           {project.externalUrl && (
             <Reveal delay={0.1} className="mt-12 flex justify-center">
               <ArrowLink href={project.externalUrl} external>
-                {dict.readArticle}
+                {project.externalLabel?.trim() || dict.readArticle}
               </ArrowLink>
             </Reveal>
           )}

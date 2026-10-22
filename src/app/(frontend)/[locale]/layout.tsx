@@ -9,7 +9,7 @@ import { SmoothScroll } from '@/components/motion/SmoothScroll'
 import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, mediaSrc } from '@/lib/media'
-import { getSettings } from '@/lib/payload'
+import { getProducts, getSettings } from '@/lib/payload'
 import { siteUrl } from '@/lib/seo'
 
 import './globals.css'
@@ -49,7 +49,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const settings = await getSettings(locale)
+  const [settings, products] = await Promise.all([getSettings(locale), getProducts(locale)])
   const dict = getDictionary(locale)
   const logo = asMedia(settings.logo)
   const logoSrc = mediaSrc(logo)
@@ -63,6 +63,8 @@ export default async function LocaleLayout({ children, params }: Props) {
             dict={dict}
             logo={logoSrc ? { src: logoSrc, alt: logo!.alt ?? '' } : null}
             email={settings.contact?.email}
+            // the Shop link appears once there is something to sell
+            shop={products.length > 0}
             social={(settings.social ?? []).map(({ label, url }) => ({ label, url }))}
           />
           <main>{children}</main>

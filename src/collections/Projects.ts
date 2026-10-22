@@ -167,8 +167,21 @@ export const Projects: CollectionConfig = {
               type: 'text',
               admin: {
                 description: t(
-                  'Optional external link (press article, campaign page…).',
-                  'Link ngoài không bắt buộc (bài báo, trang chiến dịch…).',
+                  'Optional external link (press article, campaign page, book shop…).',
+                  'Link ngoài không bắt buộc (bài báo, trang chiến dịch, trang mua sách…).',
+                ),
+              },
+            },
+            {
+              name: 'externalLabel',
+              type: 'text',
+              localized: true,
+              admin: {
+                condition: (_, siblingData) => Boolean(siblingData?.externalUrl),
+                placeholder: 'Read more',
+                description: t(
+                  'Text on the link button, e.g. "Buy on Shopee" or "Website". Empty shows "Read more".',
+                  'Chữ trên nút link, vd. "Mua trên Shopee" hoặc "Website". Để trống sẽ hiện "Đọc thêm".',
                 ),
               },
             },

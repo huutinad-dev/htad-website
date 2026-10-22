@@ -44,7 +44,7 @@ export const asPartnerList = (refs: (number | Partner)[] | null | undefined) =>
 
 export const youTubeId = (url?: string | null) => {
   if (!url) return null
-  const match = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/)
+  const match = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/|live\/)([\w-]{11})/)
   return match?.[1] ?? null
 }
 

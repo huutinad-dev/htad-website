@@ -1,6 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { resendAdapter } from '@payloadcms/email-resend'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { vi } from '@payloadcms/translations/languages/vi'
@@ -10,6 +10,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { YouTubeBlock } from './blocks/YouTube'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Services } from './collections/Services'
@@ -18,6 +19,7 @@ import { ProjectCategories } from './collections/ProjectCategories'
 import { Posts } from './collections/Posts'
 import { Messages } from './collections/Messages'
 import { Partners } from './collections/Partners'
+import { Products } from './collections/Products'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
@@ -71,9 +73,12 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Services, Projects, ProjectCategories, Posts, Partners, Media, Messages, Users],
+  collections: [Services, Projects, ProjectCategories, Posts, Products, Partners, Media, Messages, Users],
   globals: [HomePage, AboutPage, SiteSettings],
-  editor: lexicalEditor(),
+  // the editor's default tools, plus a YouTube video block (in the "+" / "/" menu)
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [YouTubeBlock] })],
+  }),
   // Email (contact form, password reset) goes through Resend once RESEND_API_KEY is set;
   // without it Payload only logs emails to the console. EMAIL_FROM must be an address on a
   // domain verified in Resend — the default only delivers to the Resend account's own email.

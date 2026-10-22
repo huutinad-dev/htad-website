@@ -18,11 +18,12 @@ type Props = {
   logo: { src: string; alt: string } | null
   email?: string | null
   social: SocialLink[]
+  shop?: boolean
 }
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
-export function Header({ locale, dict, logo, email, social }: Props) {
+export function Header({ locale, dict, logo, email, social, shop }: Props) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
@@ -50,6 +51,8 @@ export function Header({ locale, dict, logo, email, social }: Props) {
     { href: localePath(locale, `/insights`), label: dict.nav.insights },
     { href: localePath(locale, `/contact`), label: dict.nav.contact },
   ]
+  // kept apart from the main links: a pill in the header's corner, and last in the phone menu
+  const shopLink = shop ? { href: localePath(locale, `/shop`), label: dict.nav.shop } : null
   const router = useRouter()
   // keep the localStorage mirror in sync with the language the server actually rendered
   useEffect(() => {
@@ -122,6 +125,19 @@ export function Header({ locale, dict, logo, email, social }: Props) {
           </nav>
 
           <div className="relative z-10 flex items-center gap-5">
+            {shopLink && (
+              <Link
+                href={shopLink.href}
+                className={`hidden items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors sm:inline-flex ${
+                  isActive(shopLink.href)
+                    ? 'border-gold bg-gold text-ink'
+                    : 'border-gold/60 text-gold hover:bg-gold hover:text-ink'
+                }`}
+              >
+                <BagIcon />
+                {shopLink.label}
+              </Link>
+            )}
             <div className="flex items-center gap-1 text-xs font-semibold tracking-wider">
               {(['en', 'vi'] as const).map((l, i) => (
                 <span key={l} className="flex items-center gap-1">
@@ -162,7 +178,7 @@ export function Header({ locale, dict, logo, email, social }: Props) {
             transition={{ duration: 0.7, ease: EASE }}
           >
             <nav className="flex flex-col gap-2">
-              {links.map((l, i) => (
+              {(shopLink ? [...links, shopLink] : links).map((l, i) => (
                 <span key={l.href} className="overflow-hidden">
                   <motion.span
                     className="block"
@@ -197,5 +213,19 @@ export function Header({ locale, dict, logo, email, social }: Props) {
         )}
       </AnimatePresence>
     </>
+  )
+}
+
+function BagIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-4 w-4">
+      <path
+        d="M6 8h12l-1 12H7L6 8Zm3 0V7a3 3 0 0 1 6 0v1"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
