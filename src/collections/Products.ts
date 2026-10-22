@@ -9,7 +9,7 @@ export const Products: CollectionConfig = {
   slug: 'products',
   labels: { singular: t('Product', 'Sản phẩm'), plural: t('Products', 'Sản phẩm') },
   admin: {
-    group: t('Content', 'Nội dung'),
+    group: t('Shop', 'Cửa hàng'),
     useAsTitle: 'title',
     defaultColumns: ['title', 'cover', 'price', 'visible'],
   },

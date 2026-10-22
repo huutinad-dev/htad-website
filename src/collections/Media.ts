@@ -7,7 +7,7 @@ export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: t('Image', 'Hình ảnh'), plural: t('Media', 'Thư viện ảnh') },
   admin: {
-    group: t('Content', 'Nội dung'),
+    group: t('Library', 'Thư viện'),
   },
   access: {
     read: () => true,

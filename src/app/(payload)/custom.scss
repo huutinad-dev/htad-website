@@ -115,14 +115,15 @@
   background-clip: border-box;
 }
 
-// Sidebar group order: Content, Pages, then Admin. The sidebar lists groups in the order
-// their first entry appears (collections before globals), which would put Pages last, so the
-// two groups are re-ordered here by what they contain.
+// Sidebar group order follows the site: Pages, Content, Shop, Library, then Admin. The sidebar
+// lists groups in the order their first entry appears (collections before globals), which would
+// put Pages last, so Pages and Admin are moved here by what they contain; the rest keep the
+// order of the collections in payload.config.ts.
 .pt-nav__group:has(#nav-global-home-page) {
-  order: 1;
+  order: -1;
 }
 .pt-nav__group:has(#nav-users) {
-  order: 2;
+  order: 1;
 }
 
 // Drawers as centred dialogs. Payload opens "upload new", "choose from existing" and every

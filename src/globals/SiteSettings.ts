@@ -6,7 +6,7 @@ import { t, withLabels } from '../i18n/admin'
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: t('Site settings', 'Cấu hình chung'),
-  admin: { group: t('Pages', 'Trang') },
+  admin: { group: t('Admin', 'Quản trị') },
   access: { read: () => true },
   hooks: { afterChange: [revalidateGlobal] },
   fields: withLabels([

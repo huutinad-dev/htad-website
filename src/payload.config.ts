@@ -73,7 +73,9 @@ export default buildConfig({
     defaultLocale,
     fallback: true,
   },
-  collections: [Services, Projects, ProjectCategories, Posts, Products, Partners, Media, Messages, Users],
+  // The order here is the sidebar order within each group (and of the groups, see custom.scss):
+  // the content in the order of the site menu, then the shop, the shared library, admin.
+  collections: [Projects, ProjectCategories, Services, Posts, Products, Media, Partners, Messages, Users],
   globals: [HomePage, AboutPage, SiteSettings],
   // the editor's default tools, plus a YouTube video block (in the "+" / "/" menu)
   editor: lexicalEditor({
@@ -135,6 +137,7 @@ export default buildConfig({
           'home-page': 'house',
           'about-page': 'info',
           'site-settings': 'settings',
+          products: 'shopping-bag',
         },
       },
     }),

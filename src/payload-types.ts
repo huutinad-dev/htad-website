@@ -67,13 +67,13 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    services: Service;
     projects: Project;
     'project-categories': ProjectCategory;
+    services: Service;
     posts: Post;
     products: Product;
-    partners: Partner;
     media: Media;
+    partners: Partner;
     messages: Message;
     users: User;
     'payload-kv': PayloadKv;
@@ -83,13 +83,13 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    services: ServicesSelect<false> | ServicesSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
-    partners: PartnersSelect<false> | PartnersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -137,124 +137,6 @@ export interface UserAuthOperations {
   unlock: {
     email: string;
     password: string;
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: number;
-  _order?: string | null;
-  title: string;
-  /**
-   * Optional headline shown on the detail page.
-   */
-  headline?: string | null;
-  /**
-   * Short summary used on cards and the home page.
-   */
-  excerpt: string;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  highlights?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).
-   */
-  partners?: (number | Partner)[] | null;
-  cover: number | Media;
-  gallery?: (number | Media)[] | null;
-  galleryCaption?: string | null;
-  relatedProjects?: (number | Project)[] | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: number;
-  _order?: string | null;
-  name: string;
-  /**
-   * Transparent PNG works best. Larger images are scaled down to fit 500px (proportions kept) when the partner is saved.
-   */
-  logo: number | Media;
-  /**
-   * Optional: the full address (https://…) to open when the logo is clicked.
-   */
-  link?: string | null;
-  /**
-   * Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.
-   */
-  visible?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Optional. A short description of the image, read by screen readers and search engines.
-   */
-  alt?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
   };
 }
 /**
@@ -339,12 +221,130 @@ export interface Project {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Transparent PNG works best. Larger images are scaled down to fit 500px (proportions kept) when the partner is saved.
+   */
+  logo: number | Media;
+  /**
+   * Optional: the full address (https://…) to open when the logo is clicked.
+   */
+  link?: string | null;
+  /**
+   * Shows this partner in the partner strip on the home page. Projects and services always show the partners picked on them.
+   */
+  visible?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Optional. A short description of the image, read by screen readers and search engines.
+   */
+  alt?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "project-categories".
  */
 export interface ProjectCategory {
   id: number;
   _order?: string | null;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  _order?: string | null;
+  title: string;
+  /**
+   * Optional headline shown on the detail page.
+   */
+  headline?: string | null;
+  /**
+   * Short summary used on cards and the home page.
+   */
+  excerpt: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Partners / rights holders for this service. Their order follows the Partners list (drag to reorder there).
+   */
+  partners?: (number | Partner)[] | null;
+  cover: number | Media;
+  gallery?: (number | Media)[] | null;
+  galleryCaption?: string | null;
+  relatedProjects?: (number | Project)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -496,16 +496,16 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'services';
-        value: number | Service;
-      } | null)
-    | ({
         relationTo: 'projects';
         value: number | Project;
       } | null)
     | ({
         relationTo: 'project-categories';
         value: number | ProjectCategory;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
       } | null)
     | ({
         relationTo: 'posts';
@@ -516,12 +516,12 @@ export interface PayloadLockedDocument {
         value: number | Product;
       } | null)
     | ({
-        relationTo: 'partners';
-        value: number | Partner;
-      } | null)
-    | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
       } | null)
     | ({
         relationTo: 'messages';
@@ -575,32 +575,6 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
- */
-export interface ServicesSelect<T extends boolean = true> {
-  _order?: T;
-  title?: T;
-  headline?: T;
-  excerpt?: T;
-  body?: T;
-  highlights?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  partners?: T;
-  cover?: T;
-  gallery?: T;
-  galleryCaption?: T;
-  relatedProjects?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
@@ -635,6 +609,32 @@ export interface ProjectsSelect<T extends boolean = true> {
 export interface ProjectCategoriesSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  headline?: T;
+  excerpt?: T;
+  body?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  partners?: T;
+  cover?: T;
+  gallery?: T;
+  galleryCaption?: T;
+  relatedProjects?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -682,19 +682,6 @@ export interface ProductsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners_select".
- */
-export interface PartnersSelect<T extends boolean = true> {
-  _order?: T;
-  name?: T;
-  logo?: T;
-  link?: T;
-  visible?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -736,6 +723,19 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  logo?: T;
+  link?: T;
+  visible?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

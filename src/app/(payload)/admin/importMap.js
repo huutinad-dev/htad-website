@@ -26,8 +26,8 @@ import { BoolCell as BoolCell_f436cf2a4719114d9e44505773a04007 } from 'payload-t
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { VisibleToggleCell as VisibleToggleCell_55a8275ba09150027012ffa19148fe2e } from '../../../components/admin/VisibleToggle'
 import { VisibleToggleField as VisibleToggleField_55a8275ba09150027012ffa19148fe2e } from '../../../components/admin/VisibleToggle'
-import { PlainTextCell as PlainTextCell_df4830d6ccd65a12cd0c6b5b5b63cc08 } from '../../../components/admin/PlainTextCell'
 import { MediaListToggle as MediaListToggle_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { PlainTextCell as PlainTextCell_df4830d6ccd65a12cd0c6b5b5b63cc08 } from '../../../components/admin/PlainTextCell'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { AdminIcon as AdminIcon_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
 import { AdminLogo as AdminLogo_91a09b539d3c86b0aebf520e7564ce08 } from '../../../components/admin/Logo'
@@ -72,8 +72,8 @@ export const importMap = {
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "/components/admin/VisibleToggle#VisibleToggleCell": VisibleToggleCell_55a8275ba09150027012ffa19148fe2e,
   "/components/admin/VisibleToggle#VisibleToggleField": VisibleToggleField_55a8275ba09150027012ffa19148fe2e,
-  "/components/admin/PlainTextCell#PlainTextCell": PlainTextCell_df4830d6ccd65a12cd0c6b5b5b63cc08,
   "payload-theme/client#MediaListToggle": MediaListToggle_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/PlainTextCell#PlainTextCell": PlainTextCell_df4830d6ccd65a12cd0c6b5b5b63cc08,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
   "/components/admin/Logo#AdminIcon": AdminIcon_91a09b539d3c86b0aebf520e7564ce08,
   "/components/admin/Logo#AdminLogo": AdminLogo_91a09b539d3c86b0aebf520e7564ce08,
