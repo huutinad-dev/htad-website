@@ -28,8 +28,9 @@ export default async function InsightsPage({ params }: Props) {
   const dict = getDictionary(locale)
   // the fanpage is whichever Facebook link is listed first in Site settings → Social links
   const fanpage = (settings.social ?? []).find((s) => socialNetwork(s.url) === 'facebook')
-  // Facebook's page plugin shows no posts at the moment; the live feed is opt-in from the admin
-  const feed = Boolean(settings.showFacebookFeed)
+  // Facebook's page plugin currently shows no posts, so the card is shown only while the feed
+  // works (Site settings → showFacebookFeed, switched by the GitHub Action every 2 hours)
+  const showFanpage = Boolean(settings.showFacebookFeed)
 
   const items = posts.map((p) => ({
     id: p.id,
@@ -47,12 +48,7 @@ export default async function InsightsPage({ params }: Props) {
           allLabel={dict.all}
           emptyLabel={dict.noInsights}
           // the fanpage is the pinned first card of the list
-          pinned={
-            fanpage && (
-              <FanpageCard url={fanpage.url} label={fanpage.label} locale={locale} feed={feed} labels={dict} />
-            )
-          }
-          pinnedTall={feed}
+          pinned={showFanpage && fanpage && <FanpageCard url={fanpage.url} label={fanpage.label} locale={locale} labels={dict} />}
         />
       </section>
     </>

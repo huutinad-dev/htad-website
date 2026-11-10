@@ -51,8 +51,8 @@ export const SiteSettings: GlobalConfig = {
               defaultValue: false,
               admin: {
                 description: t(
-                  "Facebook's page plugin currently shows only the page header, without posts, so Insights shows a compact fanpage card instead. Checked automatically every 2 hours and switched on once the feed shows posts again (and off if it breaks).",
-                  'Plugin fanpage của Facebook hiện chỉ hiện tên trang, không hiện bài đăng, nên trang Insights đang dùng thẻ fanpage gọn. Hệ thống tự kiểm tra mỗi 2 tiếng: tự bật khi bảng tin hiện bài trở lại (và tự tắt nếu lỗi lại).',
+                  "Facebook's page plugin currently shows only the page header, without posts, so the fanpage card is hidden from Insights. Checked automatically every 2 hours and switched on once the feed shows posts again (and off if it breaks).",
+                  'Plugin fanpage của Facebook hiện chỉ hiện tên trang, không hiện bài đăng, nên thẻ fanpage đang được ẩn khỏi trang Insights. Hệ thống tự kiểm tra mỗi 2 tiếng: tự bật khi bảng tin hiện bài trở lại (và tự tắt nếu lỗi lại).',
                 ),
               },
             },
