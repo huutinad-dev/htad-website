@@ -905,6 +905,9 @@ export interface HomePage {
   featuredProjects?: (number | Project)[] | null;
   partners?: (number | Partner)[] | null;
   cta?: {
+    /**
+     * Press Enter where the line should break, so no word pair is split (e.g. "bắt | đầu").
+     */
     heading?: string | null;
     text?: string | null;
   };
@@ -994,7 +997,7 @@ export interface SiteSetting {
       }[]
     | null;
   /**
-   * Facebook's page plugin currently shows only the page header, without posts, so Insights shows a compact fanpage card instead. Checked automatically every 2 hours and switched on once the feed shows posts again (and off if it breaks).
+   * Facebook's page plugin currently shows only the page header, without posts, so the fanpage card is hidden from Insights. Checked automatically every 2 hours and switched on once the feed shows posts again (and off if it breaks).
    */
   showFacebookFeed?: boolean | null;
   contactPage?: {

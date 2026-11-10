@@ -99,7 +99,17 @@ export const HomePage: GlobalConfig = {
               name: 'cta',
               type: 'group',
               fields: [
-                { name: 'heading', type: 'text', localized: true },
+                {
+                  name: 'heading',
+                  type: 'textarea',
+                  localized: true,
+                  admin: {
+                    description: t(
+                      'Press Enter where the line should break, so no word pair is split (e.g. "bắt | đầu").',
+                      'Nhấn Enter ở chỗ muốn xuống dòng, để không bị tách đôi cụm từ (ví dụ "bắt | đầu").',
+                    ),
+                  },
+                },
                 { name: 'text', type: 'textarea', localized: true },
               ],
             },
