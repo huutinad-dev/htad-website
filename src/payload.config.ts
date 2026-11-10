@@ -161,28 +161,28 @@ export default buildConfig({
     }),
     // Uploads go to Cloudflare R2 (S3-compatible) when the R2_* variables are set (always on
     // Vercel, whose filesystem is read-only). Without them, files stay in the local /media folder.
-    // Files are still served through /api/media/file/<filename>, so stored URLs don't change.
     s3Storage({
       enabled: r2Enabled,
       // keep the adapter's fields (e.g. _objectKey) in the schema even when disabled,
       // so local and Vercel share one database schema / migration history
       alwaysInsertFields: true,
-      // an explicit (empty) prefix keeps the `prefix` column in the schema whether or not R2 is
-      // configured; without it, generating a migration with R2 on wants to drop that column
+      // Files live in media/<category>/ (see collections/Media.ts). Each document stores its full
+      // folder in `prefix`, which reads and URLs use; the collection prefix only applies to uploads.
       // With R2_PUBLIC_URL set (the bucket's public r2.dev or custom domain), media URLs point
       // straight at Cloudflare, so images no longer go through this app or its database.
       collections: {
         media: r2PublicURL
           ? {
-              prefix: '',
+              prefix: 'media',
               disablePayloadAccessControl: true,
               generateFileURL: ({ filename, prefix }) =>
-                `${r2PublicURL}/${[prefix, filename]
-                  .filter((part): part is string => Boolean(part))
+                // the prefix is a folder path (media/projects): encode each segment, keep the slashes
+                `${r2PublicURL}/${[...(prefix ?? '').split('/'), filename]
+                  .filter(Boolean)
                   .map((part) => encodeURIComponent(part))
                   .join('/')}`,
             }
-          : { prefix: '' },
+          : { prefix: 'media' },
       },
       bucket: process.env.R2_BUCKET || '',
       config: {

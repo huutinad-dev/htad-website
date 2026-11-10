@@ -50,7 +50,7 @@ const upload = async (file: string, name: string, alt: string) => {
     .toBuffer()
   const doc = await payload.create({
     collection: 'media',
-    data: { alt },
+    data: { alt, category: 'library' },
     file: { data, mimetype: 'image/jpeg', name: filename, size: data.length },
   })
   return doc.id

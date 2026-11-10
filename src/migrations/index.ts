@@ -26,6 +26,7 @@ import * as migration_20261022_092456_product_pages from './20261022_092456_prod
 import * as migration_20261022_092723_product_year from './20261022_092723_product_year';
 import * as migration_20261022_093042_product_authors from './20261022_093042_product_authors';
 import * as migration_20261110_090637_facebook_feed_toggle from './20261110_090637_facebook_feed_toggle';
+import * as migration_20261110_092205_media_category from './20261110_092205_media_category';
 
 export const migrations = [
   {
@@ -166,6 +167,11 @@ export const migrations = [
   {
     up: migration_20261110_090637_facebook_feed_toggle.up,
     down: migration_20261110_090637_facebook_feed_toggle.down,
-    name: '20261110_090637_facebook_feed_toggle'
+    name: '20261110_090637_facebook_feed_toggle',
+  },
+  {
+    up: migration_20261110_092205_media_category.up,
+    down: migration_20261110_092205_media_category.down,
+    name: '20261110_092205_media_category'
   },
 ];

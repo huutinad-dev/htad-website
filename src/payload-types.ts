@@ -249,6 +249,10 @@ export interface Partner {
 export interface Media {
   id: number;
   /**
+   * Where the file is stored (media/<category>/). Chosen when uploading.
+   */
+  category: 'projects' | 'services' | 'insights' | 'shop' | 'partners' | 'site' | 'library';
+  /**
    * Optional. A short description of the image, read by screen readers and search engines.
    */
   alt?: string | null;
@@ -734,6 +738,7 @@ export interface ProductsSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  category?: T;
   alt?: T;
   prefix?: T;
   _objectKey?: T;

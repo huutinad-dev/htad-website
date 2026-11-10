@@ -3,6 +3,19 @@ import type { CollectionConfig } from 'payload'
 import { revalidateCollection, revalidateCollectionDelete } from '../hooks/revalidate'
 import { t, withLabels } from '../i18n/admin'
 
+/** Storage folders, by what the image is for. Existing files were sorted by where they are used. */
+export const mediaCategories = ['projects', 'services', 'insights', 'shop', 'partners', 'site', 'library'] as const
+
+const mediaCategoryLabels: Record<(typeof mediaCategories)[number], ReturnType<typeof t>> = {
+  projects: t('Projects', 'Dự án'),
+  services: t('Services', 'Dịch vụ'),
+  insights: t('Insights', 'Tin tức'),
+  shop: t('Shop', 'Cửa hàng'),
+  partners: t('Partners', 'Đối tác'),
+  site: t('Site (logo, home, about)', 'Website (logo, trang chủ, giới thiệu)'),
+  library: t('Library (other)', 'Thư viện (khác)'),
+}
+
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: t('Image', 'Hình ảnh'), plural: t('Media', 'Thư viện ảnh') },
@@ -13,10 +26,34 @@ export const Media: CollectionConfig = {
     read: () => true,
   },
   hooks: {
+    // a new or replaced file is stored in the folder of its category: media/<category>/<file>
+    // (the storage plugin nests the prefix under the collection's `media` prefix)
+    beforeChange: [
+      ({ data, req }) => {
+        if (req.file && data.category) data.prefix = data.category
+        return data
+      },
+    ],
     afterChange: [revalidateCollection],
     afterDelete: [revalidateCollectionDelete],
   },
   fields: withLabels([
+    {
+      name: 'category',
+      type: 'select',
+      required: true,
+      defaultValue: 'library',
+      options: mediaCategories.map((value) => ({ value, label: mediaCategoryLabels[value] })),
+      // the folder is decided by the upload; changing it later would not move the file
+      access: { update: () => false },
+      admin: {
+        position: 'sidebar',
+        description: t(
+          'Where the file is stored (media/<category>/). Chosen when uploading.',
+          'Thư mục lưu file (media/<danh mục>/). Chọn khi tải ảnh lên.',
+        ),
+      },
+    },
     {
       name: 'alt',
       type: 'text',

@@ -39,7 +39,7 @@ const media = async (key: string, alt: string) => {
   if (!file) throw new Error(`Missing seed asset: ${key}`)
   const doc = await payload.create({
     collection: 'media',
-    data: { alt },
+    data: { alt, category: 'library' },
     filePath: path.join(dir, file),
   })
   mediaCache.set(key, doc.id)
