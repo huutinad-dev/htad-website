@@ -22,7 +22,9 @@ export function CtaBanner({
       <div className="container-x">
         <SplitHeading
           text={heading}
-          className="display mx-auto max-w-6xl text-5xl [text-wrap:balance] sm:text-6xl lg:text-7xl xl:text-8xl"
+          // phones: large type that wraps; from tablet up each line of the heading (line breaks set
+          // in the admin) stays on one line, sized to fit its longest line, up to 6rem
+          className="display mx-auto text-5xl [text-wrap:balance] sm:text-6xl md:fit-line md:[--fit-max:6rem] md:[--fit-pad:5rem]"
           // this heading wraps onto several lines: Vietnamese needs extra leading so marks
           // below one line (Ọ, Ộ) don't touch marks above the next (Ầ, Ắ)
           lineClassName="[&:lang(vi)]:leading-[1.3]"
