@@ -12,11 +12,13 @@ type Props = {
   allLabel: string
   emptyLabel: string
   pinned?: ReactNode
+  /** the pinned card spans two rows from tablet up (the fanpage with its live feed) */
+  pinnedTall?: boolean
 }
 
 /**
  * Type filter + grid of posts. With no filter, `pinned` (the fanpage card) is the first cell,
- * two rows tall from tablet up, and the posts flow around and after it. Choosing a type shows
+ * two rows tall from tablet up when `pinnedTall`, and the posts flow around and after it. Choosing a type shows
  * only posts of that type, without the pinned card.
  * Cards are rendered on the server and passed in.
  */
@@ -35,7 +37,7 @@ function ListFromUrl(props: Props) {
   return <List {...props} active={params.get('category') ?? 'all'} />
 }
 
-function List({ items, types, allLabel, emptyLabel, pinned, active }: Props & { active: string }) {
+function List({ items, types, allLabel, emptyLabel, pinned, pinnedTall, active }: Props & { active: string }) {
   const router = useRouter()
   const visible = active === 'all' ? items : items.filter((i) => i.type === active)
 
@@ -67,7 +69,7 @@ function List({ items, types, allLabel, emptyLabel, pinned, active }: Props & { 
       </div>
 
       <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
-        {pinned && active === 'all' && <div className="md:row-span-2">{pinned}</div>}
+        {pinned && active === 'all' && <div className={pinnedTall ? 'md:row-span-2' : undefined}>{pinned}</div>}
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((item, i) => (
             <motion.div

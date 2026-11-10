@@ -988,6 +988,10 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Facebook's page plugin currently shows only the page header, without posts, so Insights shows a compact fanpage card instead. Checked automatically every 2 hours and switched on once the feed shows posts again (and off if it breaks).
+   */
+  showFacebookFeed?: boolean | null;
   contactPage?: {
     heading?: string | null;
     lead?: string | null;
@@ -1109,6 +1113,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  showFacebookFeed?: T;
   contactPage?:
     | T
     | {

@@ -25,6 +25,7 @@ import * as migration_20261022_083255_products from './20261022_083255_products'
 import * as migration_20261022_092456_product_pages from './20261022_092456_product_pages';
 import * as migration_20261022_092723_product_year from './20261022_092723_product_year';
 import * as migration_20261022_093042_product_authors from './20261022_093042_product_authors';
+import * as migration_20261110_090637_facebook_feed_toggle from './20261110_090637_facebook_feed_toggle';
 
 export const migrations = [
   {
@@ -160,6 +161,11 @@ export const migrations = [
   {
     up: migration_20261022_093042_product_authors.up,
     down: migration_20261022_093042_product_authors.down,
-    name: '20261022_093042_product_authors'
+    name: '20261022_093042_product_authors',
+  },
+  {
+    up: migration_20261110_090637_facebook_feed_toggle.up,
+    down: migration_20261110_090637_facebook_feed_toggle.down,
+    name: '20261110_090637_facebook_feed_toggle'
   },
 ];
