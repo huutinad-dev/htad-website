@@ -9,7 +9,7 @@ import { absoluteUrl, languageAlternates } from '@/lib/seo'
 // they are published.
 export const revalidate = 600
 
-// Every page in both languages (`/about`, `/vi/about`), each entry naming its other-language
+// Every page in both languages (`/about`, `/en/about`), each entry naming its other-language
 // versions. Slugs and dates are shared by the languages, so they are read once.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [settings, home, about, services, projects, posts, products] = await Promise.all([

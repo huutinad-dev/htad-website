@@ -60,13 +60,13 @@ export function Header({ locale, dict, logo, email, social, shop }: Props) {
       localStorage.setItem(LOCALE_COOKIE, locale)
     } catch {}
   }, [locale])
-  // the page's path without its language (`/vi/about` → `/about`), to compare links and switch language
+  // the page's path without its language (`/en/about` → `/about`), to compare links and switch language
   const path = stripLocalePrefix(pathname) || '/'
   const isActive = (href: string) => {
     const target = stripLocalePrefix(href) || '/'
     return target === '/' ? path === '/' : path.startsWith(target)
   }
-  // The other language is another URL (`/about` ↔ `/vi/about`), a server render away. Show the
+  // The other language is another URL (`/about` ↔ `/en/about`), a server render away. Show the
   // choice at once (the toggle switches immediately and the page dims while the new text loads)
   // instead of a click that seems to do nothing for a moment.
   const [switching, startSwitch] = useTransition()

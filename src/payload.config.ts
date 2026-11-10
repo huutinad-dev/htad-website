@@ -24,7 +24,7 @@ import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
 import { adminThemeVi } from './i18n/adminTheme'
-import { locales, defaultLocale } from './i18n/config'
+import { contentDefaultLocale, locales } from './i18n/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -70,7 +70,7 @@ export default buildConfig({
       code,
       label: code === 'vi' ? 'Tiếng Việt' : 'English',
     })),
-    defaultLocale,
+    defaultLocale: contentDefaultLocale,
     fallback: true,
   },
   // The order here is the sidebar order within each group (and of the groups, see custom.scss):
