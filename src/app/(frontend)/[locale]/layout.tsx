@@ -9,8 +9,8 @@ import { SmoothScroll } from '@/components/motion/SmoothScroll'
 import { isLocale, locales } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, mediaSrc } from '@/lib/media'
-import { getProducts, getSettings } from '@/lib/payload'
-import { siteUrl } from '@/lib/seo'
+import { getAbout, getProducts, getServices, getSettings } from '@/lib/payload'
+import { JsonLd, siteGraph, siteUrl } from '@/lib/seo'
 
 import './globals.css'
 
@@ -49,7 +49,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const [settings, products] = await Promise.all([getSettings(locale), getProducts(locale)])
+  const [settings, products, services, about] = await Promise.all([
+    getSettings(locale),
+    getProducts(locale),
+    getServices(locale),
+    getAbout(locale),
+  ])
   const dict = getDictionary(locale)
   const logo = asMedia(settings.logo)
   const logoSrc = mediaSrc(logo)
@@ -57,6 +62,13 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={beVietnam.variable}>
       <body className="bg-ink font-sans text-white">
+        {/* the company and the site, on every page (src/lib/seo.tsx) */}
+        <JsonLd
+          data={siteGraph(settings, {
+            knowsAbout: services.map((s) => s.title),
+            founder: about.founder?.name ? { name: about.founder.name, jobTitle: about.founder.role } : null,
+          })}
+        />
         <SmoothScroll>
           <Header
             locale={locale}

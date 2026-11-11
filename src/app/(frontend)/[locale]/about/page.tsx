@@ -10,7 +10,7 @@ import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia } from '@/lib/media'
 import { getAbout } from '@/lib/payload'
-import { pageMetadata } from '@/lib/seo'
+import { JsonLd, pageMetadata, webPage } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -35,6 +35,7 @@ export default async function AboutPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={webPage(locale, { type: 'AboutPage', path: '/about', name: about.heading, description: about.lead })} />
       <PageHero title={about.heading} lead={about.lead} />
 
       <section className="container-x pb-16 md:pb-24">

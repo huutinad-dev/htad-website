@@ -11,9 +11,9 @@ import { ProjectCard } from '@/components/ProjectCard'
 import { RichText } from '@/components/RichText'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, asPartnerList, hasRichText, toGallery } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, hasRichText, mediaSrc, toGallery } from '@/lib/media'
 import { getHome, getService, getServices } from '@/lib/payload'
-import { breadcrumbs, JsonLd, pageMetadata } from '@/lib/seo'
+import { absoluteUrl, breadcrumbs, JsonLd, organizationRef, pageMetadata, richTextToPlain } from '@/lib/seo'
 import type { Project } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -52,8 +52,25 @@ export default async function ServicePage({ params }: Props) {
   const partners = asPartnerList(service.partners)
   const related = (service.relatedProjects ?? []).filter((p): p is Project => typeof p === 'object')
 
+  const coverSrc = mediaSrc(cover)
+
   return (
     <>
+      {/* what HTAd offers, for search and AI answer engines */}
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: service.title,
+          serviceType: service.title,
+          description: service.excerpt || richTextToPlain(service.body).slice(0, 300) || undefined,
+          url: absoluteUrl(localePath(locale, `/services/${service.slug}`)),
+          image: coverSrc ? absoluteUrl(coverSrc) : undefined,
+          inLanguage: locale,
+          provider: organizationRef(),
+          areaServed: { '@type': 'Country', name: 'Vietnam' },
+        }}
+      />
       <JsonLd
         data={breadcrumbs(locale, [
           { name: dict.nav.home, path: '/' },

@@ -10,9 +10,9 @@ import { RichText } from '@/components/RichText'
 import { SectionHeading } from '@/components/SectionHeading'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, hasRichText } from '@/lib/media'
+import { asMedia, hasRichText, mediaSrc } from '@/lib/media'
 import { getProduct, getProducts } from '@/lib/payload'
-import { breadcrumbs, JsonLd, pageMetadata } from '@/lib/seo'
+import { absoluteUrl, breadcrumbs, JsonLd, organizationRef, pageMetadata, richTextToPlain } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -55,8 +55,34 @@ export default async function ProductPage({ params }: Props) {
     product.year && { label: dict.published, value: product.year },
   ].filter((fact): fact is { label: string; value: string } => Boolean(fact))
 
+  const coverSrc = mediaSrc(asMedia(product.cover))
+  // the price is free text ("189.000đ"); only a price in dong is given to search engines, as a number
+  const priceVnd = /đ|vnd/i.test(product.price ?? '') ? Number(product.price!.replace(/\D/g, '')) || undefined : undefined
+
   return (
     <>
+      {/* the product (a book) and where to buy it, for search and AI answer engines */}
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Book',
+          name: product.title,
+          description: product.excerpt || richTextToPlain(product.body).slice(0, 300) || undefined,
+          url: absoluteUrl(localePath(locale, `/shop/${product.slug}`)),
+          image: coverSrc ? absoluteUrl(coverSrc) : undefined,
+          author: authors.length ? authors.map((name) => ({ '@type': 'Person', name })) : undefined,
+          datePublished: product.year || undefined,
+          inLanguage: locale,
+          publisher: organizationRef(),
+          offers: (product.links ?? []).map((link) => ({
+            '@type': 'Offer',
+            url: link.url,
+            seller: { '@type': 'Organization', name: link.label },
+            ...(priceVnd && { price: priceVnd, priceCurrency: 'VND' }),
+            availability: 'https://schema.org/InStock',
+          })),
+        }}
+      />
       <JsonLd
         data={breadcrumbs(locale, [
           { name: dict.nav.home, path: '/' },

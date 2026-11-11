@@ -16,8 +16,8 @@ import { ServiceList } from '@/components/ServiceList'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, asMediaList, asPartnerList, mediaSrc } from '@/lib/media'
-import { getHome, getPartners, getProjects, getServices, getSettings } from '@/lib/payload'
-import { absoluteUrl, JsonLd, pageMetadata } from '@/lib/seo'
+import { getHome, getPartners, getProjects, getServices } from '@/lib/payload'
+import { pageMetadata } from '@/lib/seo'
 import type { Project } from '@/payload-types'
 
 // Partner logos have very different shapes (shields vs. wide wordmarks). Giving each the
@@ -41,12 +41,11 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
 
-  const [home, services, allProjects, allPartners, settings] = await Promise.all([
+  const [home, services, allProjects, allPartners] = await Promise.all([
     getHome(locale),
     getServices(locale),
     getProjects(locale),
     getPartners(),
-    getSettings(locale),
   ])
   const dict = getDictionary(locale)
 
@@ -55,33 +54,8 @@ export default async function HomePage({ params }: Props) {
   const featured = (chosen.length ? chosen : allProjects.filter((p) => p.featured)).slice(0, 8)
   const partners = asPartnerList(allPartners)
 
-  // the company as a schema.org Organization: name, logo, contact and social profiles in search results
-  const logo = mediaSrc(asMedia(settings.logoStacked) ?? asMedia(settings.logo))
-  const contact = settings.contact
-  const organization = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: settings.companyName,
-    alternateName: settings.shortName || undefined,
-    description: settings.seoDescription || undefined,
-    url: absoluteUrl(localePath(locale)),
-    logo: logo ? absoluteUrl(logo) : undefined,
-    email: contact?.email || undefined,
-    telephone: contact?.phone || undefined,
-    address: contact?.address
-      ? {
-          '@type': 'PostalAddress',
-          streetAddress: contact.address,
-          addressLocality: contact.city || undefined,
-          addressCountry: 'VN',
-        }
-      : undefined,
-    sameAs: (settings.social ?? []).map((s) => s.url),
-  }
-
   return (
     <>
-      <JsonLd data={organization} />
       {/* Hero */}
       <section className="relative flex min-h-[78svh] items-end overflow-hidden md:min-h-svh">
         <HeroSlider slides={slides} />

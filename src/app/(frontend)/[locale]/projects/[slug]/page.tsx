@@ -10,11 +10,11 @@ import { SplitHeading } from '@/components/motion/SplitHeading'
 import { RichText } from '@/components/RichText'
 import { PartnerLogo } from '@/components/PartnerLogo'
 import { VideoEmbed } from '@/components/VideoEmbed'
-import { isLocale } from '@/i18n/config'
+import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
-import { asMedia, asMediaList, asPartnerList, oneLine, toGallery, youTubeId } from '@/lib/media'
+import { asMedia, asMediaList, asPartnerList, mediaSrc, oneLine, toGallery, youTubeId } from '@/lib/media'
 import { getProject, getProjects } from '@/lib/payload'
-import { breadcrumbs, JsonLd, pageMetadata } from '@/lib/seo'
+import { absoluteUrl, breadcrumbs, JsonLd, organizationRef, pageMetadata, richTextToPlain } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -55,8 +55,28 @@ export default async function ProjectPage({ params }: Props) {
   const videoId = youTubeId(project.videoUrl)
   const partners = asPartnerList(project.partners)
 
+  const coverSrc = mediaSrc(cover)
+
   return (
     <>
+      {/* the project as a piece of work by HTAd, for search and AI answer engines */}
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          name: oneLine(project.title),
+          alternativeHeadline: project.subtitle || undefined,
+          description: project.excerpt || richTextToPlain(project.body).slice(0, 300) || undefined,
+          url: absoluteUrl(localePath(locale, `/projects/${project.slug}`)),
+          image: coverSrc ? absoluteUrl(coverSrc) : undefined,
+          genre: category?.title || undefined,
+          dateCreated: project.year || undefined,
+          inLanguage: locale,
+          creator: organizationRef(),
+          contributor: partners.length ? partners.map((p) => ({ '@type': 'Organization', name: p.partner.name })) : undefined,
+          video: videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined,
+        }}
+      />
       <JsonLd
         data={breadcrumbs(locale, [
           { name: dict.nav.home, path: '/' },

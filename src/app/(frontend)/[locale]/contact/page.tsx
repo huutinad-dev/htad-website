@@ -9,7 +9,7 @@ import { PageHero } from '@/components/PageHero'
 import { isLocale } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { getSettings } from '@/lib/payload'
-import { pageMetadata } from '@/lib/seo'
+import { JsonLd, pageMetadata, webPage } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -39,6 +39,14 @@ export default async function ContactPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={webPage(locale, {
+          type: 'ContactPage',
+          path: '/contact',
+          name: settings.contactPage?.heading || dict.contactUs,
+          description: settings.contactPage?.lead,
+        })}
+      />
       <PageHero title={settings.contactPage?.heading || dict.contactUs} lead={settings.contactPage?.lead} />
 
       <section className="container-x pb-20 md:pb-32">

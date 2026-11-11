@@ -10,8 +10,8 @@ import { RichText } from '@/components/RichText'
 import { isLocale, localePath } from '@/i18n/config'
 import { getDictionary } from '@/lib/dictionary'
 import { asMedia, formatDate, hasRichText, mediaSrc } from '@/lib/media'
-import { getPost, getPosts, getSettings } from '@/lib/payload'
-import { absoluteUrl, breadcrumbs, richTextToPlain, JsonLd, pageMetadata } from '@/lib/seo'
+import { getPost, getPosts } from '@/lib/payload'
+import { absoluteUrl, breadcrumbs, JsonLd, organizationRef, pageMetadata, richTextToPlain, websiteId } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InsightPage({ params }: Props) {
   const { locale, slug } = await params
   if (!isLocale(locale)) notFound()
-  const [post, posts, settings] = await Promise.all([getPost(locale, slug), getPosts(locale), getSettings(locale)])
+  const [post, posts] = await Promise.all([getPost(locale, slug), getPosts(locale)])
   if (!post) notFound()
   const dict = getDictionary(locale)
   const cover = mediaSrc(asMedia(post.cover))
@@ -60,7 +60,9 @@ export default async function InsightPage({ params }: Props) {
           dateModified: post.updatedAt,
           mainEntityOfPage: absoluteUrl(localePath(locale, `/insights/${post.slug}`)),
           inLanguage: locale,
-          publisher: { '@type': 'Organization', name: settings.companyName, url: absoluteUrl(localePath(locale)) },
+          author: organizationRef(),
+          publisher: organizationRef(),
+          isPartOf: { '@id': websiteId() },
         }}
       />
       <JsonLd
